@@ -170,11 +170,16 @@ build_gnuconf()
  typeset rc_conf rc_make rc_makeinstall
  typeset id="$1"; shift   # build id
  typeset dir="$1"; shift  # src directory
+ typeset pkgbuilddir="$BUILDDIR/$id"
 
  build_sanity_gnuconf $dir || return $?
 
+ [ ! -d "$pkgbuilddir" ] && { mkdir -p "$pkgbuilddir"; } || { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+
+ cd "$pkgbuilddir" || { echo "Failed to change to build directory: " $pkgbuilddir; return 1; } 
+
  echo
- echo "Building $id at $(date)"
+ echo "Building $id in $pkgbuilddir at $(date)"
  echo
 
  echo "Configuring..."
