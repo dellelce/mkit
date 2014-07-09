@@ -11,13 +11,14 @@ export WORKDIR="$PWD"
 export SRCGET="$WORKDIR/srcget"
 export PATH="$PATH:$SRCGET"
 export SRCTARGET="$PWD/src"
-SRCLIST="apr aprutil httpd openssl php libxml2"
+SRCLIST="automake apr aprutil autoconf httpd openssl php pcre libxml2"
 prefix="$HOME/i"
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
 export srcget="0.0.5"  #  srcget version
 export LOGSDIR="${WORKDIR}/logs"
 export prefix="${1:-$PWD}"
+export PATH="$prefix/bin:$PATH"
 
 mkdir -p "$BUILDDIR"
 mkdir -p "$LOGSDIR"
@@ -223,6 +224,33 @@ build_apr()
  build_gnuconf apr $srcdir_apr
  return $?
 }
+#
+#
+build_automake()
+{
+ uncompress automake $fn_automake || { echo "Failed uncompress for: $fn_automake"; return 1; }
+ build_gnuconf automake $srcdir_automake
+ return $?
+}
+
+#
+#
+build_autoconf()
+{
+ uncompress autoconf $fn_autoconf || { echo "Failed uncompress for: $fn_autoconf"; return 1; }
+ build_gnuconf autoconf $srcdir_autoconf
+ return $?
+}
+
+
+#
+#
+build_pcre()
+{
+ uncompress pcre $fn_pcre || { echo "Failed uncompress for: $fn_pcre"; return 1; }
+ build_gnuconf pcre $srcdir_pcre
+ return $?
+}
 
 build_aprutil()
 {
@@ -314,6 +342,12 @@ download
 # echo
 # uncompress $x
 #done
+build_automake || exit 1
+
+build_autoconf || exit 1
+
+build_pcre || exit 1
+
 build_openssl || exit 1
 
 build_apr || exit 1
