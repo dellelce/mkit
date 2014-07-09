@@ -149,7 +149,7 @@ build_sanity_gnuconf()
 {
  set -x
  [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; } 
- [ ! -d "$1" -o ! -f "$1/configure"] && { echo "build_sanity_gnuconf: invalid srcdirectory"; return 1; }
+ [ ! -d "$1" -o ! -f "$1/configure" ] && { echo "build_sanity_gnuconf: invalid srcdirectory"; return 1; }
 }
 
 build_logger()
