@@ -10,11 +10,11 @@
 export WORKDIR="$PWD"
 export SRCGET="$WORKDIR/srcget"
 export PATH="$PATH:$SRCGET"
-export SRCTARGET="$PWD/src"
 SRCLIST="bison apr aprutil httpd openssl php pcre libxml2"
 prefix="$HOME/i"
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
+export SRCDIR="$PWD/src_${TIMESTAMP}"
 export srcget="0.0.5"  #  srcget version
 export LOGSDIR="${WORKDIR}/logs"
 export prefix="${1:-$PWD}"
@@ -22,13 +22,7 @@ export PATH="$prefix/bin:$PATH"
 
 mkdir -p "$BUILDDIR"
 mkdir -p "$LOGSDIR"
-
-[ ! -d "$SRCTARGET" ] &&
-{
-  mkdir -p $SRCTARGET
-  rc=$?
-  [ $rc -ne 0 ] && exit $rc
-}
+mkdir -p "$SRCDIR"
 
 ### FUNCTIONS ###
 
@@ -72,13 +66,14 @@ getfilename()
 #
 uncompress_xz()
 {
- typeset fn="$1"
+ typeset fn="$1" rc=0 dir=""; shift
+ typeset bdir="$1"
 
  [ ! -f "$fn" ] && { echo "uncompress: $fn is not a file."; return 1; }
 
- xz -dc < "${fn}" | tar xmf -
+ xz -dc < "${fn}" | tar xf - -C "${bdir}"
  rc=$?
- [ "$rc" -eq 0 ] && { dir=$(ls -d1t $PWD/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
+ [ "$rc" -eq 0 ] && { dir=$(ls -d1t ${bdir}/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
  echo "uncompress_xz return code: $rc"
  return $rc
 }
@@ -88,13 +83,14 @@ uncompress_xz()
 #
 uncompress_bz2()
 {
- typeset fn="$1"
+ typeset fn="$1" rc=0 dir=""; shift
+ typeset bdir="$*"
 
  [ ! -f "$fn" ] && return 1
 
- tar xmjf  "${fn}"
+ tar xjf  "${fn}" -C "${bdir}"
  rc=$?
- [ "$rc" -eq 0 ] && { dir=$(ls -d1t $PWD/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
+ [ "$rc" -eq 0 ] && { dir=$(ls -d1t ${bdir}/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
  echo "uncompress_bz2 return code: $rc"
  return $rc
 }
@@ -104,13 +100,15 @@ uncompress_bz2()
 #
 uncompress_gz()
 {
- typeset fn="$1" rc=0 dir=""
+ typeset fn="$1" rc=0 dir=""; shift
+ typeset bdir="$*"
 
  [ ! -f "$fn" ] && return 1
 
- tar xmzf "${fn}"
+# tar xmzf "${fn}"
+ tar xzf "${fn}" -C "${bdir}"
  rc=$?
- [ "$rc" -eq 0 ] && { dir=$(ls -d1t $PWD/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
+ [ "$rc" -eq 0 ] && { dir=$(ls -d1t ${bdir}/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
  echo "uncompress_gz return code: $rc"
  return $rc
 }
@@ -134,14 +132,17 @@ uncompress()
 {
  typeset id="$1"
  typeset fn="$2"
+ typeset bdir="${SRCDIR}/${id}"
 
  [ ! -f "$fn" ] && { echo "Invalid file name: $fn"; return 1; }
+ mkdir -p "$bdir"
 
+ echo
  echo "$id: uncompressing $fn"
 
- [ "$fn" != "${fn%.xz}" ] && { dir=$(uncompress_xz "${fn}"); save_srcdir $id $dir; return $?; }
- [ "$fn" != "${fn%.bz2}" ] && { dir=$(uncompress_bz2 "${fn}"); save_srcdir $id $dir; return $?; }
- [ "$fn" != "${fn%.gz}" ] && { dir=$(uncompress_gz "${fn}"); save_srcdir $id $dir; return $?; }
+ [ "$fn" != "${fn%.xz}" ] && { dir=$(uncompress_xz "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
+ [ "$fn" != "${fn%.bz2}" ] && { dir=$(uncompress_bz2 "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
+ [ "$fn" != "${fn%.gz}" ] && { dir=$(uncompress_gz "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
 
  echo "uncompress: Can't handle $fn type"
  return 1
@@ -230,7 +231,7 @@ build_apr()
 build_bison()
 {
  uncompress bison $fn_bison || { echo "Failed uncompress for: $fn_bison"; return 1; }
- build_gnuconf bison $srcdir_bison
+ build_gnuconf bison $srcdir_bison MAKEINFO=:
  return $?
 }
 
@@ -253,13 +254,12 @@ build_autoconf()
  return $?
 }
 
-
 #
 #
 build_pcre()
 {
  uncompress pcre $fn_pcre || { echo "Failed uncompress for: $fn_pcre"; return 1; }
- build_gnuconf pcre $srcdir_pcre AUTOCONF=: AUTOHEADER=: AUTOMAKE=: ACLOCAL=:
+ build_gnuconf pcre $srcdir_pcre # AUTOCONF=: AUTOHEADER=: AUTOMAKE=: ACLOCAL=:
  return $?
 }
 
@@ -354,10 +354,6 @@ download
 # uncompress $x
 #done
 build_bison || exit 1
-
-build_automake || exit 1
-
-build_autoconf || exit 1
 
 build_pcre || exit 1
 
