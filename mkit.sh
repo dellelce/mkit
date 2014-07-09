@@ -39,6 +39,9 @@ get_srcget()
  ln -sf srcget-${srcget} srcget
 }
 
+#
+# downloaded
+#
 download()
 {
  typeset pkg
@@ -70,7 +73,7 @@ uncompress_xz()
 {
  typeset fn="$1"
 
- [ ! -f "$fn" ] && return 1
+ [ ! -f "$fn" ] && { echo "uncompress: $fn is not a file."; return 1; }
 
  xz -dc < "${fn}" | tar xmf -
  rc=$?
@@ -120,6 +123,7 @@ save_srcdir()
  typeset dir="$2"
 
  [ -d "$dir" ] && { eval "srcdir_${id}=${dir}"; return 0; }
+ echo "save_srcdir: $dir is not a directory."
  return 1
 }
 
@@ -130,7 +134,7 @@ uncompress()
  typeset id="$1"
  typeset fn="$2"
 
- [ ! -f "$fn" ] && return 1
+ [ ! -f "$fn" ] && { echo "Invalid file name: $fn"; return 1; }
 
  echo "$id: uncompressing $fn"
 
@@ -147,9 +151,9 @@ uncompress()
 
 build_sanity_gnuconf()
 {
- set -x
  [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; } 
  [ ! -d "$1" -o ! -f "$1/configure" ] && { echo "build_sanity_gnuconf: invalid srcdirectory"; return 1; }
+ return 0
 }
 
 build_logger()
@@ -167,16 +171,18 @@ build_logger()
 
 build_gnuconf()
 {
- typeset rc_conf rc_make rc_makeinstall
+ typeset rc=0 rc_conf=0 rc_make=0 rc_makeinstall=0
  typeset id="$1"; shift   # build id
  typeset dir="$1"; shift  # src directory
  typeset pkgbuilddir="$BUILDDIR/$id"
 
- build_sanity_gnuconf $dir || return $?
+ build_sanity_gnuconf $dir
+ rc=$? 
+ [ $rc -ne 0 ] &&  { echo "build_gnuconf: build sanity tests failed for $dir"; return $rc; }
 
  [ ! -d "$pkgbuilddir" ] && { mkdir -p "$pkgbuilddir"; } || { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
 
- cd "$pkgbuilddir" || { echo "Failed to change to build directory: " $pkgbuilddir; return 1; } 
+ cd "$pkgbuilddir" || { echo "build_gnuconf: Failed to change to build directory: " $pkgbuilddir; return 1; } 
 
  echo
  echo "Building $id in $pkgbuilddir at $(date)"
@@ -184,14 +190,13 @@ build_gnuconf()
 
  echo "Configuring..."
  {
-  set -x
   $dir/configure --prefix="${prefix}" $* 2>&1
   rc_conf=$?
-  set +x
  } | build_logger ${id}_configure
 
  [ "$rc_conf" -ne 0 ] && return $rc_conf
 
+ echo "Running make..."
  {
   make 2>&1
   rc_make=$?
@@ -199,10 +204,13 @@ build_gnuconf()
 
  [ "$rc_make" -ne 0 ] && return $rc_make
 
+ echo "Running make install..."
  {
   make install 2>&1 
   rc_makeinstall=$?
  } | build_logger ${id}_makeinstall
+
+ cd "$WORKDIR"
 
  return $rc_makeinstall
 }
@@ -213,24 +221,28 @@ build_apr()
 {
  uncompress apr $fn_apr || { echo "Failed uncompress for: $fn_apr"; return 1; }
  build_gnuconf apr $srcdir_apr
+ return $?
 }
 
 build_aprutil()
 {
  uncompress aprutil $fn_aprutil || { echo "Failed uncompress for: $fn_aprutil"; return 1; }
  build_gnuconf aprutil $srcdir_aprutil --with-apr="${prefix}"
+ return $?
 }
 
 build_httpd()
 {
  uncompress httpd $fn_httpd || { echo "Failed uncompress for: $fn_httpd"; return 1; }
  build_gnuconf httpd $srcdir_httpd --with-apr="${prefix}" --with-apr-util="${prefix}"
+ return $?
 }
 
 build_libxml2()
 {
  uncompress libxml2 $fn_libxml2 || { echo "Failed uncompress for: $fn_libxml2"; return 1; }
  build_gnuconf libxml2 $srcdir_libxml2 --without-python
+ return $?
 }
 
 build_php()
@@ -239,6 +251,7 @@ build_php()
  build_gnuconf php $srcdir_php --enable-shared --with-libxml-dir=${prefix} \
                  --with-openssl=${prefix} --with-openssl-dir=${prefix}     \
                  --with-apxs2=${prefix}/bin/apxs
+ return $?
 }
 
 build_openssl()
@@ -301,7 +314,6 @@ download
 # echo
 # uncompress $x
 #done
-
 build_openssl || exit 1
 
 build_apr || exit 1
