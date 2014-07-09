@@ -63,7 +63,6 @@ getfilename()
  eval echo "\$fn_${pkg}"
 }
 
-
 #
 # xz
 #
@@ -133,6 +132,8 @@ uncompress()
 
  [ ! -f "$fn" ] && return 1
 
+ echo "$id: uncompressing $fn"
+
  [ "$fn" != "${fn%.xz}" ] && { dir=$(uncompress_xz "${fn}"); save_srcdir $id $dir; return $?; }
  [ "$fn" != "${fn%.bz2}" ] && { dir=$(uncompress_bz2 "${fn}"); save_srcdir $id $dir; return $?; }
  [ "$fn" != "${fn%.gz}" ] && { dir=$(uncompress_gz "${fn}"); save_srcdir $id $dir; return $?; }
@@ -146,7 +147,9 @@ uncompress()
 
 build_sanity_gnuconf()
 {
- [ ! -d "$1" -o ! -f "$d/configure"] && return 1
+ set -x
+ [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; } 
+ [ ! -d "$1" -o ! -f "$1/configure"] && { echo "build_sanity_gnuconf: invalid srcdirectory"; return 1; }
 }
 
 build_logger()
@@ -168,11 +171,13 @@ build_gnuconf()
  typeset id="$1"; shift   # build id
  typeset dir="$1"; shift  # src directory
 
- build_sanity_gnuconf $d || return $?
+ build_sanity_gnuconf $dir || return $?
+
  echo
  echo "Building $id at $(date)"
  echo
 
+ echo "Configuring..."
  {
   set -x
   $dir/configure --prefix="${prefix}" $* 2>&1
@@ -234,6 +239,7 @@ build_php()
 build_openssl()
 {
  uncompress openssl $fn_openssl || { echo "Failed uncompress for: $fn_openssl"; return 1; }
+ export rc=0
  
  (
    echo
@@ -242,24 +248,27 @@ build_openssl()
 
    cd $srcdir_openssl || return 1
 
+   echo "Configuring..."
    {
-     ./config --prefix $prefix 2>&1
+     ./config --prefix=$prefix 2>&1
      rc=$?
    } | build_logger openssl_configure
 
    [ $rc -eq 0 ]  || { echo ; echo "Failed configure for OpenSSL";  return 1; } 
 
+   echo "Running make..."
    {
      make 2>&1
      rc=$?
-   } | build_logger make_configure
+   } | build_logger openssl_make
 
    [ $rc -eq 0 ]  || { echo ; echo "Failed make for OpenSSL";  return 1; } 
 
+   echo "Running make install..."
    {
      make install 2>&1
      rc=$?
-   } | build_logger makeinstall_configure
+   } | build_logger openssl_makeinstall
 
    [ $rc -eq 0 ]  || { echo ; echo "Failed make install for OpenSSL";  return 1; } 
  ) 
@@ -288,16 +297,16 @@ download
 # uncompress $x
 #done
 
-build_openssl
+build_openssl || exit 1
 
-build_apr
+build_apr || exit 1
 
-build_aprutil
+build_aprutil || exit 1
 
-build_libxml2
+build_libxml2 || exit 1
 
-build_httpd
+build_httpd || exit 1
 
-build_php
+build_php || exit 1
 
 ### EOF ###
