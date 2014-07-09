@@ -11,7 +11,7 @@ export WORKDIR="$PWD"
 export SRCGET="$WORKDIR/srcget"
 export PATH="$PATH:$SRCGET"
 export SRCTARGET="$PWD/src"
-SRCLIST="automake apr aprutil autoconf httpd openssl php pcre libxml2"
+SRCLIST="bison apr aprutil httpd openssl php pcre libxml2"
 prefix="$HOME/i"
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
@@ -225,6 +225,17 @@ build_apr()
  return $?
 }
 #
+
+#
+build_bison()
+{
+ uncompress bison $fn_bison || { echo "Failed uncompress for: $fn_bison"; return 1; }
+ build_gnuconf bison $srcdir_bison
+ return $?
+}
+
+#
+#
 #
 build_automake()
 {
@@ -248,7 +259,7 @@ build_autoconf()
 build_pcre()
 {
  uncompress pcre $fn_pcre || { echo "Failed uncompress for: $fn_pcre"; return 1; }
- build_gnuconf pcre $srcdir_pcre
+ build_gnuconf pcre $srcdir_pcre AUTOCONF=: AUTOHEADER=: AUTOMAKE=: ACLOCAL=:
  return $?
 }
 
@@ -342,6 +353,8 @@ download
 # echo
 # uncompress $x
 #done
+build_bison || exit 1
+
 build_automake || exit 1
 
 build_autoconf || exit 1
