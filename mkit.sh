@@ -7,7 +7,7 @@
 
 ### ENV ###
 
-export WORKDIR="$PWD"
+export WORKDIR="$PWD/mkit_workdir"
 export SRCGET="$WORKDIR/srcget"
 export PATH="$PATH:$SRCGET"
 SRCLIST="bison apr aprutil httpd openssl php pcre libxml2"
@@ -18,6 +18,15 @@ export SRCDIR="$PWD/src_${TIMESTAMP}"
 export srcget="0.0.5"  #  srcget version
 export LOGSDIR="${WORKDIR}/logs"
 export prefix="${1:-$PWD}"
+
+# test prefix for relative directory
+
+[ ${prefix} != ${prefix#./} ] &&
+{
+  _prefix="${prefix#./}"
+  prefix="${PWD}/${_prefix}"
+}
+
 export PATH="$prefix/bin:$PATH"
 
 mkdir -p "$BUILDDIR"
