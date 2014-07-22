@@ -10,7 +10,7 @@
 export WORKDIR="$PWD/mkit_workdir"
 export SRCGET="$WORKDIR/srcget"
 export PATH="$PATH:$SRCGET"
-SRCLIST="bison apr aprutil httpd openssl php pcre libxml2"
+SRCLIST="m4 autocinf suhosin bison apr aprutil httpd openssl php pcre libxml2"
 prefix="$HOME/i"
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
@@ -226,6 +226,36 @@ build_gnuconf()
  return $rc_makeinstall
 }
 
+### 
+
+build_m4()
+{
+ uncompress m4 $fn_m4 || { echo "Failed uncompress for: $fn_m4"; return 1; }
+ build_gnuconf m4 $srcdir_m4
+ return $?
+}
+
+build_autoconf()
+{
+ uncompress autoconf $fn_autoconf || { echo "Failed uncompress for: $fn_autoconf"; return 1; }
+ build_gnuconf autoconf $srcdir_autoconf
+ return $?
+}
+
+build_suhosin()
+{
+ uncompress suhosin $fn_suhosin || { echo "Failed uncompress for: $fn_suhosin"; return 1; }
+ {
+   echo "Running phpize in $srcdir_suhosin"
+   cwd="$PWD"
+   cd $srcdir_suhosin
+   phpize
+   cd "$cwd"
+ }
+ build_gnuconf suhosin $srcdir_suhosin
+ return $?
+}
+
 #
 #
 build_apr()
@@ -362,6 +392,11 @@ download
 # echo
 # uncompress $x
 #done
+
+build_m4 || exit 1
+
+build_autoconf || exit 1
+
 build_bison || exit 1
 
 build_pcre || exit 1
@@ -377,5 +412,7 @@ build_libxml2 || exit 1
 build_httpd || exit 1
 
 build_php || exit 1
+
+build_suhosin || exit 1
 
 ### EOF ###
