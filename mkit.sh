@@ -10,12 +10,12 @@
 export WORKDIR="$PWD/mkit_workdir"
 export SRCGET="$WORKDIR/srcget"
 export PATH="$PATH:$SRCGET"
-SRCLIST="m4 autocinf suhosin bison apr aprutil httpd openssl php pcre libxml2"
+SRCLIST="m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2"
 prefix="$HOME/i"
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
 export SRCDIR="$PWD/src_${TIMESTAMP}"
-export srcget="0.0.5"  #  srcget version
+export srcget="0.0.5.2"  #  srcget version
 export LOGSDIR="${WORKDIR}/logs"
 export prefix="${1:-$PWD}"
 
@@ -38,9 +38,10 @@ mkdir -p "$SRCDIR"
 # download srcget
 get_srcget()
 {
- wget -q -O ${srcget}.tar.gz https://github.com/dellelce/srcget/archive/${srcget}.tar.gz
- tar xzf ${srcget}.tar.gz 
+ wget -q -O ${srcget}.tar.gz https://github.com/dellelce/srcget/archive/${srcget}.tar.gz || return 1
+ tar xzf ${srcget}.tar.gz  || return 2
  ln -sf srcget-${srcget} srcget
+ export PATH="$PWD/srcget:$PATH"
 }
 
 #
@@ -53,6 +54,8 @@ download()
  for pkg in $SRCLIST
  do
    fn=$(srcget.sh -n $pkg)
+   fn="$PWD/$fn"
+   [ ! -f "$fn" ] && { echo "Failed downloading $pkg"; return 1; }
    echo $pkg " has been downloaded as: " $fn
    eval "fn_${pkg}=$fn"
  done
@@ -114,7 +117,6 @@ uncompress_gz()
 
  [ ! -f "$fn" ] && return 1
 
-# tar xmzf "${fn}"
  tar xzf "${fn}" -C "${bdir}"
  rc=$?
  [ "$rc" -eq 0 ] && { dir=$(ls -d1t ${bdir}/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
@@ -378,10 +380,10 @@ echo "Install directory is ${prefix}"
 echo
 
 # download srcget
- get_srcget
+get_srcget || { echo "Failed getting srcget, exiting..."; exit 1; }
 
 # download latest archives / builds name mapping
-download
+download || { echo "Download failed for one of the components"; exit 1; }
 
 
 #for x in *.bz2 *.gz *.xz
