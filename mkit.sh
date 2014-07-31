@@ -10,7 +10,7 @@
 export WORKDIR="$PWD/mkit_workdir"
 export SRCGET="$WORKDIR/srcget"
 export PATH="$PATH:$SRCGET"
-SRCLIST="m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2"
+SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2"
 prefix="$HOME/i"
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
@@ -229,6 +229,12 @@ build_gnuconf()
 }
 
 ### 
+build_sqlite3()
+{
+ uncompress sqlite3 $fn_sqlite3 || { echo "Failed uncompress for: $fn_sqlite3"; return 1; }
+ build_gnuconf sqlite3 $srcdir_sqlite3
+ return $?
+}
 
 build_m4()
 {
@@ -394,6 +400,8 @@ download || { echo "Download failed for one of the components"; exit 1; }
 # echo
 # uncompress $x
 #done
+
+build_sqlite3 || exit 1
 
 build_m4 || exit 1
 
