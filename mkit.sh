@@ -15,7 +15,7 @@ prefix="$HOME/i"
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
 export SRCDIR="$PWD/src_${TIMESTAMP}"
-export srcget="0.0.5.2"  #  srcget version
+export srcget="0.0.5.4"  #  srcget version
 export LOGSDIR="${WORKDIR}/logs"
 export prefix="${1:-$PWD}"
 
