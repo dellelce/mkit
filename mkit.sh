@@ -335,8 +335,8 @@ build_php()
 {
  uncompress php $fn_php || { echo "Failed uncompress for: $fn_php"; return 1; }
  build_gnuconf php $srcdir_php --enable-shared --with-libxml-dir=${prefix} \
-                 --with-openssl=${prefix} --with-openssl-dir=${prefix}     \
-                 --with-apxs2=${prefix}/bin/apxs
+                 --with-openssl=${prefix} --with-openssl-dir="${prefix}"     \
+                 --with-apxs2="${prefix}/bin/apxs"
  return $?
 }
 
@@ -391,15 +391,7 @@ get_srcget || { echo "Failed getting srcget, exiting..."; exit 1; }
 # download latest archives / builds name mapping
 download || { echo "Download failed for one of the components"; exit 1; }
 
-
-#for x in *.bz2 *.gz *.xz
-#do
-# [ ! -f "$x" ] && continue
-# echo 
-# echo $x
-# echo
-# uncompress $x
-#done
+## Build steps
 
 build_sqlite3 || exit 1
 
