@@ -11,12 +11,13 @@ export WORKDIR="$PWD/mkit_workdir"
 export SRCGET="$WORKDIR/srcget"
 export PATH="$PATH:$SRCGET"
 SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2"
-prefix="$HOME/i"
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
 export SRCDIR="$PWD/src_${TIMESTAMP}"
 export srcget="0.0.5.4"  #  srcget version
 export LOGSDIR="${WORKDIR}/logs"
+
+## need to be more explicit here?
 export prefix="${1:-$PWD}"
 
 # test prefix for relative directory
