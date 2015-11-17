@@ -14,7 +14,7 @@ SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil httpd openssl php pcre li
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
 export SRCDIR="$PWD/src_${TIMESTAMP}"
-export srcget="0.0.5.4"  #  srcget version
+export srcget="0.0.5.5"  #  srcget version
 export LOGSDIR="${WORKDIR}/logs"
 
 ## need to be more explicit here?
