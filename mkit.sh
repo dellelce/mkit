@@ -7,14 +7,15 @@
 
 ### ENV ###
 
+export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export WORKDIR="$PWD/mkit_workdir"
 export SRCGET="$WORKDIR/srcget"
 export PATH="$PATH:$SRCGET"
 SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2"
-export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
 export SRCDIR="$PWD/src_${TIMESTAMP}"
 export srcget="0.0.5.5"  #  srcget version
+export srcgetUrl="https://github.com/dellelce/srcget/archive"
 export LOGSDIR="${WORKDIR}/logs"
 
 ## need to be more explicit here?
@@ -39,7 +40,9 @@ mkdir -p "$SRCDIR"
 # download srcget
 get_srcget()
 {
- wget -q -O ${srcget}.tar.gz https://github.com/dellelce/srcget/archive/${srcget}.tar.gz || return 1
+ wget -q -O ${srcget}.tar.gz               \
+            "${srcgetUrl}/${srcget}.tar.gz" || return 1
+
  tar xzf ${srcget}.tar.gz  || return 2
  ln -sf srcget-${srcget} srcget
  export PATH="$PWD/srcget:$PATH"
@@ -87,6 +90,7 @@ uncompress_xz()
  xz -dc < "${fn}" | tar xf - -C "${bdir}"
  rc=$?
  [ "$rc" -eq 0 ] && { dir=$(ls -d1t ${bdir}/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
+
  echo "uncompress_xz return code: $rc"
  return $rc
 }
@@ -104,6 +108,7 @@ uncompress_bz2()
  tar xjf  "${fn}" -C "${bdir}"
  rc=$?
  [ "$rc" -eq 0 ] && { dir=$(ls -d1t ${bdir}/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
+
  echo "uncompress_bz2 return code: $rc"
  return $rc
 }
@@ -121,6 +126,7 @@ uncompress_gz()
  tar xzf "${fn}" -C "${bdir}"
  rc=$?
  [ "$rc" -eq 0 ] && { dir=$(ls -d1t ${bdir}/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
+
  echo "uncompress_gz return code: $rc"
  return $rc
 }
@@ -134,6 +140,7 @@ save_srcdir()
  typeset dir="$2"
 
  [ -d "$dir" ] && { eval "srcdir_${id}=${dir}"; return 0; }
+
  echo "save_srcdir: $dir is not a directory."
  return 1
 }
@@ -167,6 +174,7 @@ build_sanity_gnuconf()
 {
  [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; } 
  [ ! -d "$1" -o ! -f "$1/configure" ] && { echo "build_sanity_gnuconf: invalid srcdirectory"; return 1; }
+
  return 0
 }
 
@@ -194,9 +202,12 @@ build_gnuconf()
  rc=$? 
  [ $rc -ne 0 ] &&  { echo "build_gnuconf: build sanity tests failed for $dir"; return $rc; }
 
- [ ! -d "$pkgbuilddir" ] && { mkdir -p "$pkgbuilddir"; } || { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+ [ ! -d "$pkgbuilddir" ] && 
+   { mkdir -p "$pkgbuilddir"; } ||
+   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
 
- cd "$pkgbuilddir" || { echo "build_gnuconf: Failed to change to build directory: " $pkgbuilddir; return 1; } 
+ cd "$pkgbuilddir" ||
+   { echo "build_gnuconf: Failed to change to build directory: " $pkgbuilddir; return 1; } 
 
  echo
  echo "Building $id in $pkgbuilddir at $(date)"
