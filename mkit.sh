@@ -7,18 +7,24 @@
 
 ### ENV ###
 
+# built-in defaults
+SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2"
+export srcget="0.0.5.5"  #  srcget version
+export srcgetUrl="https://github.com/dellelce/srcget/archive"
+
+# "external" options
+ . mkit.config.sh
+
+# 
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export WORKDIR="$PWD/mkit_workdir"
 export SRCGET="$WORKDIR/srcget"
 export PATH="$PATH:$SRCGET"
-SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2"
 export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
 export SRCDIR="$PWD/src_${TIMESTAMP}"
-export srcget="0.0.5.5"  #  srcget version
-export srcgetUrl="https://github.com/dellelce/srcget/archive"
 export LOGSDIR="${WORKDIR}/logs"
 
-## need to be more explicit here?
+## "prefix" is the usual "GNU prefix" option i.e. the root of our install
 export prefix="${1:-$PWD}"
 
 # test prefix for relative directory
@@ -35,7 +41,6 @@ mkdir -p "$BUILDDIR"
 mkdir -p "$LOGSDIR"
 mkdir -p "$SRCDIR"
 
- . mkit.config.sh
 
 ### FUNCTIONS ###
 
