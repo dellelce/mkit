@@ -55,28 +55,28 @@ download || { echo "Download failed for one of the components"; exit 1; }
 
 ## Build steps
 
-build_sqlite3 || exit 1
+build_sqlite3 || exit $?
 
-build_m4 || exit 1
+build_m4 || exit $?
 
-build_autoconf || exit 1
+build_autoconf || exit $?
 
-build_bison || exit 1
+build_bison || exit $?
 
-build_pcre || exit 1
+build_pcre || exit $?
 
-build_openssl || exit 1
+build_openssl || exit $?
 
-build_apr || exit 1
+build_apr || exit $?
 
-build_aprutil || exit 1
+build_aprutil || exit $?
 
-build_libxml2 || exit 1
+build_libxml2 || exit $?
 
-build_httpd || exit 1
+build_httpd || exit $?
 
-build_php || exit 1
+build_php || exit $?
 
-build_suhosin || exit 1
+build_suhosin || exit $?
 
 ### EOF ###
