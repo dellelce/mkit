@@ -163,7 +163,8 @@ build_logger()
 
 build_gnuconf()
 {
- typeset rc=0 rc_conf=0 rc_make=0 rc_makeinstall=0
+ typeset rc=0
+ export rc_conf=0 rc_make=0 rc_makeinstall=0
  typeset id="$1"; shift   # build id
  typeset dir="$1"; shift  # src directory
  typeset pkgbuilddir="$BUILDDIR/$id"
@@ -177,7 +178,19 @@ build_gnuconf()
    { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
 
  cd "$pkgbuilddir" ||
-   { echo "build_gnuconf: Failed to change to build directory: " $pkgbuilddir; return 1; } 
+ {
+  echo "build_gnuconf: Failed to change to build directory: " $pkgbuilddir;
+  return 1;
+ } 
+
+ # some "configure"s do not supporting building in a directory different than the source directory
+ [ "$opt" == "BADCONFIGURE" ] &&
+ {
+  for bad in $dir/*
+  do
+    ln -s "$bad" .
+  done
+ }
 
  echo
  echo "Building $id in $pkgbuilddir at $(date)"
@@ -305,7 +318,7 @@ build_aprutil()
 build_mod_wsgi()
 {
  uncompress mod_wsgi $fn_mod_wsgi || { echo "Failed uncompress for: $fn_mod_wsgi"; return 1; }
- build_gnuconf mod_wsgi $srcdir_mod_wsgi --with-apxs="${prefix}/bin/apxs"
+ opt="BADCONFIGURE" build_gnuconf mod_wsgi $srcdir_mod_wsgi --with-apxs="${prefix}/bin/apxs"
  return $?
 }
 
