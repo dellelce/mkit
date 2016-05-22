@@ -150,8 +150,9 @@ build_sanity_gnuconf()
 build_logger()
 {
  typeset logid="$1"
+ export LAST_LOG="${LOGSDIR}/${TIMESTAMP}_${logid}.log"
 
- cat >> "${LOGSDIR}/${TIMESTAMP}_${logid}.log"
+ cat >> "${LAST_LOG}"
 }
 
 #
