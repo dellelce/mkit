@@ -299,6 +299,17 @@ build_aprutil()
  return $?
 }
 
+#
+# mod_wsgi
+
+build_mod_wsgi()
+{
+ uncompress mod_wsgi $fn_mod_wsgi || { echo "Failed uncompress for: $fn_mod_wsgi"; return 1; }
+ build_gnuconf mod_wsgi $srcdir_mod_wsgi --with-apxs="${prefix}/bin/apxs"
+ return $?
+}
+
+
 build_httpd()
 {
  uncompress httpd $fn_httpd || { echo "Failed uncompress for: $fn_httpd"; return 1; }

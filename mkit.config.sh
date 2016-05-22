@@ -9,7 +9,7 @@
 
 ### ENV ###
 
- SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2"
+ SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2 mod_wsgi"
  export srcget="0.0.5.8"  #  srcget version
 
 ### EOF ###
