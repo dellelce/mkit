@@ -1,4 +1,4 @@
-mkit
+=== mkit ===
 
 Download and Build a complete PHP/Apache stack.
 
@@ -8,3 +8,9 @@ TODO:
   * YES: Add ability to re-use installed system component (use installed pcre instead of downloading it)
   * Give more options (i.e. force download)
   * Test if after "make install" component is actually there 
+
+REQUIREMENTS:
+  * gcc
+  * g++ (pcre)
+  * perl, Data/Dumper.pm 
+
