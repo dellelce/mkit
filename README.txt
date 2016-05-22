@@ -3,6 +3,8 @@ mkit
 Download and Build a complete PHP/Apache stack.
 
 TODO:
-  * Test if a component is needed (missing on the system)
+  * SANITY CHECKSS: Test if basic pre-requisites: gcc/g++ are there (we are not going to installed them!)
+  * NO: Test if a component is needed (missing on the system)
+  * YES: Add ability to re-use installed system component (use installed pcre instead of downloading it)
   * Give more options (i.e. force download)
   * Test if after "make install" component is actually there 
