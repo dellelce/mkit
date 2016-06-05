@@ -337,6 +337,22 @@ build_libxml2()
  return $?
 }
 
+#
+# python3
+#
+
+build_python3()
+{
+ uncompress php $fn_python3 || { echo "Failed uncompress for: $fn_python3"; return 1; }
+ build_gnuconf python3 $srcdir_python3
+
+ return $?
+}
+
+#
+# php
+#
+
 build_php()
 {
  uncompress php $fn_php || { echo "Failed uncompress for: $fn_php"; return 1; }
