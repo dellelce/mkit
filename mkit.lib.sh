@@ -318,7 +318,8 @@ build_aprutil()
 build_mod_wsgi()
 {
  uncompress mod_wsgi $fn_mod_wsgi || { echo "Failed uncompress for: $fn_mod_wsgi"; return 1; }
- opt="BADCONFIGURE" build_gnuconf mod_wsgi $srcdir_mod_wsgi --with-apxs="${prefix}/bin/apxs"
+ opt="BADCONFIGURE" build_gnuconf mod_wsgi $srcdir_mod_wsgi --with-apxs="${prefix}/bin/apxs" \
+                                       --with-python="${prefix}/bin/python3"
  return $?
 }
 
