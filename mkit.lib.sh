@@ -345,7 +345,7 @@ build_libxml2()
 build_python3()
 {
  uncompress python3 $fn_python3 || { echo "Failed uncompress for: $fn_python3"; return 1; }
- build_gnuconf python3 $srcdir_python3 LDFLAGS="${prefix}/lib"
+ build_gnuconf python3 $srcdir_python3 LDFLAGS="-L${prefix}/lib"
 
  return $?
 }
