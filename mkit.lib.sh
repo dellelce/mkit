@@ -339,6 +339,18 @@ build_libxml2()
 }
 
 #
+# zlib
+# Needed by some python packages
+#
+
+build_zlib()
+{
+ uncompress zlib $fn_zlib || { echo "Failed uncompress for: $fn_zlib"; return 1; }
+ build_gnuconf zlib $srcdir_zlib 
+ return $?
+}
+
+#
 # python3
 #
 
