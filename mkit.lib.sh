@@ -346,7 +346,7 @@ build_libxml2()
 build_zlib()
 {
  uncompress zlib $fn_zlib || { echo "Failed uncompress for: $fn_zlib"; return 1; }
- build_gnuconf zlib $srcdir_zlib 
+ opt="BADCONFIGURE" build_gnuconf zlib $srcdir_zlib 
  return $?
 }
 
