@@ -18,10 +18,11 @@ export srcgetUrl="https://github.com/dellelce/srcget/archive"
 # 
 export TIMESTAMP="$(date +%H%M_%d%m%y)"
 export WORKDIR="$PWD/mkit_workdir"
-export SRCGET="$WORKDIR/srcget"
+export SRCGET="${WORKDIR}/srcget"
 export PATH="$PATH:$SRCGET"
-export BUILDDIR="$WORKDIR/build_${TIMESTAMP}"
-export SRCDIR="$PWD/src_${TIMESTAMP}"
+export DOWNLOADS="${WORKDIR}/downloads"
+export BUILDDIR="${WORKDIR}/build_${TIMESTAMP}"
+export SRCDIR="${WORKDIR}/src_${TIMESTAMP}"
 export LOGSDIR="${WORKDIR}/logs"
 
 ## "prefix" is the usual "GNU prefix" option i.e. the root of our install
@@ -40,7 +41,7 @@ export PATH="$prefix/bin:$PATH"
 mkdir -p "$BUILDDIR"
 mkdir -p "$LOGSDIR"
 mkdir -p "$SRCDIR"
-
+mkdir -p "$DOWNLOADS"
 
 ### FUNCTIONS ###
 
@@ -70,6 +71,8 @@ build_bison || exit $?
 
 build_pcre || exit $?
 
+build_zlib || exit $?
+
 build_openssl || exit $?
 
 build_apr || exit $?
@@ -83,8 +86,6 @@ build_httpd || exit $?
 build_php || exit $?
 
 build_suhosin || exit $?
-
-build_zlib || exit $?
 
 build_python3 || exit $?
 
