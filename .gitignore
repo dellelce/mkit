@@ -3,3 +3,5 @@ logs
 *.xz
 *.gz
 srcget*
+mkit_workdir
+tmp
