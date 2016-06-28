@@ -314,10 +314,13 @@ build_pcre()
  return $?
 }
 
+#
+# APR-Util
+#
 build_aprutil()
 {
  uncompress aprutil $fn_aprutil || { echo "Failed uncompress for: $fn_aprutil"; return 1; }
- build_gnuconf aprutil $srcdir_aprutil --with-apr="${prefix}"
+ build_gnuconf aprutil $srcdir_aprutil --with-apr="${prefix}" --with-openssl="${prefix}" --with-crypto 
  return $?
 }
 
