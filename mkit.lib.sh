@@ -18,7 +18,7 @@ get_srcget()
 }
 
 #
-# downloaded
+# download
 #
 download()
 {
@@ -26,11 +26,15 @@ download()
 
  for pkg in $SRCLIST
  do
+   pushd "$DOWNLOADS" > /dev/null # using "pushd" to move to new directory - not portable
    fn=$(srcget.sh -n $pkg)
    fn="$PWD/$fn"
    [ ! -f "$fn" ] && { echo "Failed downloading $pkg"; return 1; }
    echo $pkg " has been downloaded as: " $fn
+
+   # save directory to a variable named after the package
    eval "fn_${pkg}=$fn"
+   popd > /dev/null
  done
 }
 
@@ -245,6 +249,11 @@ build_autoconf()
  return $?
 }
 
+#
+# suhosin
+#
+# suhosin requires phpize to be run in source directory
+#
 build_suhosin()
 {
  uncompress suhosin $fn_suhosin || { echo "Failed uncompress for: $fn_suhosin"; return 1; }
@@ -318,16 +327,23 @@ build_aprutil()
 build_mod_wsgi()
 {
  uncompress mod_wsgi $fn_mod_wsgi || { echo "Failed uncompress for: $fn_mod_wsgi"; return 1; }
- opt="BADCONFIGURE" build_gnuconf mod_wsgi $srcdir_mod_wsgi --with-apxs="${prefix}/bin/apxs" \
+ opt="BADCONFIGURE" build_gnuconf mod_wsgi $srcdir_mod_wsgi \
+                                       --with-apxs="${prefix}/bin/apxs" \
                                        --with-python="${prefix}/bin/python3"
  return $?
 }
 
-
+#
+# Apache HTTPD
+#
 build_httpd()
 {
  uncompress httpd $fn_httpd || { echo "Failed uncompress for: $fn_httpd"; return 1; }
- build_gnuconf httpd $srcdir_httpd --with-apr="${prefix}" --with-apr-util="${prefix}"
+ [ -x "${prefix}/bin/pkg-config" ] && { export PKGCONFIG="${prefix}/bin/pkg-config"; }
+ build_gnuconf httpd $srcdir_httpd \
+                               --with-apr="${prefix}"		\
+                               --with-apr-util="${prefix}"
+
  return $?
 }
 
@@ -335,6 +351,7 @@ build_libxml2()
 {
  uncompress libxml2 $fn_libxml2 || { echo "Failed uncompress for: $fn_libxml2"; return 1; }
  build_gnuconf libxml2 $srcdir_libxml2 --without-python
+
  return $?
 }
 
@@ -346,7 +363,10 @@ build_libxml2()
 build_zlib()
 {
  uncompress zlib $fn_zlib || { echo "Failed uncompress for: $fn_zlib"; return 1; }
+
+ # zlib's configure does not support building in a different directory than source
  opt="BADCONFIGURE" build_gnuconf zlib $srcdir_zlib 
+
  return $?
 }
 
@@ -370,7 +390,8 @@ build_python3()
 build_php()
 {
  uncompress php $fn_php || { echo "Failed uncompress for: $fn_php"; return 1; }
- build_gnuconf php $srcdir_php --enable-shared --with-libxml-dir=${prefix} \
+ build_gnuconf php $srcdir_php \
+                 --enable-shared --with-libxml-dir=${prefix} \
                  --with-openssl=${prefix} --with-openssl-dir="${prefix}"     \
                  --with-apxs2="${prefix}/bin/apxs"
  return $?
@@ -412,7 +433,6 @@ build_openssl()
 
    [ $rc -eq 0 ]  || { echo ; echo "Failed make install for OpenSSL";  return 1; } 
  ) 
-
 }
 
 ### EOF ###
