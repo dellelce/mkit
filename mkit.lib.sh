@@ -28,8 +28,9 @@ download()
  do
    pushd "$DOWNLOADS" > /dev/null # using "pushd" to move to new directory - not portable
    fn=$(srcget.sh -n $pkg)
+   srcget_rc=$?
    fn="$PWD/$fn"
-   [ ! -f "$fn" ] && { echo "Failed downloading $pkg"; return 1; }
+   [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
    echo $pkg " has been downloaded as: " $fn
 
    # save directory to a variable named after the package
@@ -320,7 +321,11 @@ build_pcre()
 build_aprutil()
 {
  uncompress aprutil $fn_aprutil || { echo "Failed uncompress for: $fn_aprutil"; return 1; }
- build_gnuconf aprutil $srcdir_aprutil --with-apr="${prefix}" --with-openssl="${prefix}" --with-crypto 
+ # both crypto/openssl & sqlite3 do not appear to work (link) with the following options.... ignoring for now
+ #build_gnuconf aprutil $srcdir_aprutil --with-apr="${prefix}" --with-openssl="${prefix}" --with-crypto 
+ #                     --with-sqlite3="${prefix}" --with-apr="${prefix}" # --with-openssl="${prefix}" --with-crypto 
+ build_gnuconf aprutil $srcdir_aprutil \
+                         --with-apr="${prefix}" 
  return $?
 }
 
@@ -342,7 +347,7 @@ build_mod_wsgi()
 build_httpd()
 {
  uncompress httpd $fn_httpd || { echo "Failed uncompress for: $fn_httpd"; return 1; }
- [ -x "${prefix}/bin/pkg-config" ] && { export PKGCONFIG="${prefix}/bin/pkg-config"; }
+ [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
  build_gnuconf httpd $srcdir_httpd \
                                --with-apr="${prefix}"		\
                                --with-apr-util="${prefix}"
