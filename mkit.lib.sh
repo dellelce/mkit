@@ -6,6 +6,19 @@
 
 ### FUNCTIONS ###
 
+# Wrapping bash's popd/pushd for "portability"
+pushdir()
+{
+ pushd "$1" > /dev/null
+ return "$?"
+}
+
+popdir()
+{
+ popd > /dev/null
+ return "$?"
+}
+
 # download srcget
 get_srcget()
 {
@@ -26,7 +39,7 @@ download()
 
  for pkg in $SRCLIST
  do
-   pushd "$DOWNLOADS" > /dev/null # using "pushd" to move to new directory - not portable
+   pushdir "$DOWNLOADS"
    fn=$(srcget.sh -n $pkg)
    srcget_rc=$?
    fn="$PWD/$fn"
@@ -35,7 +48,7 @@ download()
 
    # save directory to a variable named after the package
    eval "fn_${pkg}=$fn"
-   popd > /dev/null
+   popdir
  done
 }
 
@@ -193,7 +206,13 @@ build_gnuconf()
  {
   for bad in $dir/*
   do
-    ln -s "$bad" .
+   [ -d "$bad" ] &&
+   {
+    baseDir=$(basename "$bad")
+    mkdir -p "$baseDir" || return 1
+    continue
+   }
+   ln -s "$bad" .
   done
  }
 
