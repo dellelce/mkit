@@ -368,6 +368,7 @@ build_httpd()
  uncompress httpd $fn_httpd || { echo "Failed uncompress for: $fn_httpd"; return 1; }
  [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
  build_gnuconf httpd $srcdir_httpd \
+                               --with-z="${prefix}"		\
                                --with-apr="${prefix}"		\
                                --with-apr-util="${prefix}"
 
