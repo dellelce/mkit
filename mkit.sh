@@ -87,6 +87,8 @@ build_php || exit $?
 
 build_suhosin || exit $?
 
+build_readline || exit $?
+
 build_python3 || exit $?
 
 build_mod_wsgi || exit $?

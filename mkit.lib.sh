@@ -3,7 +3,6 @@
 # mkit functions library
 #
 
-
 ### FUNCTIONS ###
 
 # Wrapping bash's popd/pushd for "portability"
@@ -317,6 +316,17 @@ build_automake()
 }
 
 #
+# readline
+#
+build_readline()
+{
+ uncompress readline $fn_readline || { echo "Failed uncompress for: $fn_readline"; return 1; }
+ build_gnuconf readline $srcdir_readline
+ return $?
+}
+
+#
+# autoconf
 #
 build_autoconf()
 {
