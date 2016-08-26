@@ -56,6 +56,17 @@ echo
 # download srcget
 get_srcget || { echo "Failed getting srcget, exiting..."; exit 1; }
 
+# the next function (download) uses the variable SRCLIST to determine which packages to download
+# TODO: check if perl is not installed at all?
+
+eval $(getPerlVersions)
+
+[ "$PERL_REVISION" -eq 5 -a "$PERL_VERSION" -lt 10 ] &&
+{
+ export SRCLIST="perl ${SRCLIST}"
+ export PERL_NEEDED=1
+}
+
 # download latest archives / builds name mapping
 download || { echo "Download failed for one of the components"; exit 1; }
 
@@ -72,6 +83,13 @@ build_bison || exit $?
 build_pcre || exit $?
 
 build_zlib || exit $?
+
+[ "$PERL_NEEDED" -eq 1] &&
+{
+ build_perl
+ rc=$?
+ [ "$rc" -ne 0 ] && return "$rc"
+}
 
 build_openssl || exit $?
 
