@@ -84,7 +84,7 @@ build_pcre || exit $?
 
 build_zlib || exit $?
 
-[ "$PERL_NEEDED" -eq 1] &&
+[ "$PERL_NEEDED" -eq 1 ] &&
 {
  build_perl
  rc=$?
