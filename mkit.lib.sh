@@ -212,6 +212,68 @@ build_logger()
 }
 
 #
+# Build perl - custom function only for perl
+
+build_perl()
+{
+ typeset rc=0
+ export rc_conf=0 rc_make=0 rc_makeinstall=0
+ typeset id="perl"        # build id
+ typeset dir="$1"; shift  # src directory
+ typeset pkgbuilddir="$BUILDDIR/$id"
+
+ # No Sanity checks!
+
+ # Other steps
+ [ ! -d "$pkgbuilddir" ] && 
+   { mkdir -p "$pkgbuilddir"; } ||
+   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+
+ cd "$pkgbuilddir" ||
+ {
+  echo "build_perl: Failed to change to build directory: " $pkgbuilddir;
+  return 1;
+ } 
+
+ echo
+ echo "Building Perl in $pkgbuilddir at $(date)"
+ echo
+
+ echo "Configuring..."
+ {
+  $dir/Configure  -Dprefix="${prefix}"          \
+                  -Dvendorprefix="${prefix}"    \
+                  -Dman1dir=${prefix}/man/man1  \
+                  -Dman3dir=${prefix}/man3      \
+                  -Duseshrplib                  \
+                  $* 2>&1
+  rc_conf=$?
+ } | build_logger ${id}_configure
+
+ [ "$rc_conf" -ne 0 ] && return $rc_conf
+
+ echo "Running make..."
+ {
+  make 2>&1
+  rc_make=$?
+ } | build_logger ${id}_make
+
+ [ "$rc_make" -ne 0 ] && return $rc_make
+
+ echo "Running make install..."
+ {
+  make install 2>&1 
+  rc_makeinstall=$?
+ } | build_logger ${id}_makeinstall
+
+ cd "$WORKDIR"
+
+ return $rc_makeinstall
+}
+
+#
+
+#
 # Build  functions need to be executed from build directory
 #
 # all build here use GNU Configure
