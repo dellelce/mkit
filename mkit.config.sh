@@ -10,6 +10,6 @@
 ### ENV ###
 
  SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2 zlib mod_wsgi readline python3 "
- export srcget="0.0.6.1"  #  srcget version
+ export srcget="0.0.6.2"  #  srcget version
 
 ### EOF ###
