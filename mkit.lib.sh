@@ -194,7 +194,6 @@ uncompress()
 
 #
 #
-
 build_sanity_gnuconf()
 {
  [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; } 
@@ -214,11 +213,11 @@ build_logger()
 #
 # Build perl - custom function only for perl
 
-build_perl()
+build_perl_core()
 {
  typeset rc=0
  export rc_conf=0 rc_make=0 rc_makeinstall=0
- typeset id="perl"        # build id
+ typeset id="$1";  shift  # build id
  typeset dir="$1"; shift  # src directory
  typeset pkgbuilddir="$BUILDDIR/$id"
 
@@ -241,7 +240,8 @@ build_perl()
 
  echo "Configuring..."
  {
-  $dir/Configure  -Dprefix="${prefix}"          \
+  $dir/Configure  -des                          \
+                  -Dprefix="${prefix}"          \
                   -Dvendorprefix="${prefix}"    \
                   -Dman1dir=${prefix}/man/man1  \
                   -Dman3dir=${prefix}/man3      \
@@ -271,14 +271,17 @@ build_perl()
  return $rc_makeinstall
 }
 
-#
+build_perl()
+{
+ uncompress perl $fn_perl || { echo "Failed uncompress for: $fn_perl"; return 1; }
+ build_perl_core perl $srcdir_perl 
+}
 
 #
 # Build  functions need to be executed from build directory
 #
 # all build here use GNU Configure
 #
-
 build_gnuconf()
 {
  typeset rc=0
@@ -304,14 +307,19 @@ build_gnuconf()
  # some "configure"s do not supporting building in a directory different than the source directory
  [ "$opt" == "BADCONFIGURE" ] &&
  {
-  for bad in $dir/*
+  objList=$(find $dir)
+  for bad in $objList
   do
+   # Directories
    [ -d "$bad" ] &&
    {
     baseDir=$(basename "$bad")
-    mkdir -p "$baseDir" || return 1
+    mkdir -p "$baseDir"
+    rc=$?
+    [ "$rc" -ne 0 ] && return 1
     continue
    }
+   # Files
    ln -s "$bad" .
   done
  }
@@ -378,11 +386,11 @@ build_suhosin()
 {
  uncompress suhosin $fn_suhosin || { echo "Failed uncompress for: $fn_suhosin"; return 1; }
  {
-   echo "Running phpize in $srcdir_suhosin"
-   cwd="$PWD"
-   cd $srcdir_suhosin
-   phpize
-   cd "$cwd"
+  echo "Running phpize in $srcdir_suhosin"
+  cwd="$PWD"
+  cd $srcdir_suhosin
+  phpize
+  cd "$cwd"
  }
  build_gnuconf suhosin $srcdir_suhosin
  return $?
