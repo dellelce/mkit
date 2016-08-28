@@ -65,6 +65,11 @@ eval $(getPerlVersions)
 {
  export SRCLIST="perl ${SRCLIST}"
  export PERL_NEEDED=1
+ cat << EOF
+   Detected version of perl is ${PERL_REVISION}.${PERL_VERSION}.${PERL_SUBVERSION} minimum required version is 5.10.
+   Will download and build local version.
+
+EOF
 }
 
 # download latest archives / builds name mapping
@@ -88,7 +93,7 @@ build_zlib || exit $?
 {
  build_perl
  rc=$?
- [ "$rc" -ne 0 ] && return "$rc"
+ [ "$rc" -ne 0 ] && exit "$rc"
 }
 
 build_openssl || exit $?
@@ -101,9 +106,12 @@ build_libxml2 || exit $?
 
 build_httpd || exit $?
 
-build_php || exit $?
+[ "$PHP_NEEDED" == 1 ] &&
+{
+ build_php || exit $?
 
-build_suhosin || exit $?
+ build_suhosin || exit $?
+}
 
 build_readline || exit $?
 
