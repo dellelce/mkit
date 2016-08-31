@@ -315,14 +315,14 @@ build_gnuconf()
   #make directores
   for bad in $dirList
   do
-   baseDir=${bad#/$dir} #remove "base" directory
+   baseDir=${bad#${dir}/} #remove "base" directory
    mkdir -p "$baseDir" || return "$?"
   done
 
   # link files
   for bad in $fileList
   do
-   baseFile=${bad#/$dir} #remove "base" directory
+   baseFile=${bad#${dir}/} #remove "base" directory
    ln -s "$bad" "$baseFile" || return "$?"
   done
  }
