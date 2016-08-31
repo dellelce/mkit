@@ -305,22 +305,25 @@ build_gnuconf()
  } 
 
  # some "configure"s do not supporting building in a directory different than the source directory
+ # TODO: cwd to "$dir"
+
  [ "$opt" == "BADCONFIGURE" ] &&
  {
-  objList=$(find $dir)
-  for bad in $objList
+  dirList=$(find $dir -type d)
+  fileList=$(find $dir -type f)
+
+  #make directores
+  for bad in $dirList
   do
-   # Directories
-   [ -d "$bad" ] &&
-   {
-    baseDir=$(basename "$bad")
-    mkdir -p "$baseDir"
-    rc=$?
-    [ "$rc" -ne 0 ] && return 1
-    continue
-   }
-   # Files
-   ln -s "$bad" .
+   baseDir=${bad#/$dir} #remove "base" directory
+   mkdir -p "$baseDir" && return "$?"
+  done
+
+  # link files
+  for bad in $fileList
+  do
+   baseFile=${bad#/$dir} #remove "base" directory
+   ln -s "$bad" "$baseFile"  && return "$?"
   done
  }
 
