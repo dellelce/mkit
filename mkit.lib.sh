@@ -197,7 +197,8 @@ uncompress()
 build_sanity_gnuconf()
 {
  [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; } 
- [ ! -d "$1" -o ! -f "$1/configure" ] && { echo "build_sanity_gnuconf: invalid srcdirectory"; return 1; }
+ [ ! -d "$1" ] && { echo "build_sanity_gnuconf: invalid srcdirectory: $1"; return 1; }
+ [ ! -f "$1/configure" ] && { echo "build_sanity_gnuconf: no configure file in: $1"; return 1; }
 
  return 0
 }
