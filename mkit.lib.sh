@@ -202,6 +202,9 @@ build_sanity_gnuconf()
  return 0
 }
 
+#
+# logging function to be used by build functions
+#
 build_logger()
 {
  typeset logid="$1"
@@ -271,6 +274,8 @@ build_perl_core()
  return $rc_makeinstall
 }
 
+#
+# build_perl: wrapper to handle "standard" arguments and uncompression
 build_perl()
 {
  uncompress perl $fn_perl || { echo "Failed uncompress for: $fn_perl"; return 1; }
@@ -547,6 +552,9 @@ build_php()
  return $?
 }
 
+#
+# Custom build for openssl
+#
 build_openssl()
 {
  uncompress openssl $fn_openssl || { echo "Failed uncompress for: $fn_openssl"; return 1; }
