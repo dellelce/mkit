@@ -511,6 +511,17 @@ build_libxml2()
 }
 
 #
+# bzip2
+#
+build_bzip2()
+{
+ uncompress bzip2 $fn_bzip2 || { echo "Failed uncompress for: $fn_bzip2"; return 1; }
+ build_gnuconf bzip2 $srcdir_bzip2
+
+ return $?
+}
+
+#
 # zlib
 # Needed by some python packages
 #
