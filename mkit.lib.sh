@@ -531,7 +531,7 @@ build_libxml2()
 build_bzip2_core()
 {
  typeset rc=0 cwd=""
- export rc_conf=0 rc_make=0 rc_makeinstall=0
+ export rc_conf=0 rc_make=0 rc_makeso=0 rc_makeinstall=0
  typeset id="$1"; shift   # build id
  typeset dir="$1"; shift  # src directory
  typeset pkgbuilddir="$BUILDDIR/$id"
@@ -582,17 +582,32 @@ build_bzip2_core()
  }
  [ "$rc_make" -ne 0 ] && return "$rc_make"
 
- # make install
+ # make shared (not needed on cygwin?)
+ {
+  logFile=$(logger_file ${id}_makeso)
+  echo "Running make shared: logging at ${logFile}"
+  cwd="$PWD"
+  cd "$dir"
+  make -f Makefile-libbz2_so  > ${logFile} 2>&1 
+  rc_makeso="$?"
+  cd "$cwd"
+ }
+ [ "$rc_makeso" -ne 0 ] && return "$rc_make"
+
+ # make install 
  {
   logFile=$(logger_file ${id}_makeinstall)
   echo "Running make install: logging at ${logFile}"
   cwd="$PWD"
   cd "$dir"
   make install PREFIX="${prefix}" > ${logFile} 2>&1 
+  cp "libbz2.so.1.0.6" "${prefix}/lib"
+  ln -s "${prefix}/lib/libbz2.so.1.0.6" "${prefix}/lib/libbz2.so.1.0"
   rc_makeinstall="$?"
   cd "$cwd"
  }
  [ "$rc_makeinstall" -ne 0 ] && return "$rc_makeinstall"
+ 
  return 0
 }
 
