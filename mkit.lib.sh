@@ -572,7 +572,7 @@ build_bzip2_core()
  echo
  # make
  {
-  logFile=$(logger_name ${id}_make)
+  logFile=$(logger_file ${id}_make)
   echo "Running make: logging at ${logFile}"
   cwd="$PWD"
   cd "$dir"
@@ -584,7 +584,7 @@ build_bzip2_core()
 
  # make install
  {
-  logFile=$(logger_name ${id}_makeinstall)
+  logFile=$(logger_file ${id}_makeinstall)
   echo "Running make install: logging at ${logFile}"
   cwd="$PWD"
   cd "$dir"
