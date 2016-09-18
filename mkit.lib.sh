@@ -536,6 +536,10 @@ build_bzip2_core()
  typeset dir="$1"; shift  # src directory
  typeset pkgbuilddir="$BUILDDIR/$id"
 
+ [ ! -d "$pkgbuilddir" ] && 
+   { mkdir -p "$pkgbuilddir"; } ||
+   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+ 
  cd "$pkgbuilddir" ||
  {
   echo "build_gzip2_core: Failed to change to build directory: " $pkgbuilddir;
