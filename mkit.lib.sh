@@ -588,6 +588,7 @@ build_bzip2_core()
   echo "Running make shared: logging at ${logFile}"
   cwd="$PWD"
   cd "$dir"
+  make clean # the next step will not rebuild and the "linker" will fail without this
   make -f Makefile-libbz2_so  > ${logFile} 2>&1 
   rc_makeso="$?"
   cd "$cwd"
