@@ -593,6 +593,7 @@ build_bzip2_core()
   cd "$cwd"
  }
  [ "$rc_makeinstall" -ne 0 ] && return "$rc_makeinstall"
+ return 0
 }
 
 build_bzip2()
