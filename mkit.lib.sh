@@ -204,13 +204,22 @@ build_sanity_gnuconf()
 }
 
 #
+# logger_file: return a full file name to be used for the specified id
+#
+logger_file()
+{
+ typeset logid="$1"
+ typeset LAST_LOG="${LOGSDIR}/${TIMESTAMP}_${logid}.log"
+
+ echo $LAST_LOG
+}
+
+#
 # logging function to be used by build functions
 #
 build_logger()
 {
- typeset logid="$1"
- export LAST_LOG="${LOGSDIR}/${TIMESTAMP}_${logid}.log"
-
+ export LAST_LOG=$(logger_file "$1")
  cat >> "${LAST_LOG}"
 }
 
@@ -229,14 +238,18 @@ build_perl_core()
 
  # Other steps
  [ ! -d "$pkgbuilddir" ] && 
-   { mkdir -p "$pkgbuilddir"; } ||
-   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+ {
+  mkdir -p "$pkgbuilddir";
+ } ||
+ {
+  pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir";
+ }
 
  cd "$pkgbuilddir" ||
  {
   echo "build_perl: Failed to change to build directory: " $pkgbuilddir;
   return 1;
- } 
+ }
 
  echo
  echo "Building Perl in $pkgbuilddir at $(date)"
@@ -252,7 +265,7 @@ build_perl_core()
                   -Duseshrplib                  \
                   $* 2>&1
   rc_conf=$?
- } | build_logger ${id}_configure
+ } | build_logger "${id}_configure"
 
  [ "$rc_conf" -ne 0 ] && return $rc_conf
 
@@ -514,10 +527,74 @@ build_libxml2()
 #
 # bzip2
 #
+
+build_bzip2_core()
+{
+ typeset rc=0 cwd=""
+ export rc_conf=0 rc_make=0 rc_makeinstall=0
+ typeset id="$1"; shift   # build id
+ typeset dir="$1"; shift  # src directory
+ typeset pkgbuilddir="$BUILDDIR/$id"
+
+ cd "$pkgbuilddir" ||
+ {
+  echo "build_gzip2_core: Failed to change to build directory: " $pkgbuilddir;
+  return 1;
+ } 
+ 
+ #bzip2 does not have a configure but just a raw makefile
+ {
+  dirList=$(find $dir -type d)
+  fileList=$(find $dir -type f)
+
+  #make directores
+  for bad in $dirList
+  do
+   baseDir=${bad#${dir}/} #remove "base" directory
+   mkdir -p "$baseDir" || return "$?"
+  done
+
+  # link files
+  for bad in $fileList
+  do
+   baseFile=${bad#${dir}/} #remove "base" directory
+   ln -s "$bad" "$baseFile" || return "$?"
+  done
+ }
+
+ #
+ echo
+ echo "Building $id in $pkgbuilddir at $(date)"
+ echo
+ # make
+ {
+  logFile=$(logger_name ${id}_make)
+  echo "Running make: logging at ${logFile}"
+  cwd="$PWD"
+  cd "$dir"
+  make > ${logFile} 2>&1 
+  rc_make="$?"
+  cd "$cwd"
+ }
+ [ "$rc_make" -ne 0 ] && return "$rc_make"
+
+ # make install
+ {
+  logFile=$(logger_name ${id}_makeinstall)
+  echo "Running make install: logging at ${logFile}"
+  cwd="$PWD"
+  cd "$dir"
+  make install PREFIX="${prefix}" > ${logFile} 2>&1 
+  rc_makeinstall="$?"
+  cd "$cwd"
+ }
+ [ "$rc_makeinstall" -ne 0 ] && return "$rc_makeinstall"
+}
+
 build_bzip2()
 {
  uncompress bzip2 $fn_bzip2 || { echo "Failed uncompress for: $fn_bzip2"; return 1; }
- build_gnuconf bzip2 $srcdir_bzip2
+ build_bzip2_core bzip2 $srcdir_bzip2
 
  return $?
 }
