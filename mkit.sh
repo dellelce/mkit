@@ -21,15 +21,23 @@ export WORKDIR="$PWD/mkit_workdir"
 export SRCGET="${WORKDIR}/srcget"
 export PATH="$PATH:$SRCGET"
 export DOWNLOADS="${WORKDIR}/downloads"
-export BUILDDIR="${WORKDIR}/build_${TIMESTAMP}"
-export SRCDIR="${WORKDIR}/src_${TIMESTAMP}"
+
+[ -z "$NO_TIMESTAMP" ] &&
+{
+ export BUILDDIR="${WORKDIR}/build_${TIMESTAMP}"
+ export SRCDIR="${WORKDIR}/src_${TIMESTAMP}"
+} ||
+{
+ export BUILDDIR="${WORKDIR}/build"
+ export SRCDIR="${WORKDIR}/src"
+}
+ 
 export LOGSDIR="${WORKDIR}/logs"
 
 ## "prefix" is the usual "GNU prefix" option i.e. the root of our install
 export prefix="${1:-$PWD}"
 
-# test prefix for relative directory
-
+# prefix: if a relative path make it absolute
 [ ${prefix} != ${prefix#./} ] &&
 {
   _prefix="${prefix#./}"
@@ -77,6 +85,8 @@ download || { echo "Download failed for one of the components"; exit 1; }
 
 ## Build steps
 
+build_readline || exit $?
+
 build_sqlite3 || exit $?
 
 build_m4 || exit $?
@@ -114,8 +124,6 @@ build_httpd || exit $?
 
  build_suhosin || exit $?
 }
-
-build_readline || exit $?
 
 build_python3 || exit $?
 
