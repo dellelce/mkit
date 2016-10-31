@@ -71,22 +71,26 @@ get_srcget()
 #
 # download
 #
+# Used Globals:
+#   SRCLIST
+#   DOWNLOADS
+#
 download()
 {
- typeset pkg
+ typeset pkg fn
 
  for pkg in $SRCLIST
  do
-   pushdir "$DOWNLOADS"
-   fn=$(srcget.sh -n $pkg)
-   srcget_rc=$?
-   fn="$PWD/$fn"
-   [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
-   echo $pkg " has been downloaded as: " $fn
+  pushdir "$DOWNLOADS"
+  fn=$(srcget.sh -n $pkg)
+  srcget_rc=$?
+  fn="$PWD/$fn"
+  [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
+  echo $pkg " has been downloaded as: " $fn
 
-   # save directory to a variable named after the package
-   eval "fn_${pkg}=$fn"
-   popdir
+  # save directory to a variable named after the package
+  eval "fn_${pkg}=$fn"
+  popdir
  done
 }
 
@@ -114,7 +118,12 @@ uncompress_xz()
 
  xz -dc < "${fn}" | tar xf - -C "${bdir}"
  rc=$?
- [ "$rc" -eq 0 ] && { dir=$(ls -d1t ${bdir}/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
+ [ "$rc" -eq 0 ] &&
+ {
+  dir=$(ls -d1t ${bdir}/* | head -1)
+  [ -d "$dir" ] && echo $dir
+  return 0
+ }
 
  echo "uncompress_xz return code: $rc"
  return $rc
@@ -132,7 +141,12 @@ uncompress_bz2()
 
  tar xjf  "${fn}" -C "${bdir}"
  rc=$?
- [ "$rc" -eq 0 ] && { dir=$(ls -d1t ${bdir}/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
+ [ "$rc" -eq 0 ] &&
+ {
+  dir=$(ls -d1t ${bdir}/* | head -1)
+  [ -d "$dir" ] && echo $dir
+  return 0
+ }
 
  echo "uncompress_bz2 return code: $rc"
  return $rc
@@ -482,8 +496,10 @@ build_aprutil()
 {
  uncompress aprutil $fn_aprutil || { echo "Failed uncompress for: $fn_aprutil"; return 1; }
  # both crypto/openssl & sqlite3 do not appear to work (link) with the following options.... ignoring for now
- #build_gnuconf aprutil $srcdir_aprutil --with-apr="${prefix}" --with-openssl="${prefix}" --with-crypto 
- #                     --with-sqlite3="${prefix}" --with-apr="${prefix}" # --with-openssl="${prefix}" --with-crypto 
+ #build_gnuconf aprutil $srcdir_aprutil --with-apr="${prefix}" \
+ #                   --with-openssl="${prefix}" --with-crypto \
+ #                    --with-sqlite3="${prefix}" \
+ #                  --with-apr="${prefix}" # --with-openssl="${prefix}" --with-crypto 
  build_gnuconf aprutil $srcdir_aprutil \
                          --with-apr="${prefix}" 
  return $?
