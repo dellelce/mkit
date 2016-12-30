@@ -2,7 +2,7 @@
 #
 # File:         mkit.config.sh
 # Created:      180516
-# Description:  description for mkit.config.sh
+# Description:  mkit configuration (shell format)
 #
 
 ### FUNCTIONS ###
@@ -11,6 +11,6 @@
 
  SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil bzip2
              httpd openssl php pcre libxml2 zlib mod_wsgi readline python3 "
- export srcget="0.0.6.5"  #  srcget version
+ export srcget="0.0.6.6"  #  srcget version
 
 ### EOF ###
