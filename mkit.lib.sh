@@ -212,6 +212,11 @@ build_sanity_gnuconf()
 {
  [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; } 
  [ ! -d "$1" ] && { echo "build_sanity_gnuconf: invalid srcdirectory: $1"; return 1; }
+ [ ! -f "$1/configure" -a -f "$1/buildconf.sh" ] &&
+  {
+   echo "build_sanity_gnuconf: no configure file in: $1 but buildconf.sh is present"
+   return 2
+  }
  [ ! -f "$1/configure" ] && { echo "build_sanity_gnuconf: no configure file in: $1"; return 1; }
 
  return 0
@@ -325,7 +330,11 @@ build_gnuconf()
 
  build_sanity_gnuconf $dir
  rc=$? 
- [ $rc -ne 0 ] &&  { echo "build_gnuconf: build sanity tests failed for $dir"; return $rc; }
+
+ # rc=2: buildconf.sh was found without configure: try run buildconf.sh and check again 
+ [ $rc -eq 2 ] && { $dir/buildconf.sh; bc_rc=$?; build_sanity_gnuconf $dir; rc=$? } 
+
+ [ $rc -ne 0 ] && { echo "build_gnuconf: build sanity tests failed for $dir"; return $rc; }
 
  [ ! -d "$pkgbuilddir" ] && 
    { mkdir -p "$pkgbuilddir"; } ||
