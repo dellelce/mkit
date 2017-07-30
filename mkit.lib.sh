@@ -332,7 +332,7 @@ build_gnuconf()
  rc=$? 
 
  # rc=2: buildconf.sh was found without configure: try run buildconf.sh and check again 
- [ $rc -eq 2 ] && { $dir/buildconf.sh; bc_rc=$?; build_sanity_gnuconf $dir; rc=$? } 
+ [ $rc -eq 2 ] && { $dir/buildconf.sh; bc_rc=$?; build_sanity_gnuconf $dir; rc=$?; }
 
  [ $rc -ne 0 ] && { echo "build_gnuconf: build sanity tests failed for $dir"; return $rc; }
 
