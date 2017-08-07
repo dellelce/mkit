@@ -417,6 +417,14 @@ build_libbsd()
 }
 
 #
+build_libexpat()
+{
+ uncompress libexpat $fn_libexpat || { echo "Failed uncompress for: $fn_libexpat"; return 1; }
+ build_gnuconf libexpat $srcdir_libexpat
+ return $?
+}
+
+#
 # M4 Macro Processor
 build_m4()
 {
