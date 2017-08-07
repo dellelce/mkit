@@ -11,6 +11,6 @@
 
  SRCLIST="libbsd expat sqlite3 m4 autoconf suhosin bison apr aprutil bzip2
              httpd openssl php pcre libxml2 zlib mod_wsgi readline python3 "
- export srcget="0.0.7.0"  #  srcget version
+ export srcget="0.0.7.1"  #  srcget version
 
 ### EOF ###
