@@ -400,7 +400,7 @@ build_gnuconf()
  return $rc_makeinstall
 }
 
-### 
+#
 build_sqlite3()
 {
  uncompress sqlite3 $fn_sqlite3 || { echo "Failed uncompress for: $fn_sqlite3"; return 1; }
@@ -408,6 +408,16 @@ build_sqlite3()
  return $?
 }
 
+#
+build_libbsd()
+{
+ uncompress libbsd $fn_libbsd || { echo "Failed uncompress for: $fn_libbsd"; return 1; }
+ build_gnuconf libbsd $srcdir_libbsd
+ return $?
+}
+
+#
+# M4 Macro Processor
 build_m4()
 {
  uncompress m4 $fn_m4 || { echo "Failed uncompress for: $fn_m4"; return 1; }

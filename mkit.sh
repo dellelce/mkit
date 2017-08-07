@@ -85,6 +85,9 @@ download || { echo "Download failed for one of the components"; exit 1; }
 
 ## Build steps
 
+build_libbsd || exit $?
+build_libexpat  || exit $?
+
 build_readline || exit $?
 
 build_sqlite3 || exit $?
