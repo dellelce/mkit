@@ -104,7 +104,7 @@ build_zlib || exit $?
 
 build_bzip2 || exit $?
 
-[ "$PERL_NEEDED" -eq 1 ] &&
+[ ! -z "$PERL_NEEDED" -a "$PERL_NEEDED" -eq 1 ] &&
 {
  build_perl
  rc=$?
