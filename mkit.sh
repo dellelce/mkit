@@ -121,7 +121,7 @@ build_libxml2 || exit $?
 
 build_httpd || exit $?
 
-[ "$PHP_NEEDED" == 1 ] &&
+[ ! -z "$PHP_NEEDED" -a "$PHP_NEEDED" == 1 ] &&
 {
  build_php || exit $?
 
