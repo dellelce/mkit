@@ -373,6 +373,14 @@ build_gnuconf()
  echo "Building $id in $pkgbuilddir at $(date)"
  echo
 
+ [ -z "$CFLAGS" ] && export CFLAGS="-I${prefix}/include"
+ [ -z "$LDFLAGS" ] && export LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"
+
+cat << EOF
+ CFLAGS="${CFLAGS}"
+ LDFLAGS="${LDFLAGS}"
+EOF
+
  echo "Configuring..."
  {
   $dir/configure --prefix="${prefix}" $* 2>&1
@@ -419,8 +427,8 @@ build_libbsd()
 #
 build_libexpat()
 {
- uncompress libexpat $fn_libexpat || { echo "Failed uncompress for: $fn_libexpat"; return 1; }
- build_gnuconf libexpat $srcdir_libexpat
+ uncompress expat $fn_expat || { echo "Failed uncompress for: $fn_expat"; return 1; }
+ build_gnuconf expat $srcdir_expat
  return $?
 }
 
