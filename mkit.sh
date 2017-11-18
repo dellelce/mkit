@@ -10,78 +10,82 @@
  . mkit.config.sh
 
 # 
-export TIMESTAMP="$(date +%H%M_%d%m%y)"
-export WORKDIR="$PWD/mkit_workdir"
-export SRCGET="${WORKDIR}/srcget"
-export PATH="$PATH:$SRCGET"
-export DOWNLOADS="${WORKDIR}/downloads"
-
-[ -z "$NO_TIMESTAMP" ] &&
+mkit_setup()
 {
- export BUILDDIR="${WORKDIR}/build_${TIMESTAMP}"
- export SRCDIR="${WORKDIR}/src_${TIMESTAMP}"
-} ||
-{
- export BUILDDIR="${WORKDIR}/build"
- export SRCDIR="${WORKDIR}/src"
-}
+ export TIMESTAMP="$(date +%H%M_%d%m%y)"
+ export WORKDIR="$PWD/mkit_workdir"
+ export SRCGET="${WORKDIR}/srcget"
+ export PATH="$PATH:$SRCGET"
+ export DOWNLOADS="${WORKDIR}/downloads"
  
-export LOGSDIR="${WORKDIR}/logs"
+ [ -z "$NO_TIMESTAMP" ] &&
+ {
+  export BUILDDIR="${WORKDIR}/build_${TIMESTAMP}"
+  export SRCDIR="${WORKDIR}/src_${TIMESTAMP}"
+ } ||
+ {
+  export BUILDDIR="${WORKDIR}/build"
+  export SRCDIR="${WORKDIR}/src"
+ }
+ 
+ export LOGSDIR="${WORKDIR}/logs"
+  
+ ## "prefix" is the usual "GNU prefix" option i.e. the root of our install
+ export prefix="${1:-$PWD}"
 
-## "prefix" is the usual "GNU prefix" option i.e. the root of our install
-export prefix="${1:-$PWD}"
-
-# prefix: if a relative path make it absolute
-[ ${prefix} != ${prefix#./} ] &&
-{
+ # prefix: if a relative path make it absolute
+ [ ${prefix} != ${prefix#./} ] &&
+ {
   _prefix="${prefix#./}"
   prefix="${PWD}/${_prefix}"
+ }
+
+ export PATH="$prefix/bin:$PATH"
+ 
+ mkdir -p "$BUILDDIR"
+ mkdir -p "$LOGSDIR"
+ mkdir -p "$SRCDIR"
+ mkdir -p "$DOWNLOADS"
 }
 
-export PATH="$prefix/bin:$PATH"
-
-mkdir -p "$BUILDDIR"
-mkdir -p "$LOGSDIR"
-mkdir -p "$SRCDIR"
-mkdir -p "$DOWNLOADS"
-
-### FUNCTIONS ###
-
- .  mkit.lib.sh
 
 ### MAIN ###
 
-echo
-echo "Install directory is ${prefix}"
-echo
+ mkit_setup
+ .  mkit.lib.sh
 
-# download srcget
-get_srcget || { echo "Failed getting srcget, exiting..."; exit 1; }
+ echo
+ echo "Install directory is ${prefix}"
+ echo
 
-# the next function (download) uses the variable SRCLIST to determine which packages to download
-# TODO: check if perl is not installed at all?
+ # download srcget
+ get_srcget || { echo "Failed getting srcget, exiting..."; exit 1; }
 
-eval $(getPerlVersions)
+ # the next function (download) uses the variable SRCLIST to determine 
+ # which packages to download
+ # TODO: check if perl is not installed at all?
 
-[ "$PERL_REVISION" -eq 5 -a "$PERL_VERSION" -lt 10 ] &&
-{
- export SRCLIST="perl ${SRCLIST}"
- export PERL_NEEDED=1
- cat << EOF
+ eval $(getPerlVersions)
+
+ [ "$PERL_REVISION" -eq 5 -a "$PERL_VERSION" -lt 10 ] &&
+ { 
+  export SRCLIST="perl ${SRCLIST}"
+  export PERL_NEEDED=1
+  cat << EOF
    Detected version of perl is ${PERL_REVISION}.${PERL_VERSION}.${PERL_SUBVERSION} minimum required version is 5.10.
    Will download and build local version.
 
 EOF
-}
+ }
 
-# download latest archives / builds name mapping
-download || { echo "Download failed for one of the components"; exit 1; }
+ # download latest archives / builds name mapping
+ download || { echo "Download failed for one of the components"; exit 1; }
 
 ## Build steps
 
 build_libbsd || exit $?
 build_libexpat  || exit $?
-
+ 
 build_readline || exit $?
 
 build_sqlite3 || exit $?
