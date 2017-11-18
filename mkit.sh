@@ -7,12 +7,6 @@
 
 ### ENV ###
 
-# built-in defaults
-SRCLIST="sqlite3 m4 autoconf suhosin bison apr aprutil httpd openssl php pcre libxml2"
-export srcget="0.0.5.5"  #  srcget version
-export srcgetUrl="https://github.com/dellelce/srcget/archive"
-
-# "external" options
  . mkit.config.sh
 
 # 
