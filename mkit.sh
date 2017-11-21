@@ -10,6 +10,8 @@
  . mkit.config.sh
  . mkit.profiles.sh
 
+ export srcgetUrl="https://github.com/dellelce/srcget/archive"
+
 # 
 mkit_setup()
 {
