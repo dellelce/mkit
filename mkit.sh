@@ -51,10 +51,9 @@ mkit_setup()
  mkdir -p "$DOWNLOADS"
 }
 
-
 ### MAIN ###
 
- mkit_setup
+ mkit_setup $*
  .  mkit.lib.sh
 
  echo
@@ -87,6 +86,5 @@ EOF
  # launch default profile
  profile_default
  exit $?
-
 
 ### EOF ###
