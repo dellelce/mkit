@@ -588,8 +588,8 @@ build_bzip2_core()
  typeset pkgbuilddir="$BUILDDIR/$id"
 
  [ ! -d "$pkgbuilddir" ] && 
-   { mkdir -p "$pkgbuilddir"; } ||
-   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+  { mkdir -p "$pkgbuilddir"; } ||
+  { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
  
  cd "$pkgbuilddir" ||
  {
@@ -723,35 +723,35 @@ build_openssl()
  export rc=0
  
  (
-   echo
-   echo Building OpenSSL
-   echo
+  echo
+  echo Building OpenSSL
+  echo
 
-   cd $srcdir_openssl || return 1
+  cd $srcdir_openssl || return 1
 
-   echo "Configuring..."
-   {
-     ./config shared --prefix=$prefix 2>&1
-     rc=$?
-   } | build_logger openssl_configure
+  echo "Configuring..."
+  {
+   ./config shared --prefix=$prefix 2>&1
+   rc=$?
+  } | build_logger openssl_configure
 
-   [ $rc -eq 0 ]  || { echo ; echo "Failed configure for OpenSSL";  return 1; } 
+  [ $rc -eq 0 ]  || { echo ; echo "Failed configure for OpenSSL";  return 1; } 
 
-   echo "Running make..."
-   {
-     make 2>&1
-     rc=$?
-   } | build_logger openssl_make
+  echo "Running make..."
+  {
+   make 2>&1
+   rc=$?
+  } | build_logger openssl_make
 
-   [ $rc -eq 0 ]  || { echo ; echo "Failed make for OpenSSL";  return 1; } 
+  [ $rc -eq 0 ]  || { echo ; echo "Failed make for OpenSSL";  return 1; } 
 
-   echo "Running make install..."
-   {
-     make install 2>&1
-     rc=$?
-   } | build_logger openssl_makeinstall
+  echo "Running make install..."
+  {
+   make install 2>&1
+   rc=$?
+  } | build_logger openssl_makeinstall
 
-   [ $rc -eq 0 ]  || { echo ; echo "Failed make install for OpenSSL";  return 1; } 
+  [ $rc -eq 0 ]  || { echo ; echo "Failed make install for OpenSSL";  return 1; } 
  ) 
 }
 
