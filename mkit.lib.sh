@@ -172,7 +172,6 @@ uncompress_gz()
 
 #
 #
-
 save_srcdir()
 {
  typeset id="$1"
@@ -207,6 +206,19 @@ uncompress()
 }
 
 #
+# logger_file: return a full file name to be used for the specified id
+#
+logger_file()
+{
+ typeset logid="$1"
+ typeset LAST_LOG="${LOGSDIR}/${TIMESTAMP}_${logid}.log"
+
+ echo $LAST_LOG
+}
+
+### BEGIN OF BUILD FUNCTIONS ###
+
+#
 #
 build_sanity_gnuconf()
 {
@@ -220,17 +232,6 @@ build_sanity_gnuconf()
  [ ! -f "$1/configure" ] && { echo "build_sanity_gnuconf: no configure file in: $1"; return 1; }
 
  return 0
-}
-
-#
-# logger_file: return a full file name to be used for the specified id
-#
-logger_file()
-{
- typeset logid="$1"
- typeset LAST_LOG="${LOGSDIR}/${TIMESTAMP}_${logid}.log"
-
- echo $LAST_LOG
 }
 
 #
@@ -409,6 +410,8 @@ EOF
 }
 
 #
+# sqlite3
+#
 build_sqlite3()
 {
  uncompress sqlite3 $fn_sqlite3 || { echo "Failed uncompress for: $fn_sqlite3"; return 1; }
@@ -417,6 +420,8 @@ build_sqlite3()
 }
 
 #
+# libbsd
+#
 build_libbsd()
 {
  uncompress libbsd $fn_libbsd || { echo "Failed uncompress for: $fn_libbsd"; return 1; }
@@ -424,6 +429,8 @@ build_libbsd()
  return $?
 }
 
+#
+# libexpat
 #
 build_libexpat()
 {
@@ -468,6 +475,7 @@ build_suhosin()
 }
 
 #
+# apr
 #
 build_apr()
 {
@@ -486,7 +494,7 @@ build_bison()
 }
 
 #
-#
+# automake
 #
 build_automake()
 {
@@ -516,6 +524,7 @@ build_autoconf()
 }
 
 #
+# pcre
 #
 build_pcre()
 {
@@ -578,7 +587,6 @@ build_libxml2()
 #
 # bzip2
 #
-
 build_bzip2_core()
 {
  typeset rc=0 cwd=""
