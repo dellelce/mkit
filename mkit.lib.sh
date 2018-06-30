@@ -222,7 +222,7 @@ logger_file()
 #
 build_sanity_gnuconf()
 {
- [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; } 
+ [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; }
  [ ! -d "$1" ] && { echo "build_sanity_gnuconf: invalid srcdirectory: $1"; return 1; }
  [ ! -f "$1/configure" -a -f "$1/buildconf.sh" ] &&
   {
@@ -257,7 +257,7 @@ build_perl_core()
  # No Sanity checks!
 
  # Other steps
- [ ! -d "$pkgbuilddir" ] && 
+ [ ! -d "$pkgbuilddir" ] &&
  {
   mkdir -p "$pkgbuilddir";
  } ||
@@ -299,7 +299,7 @@ build_perl_core()
 
  echo "Running make install..."
  {
-  make install 2>&1 
+  make install 2>&1
   rc_makeinstall=$?
  } | build_logger ${id}_makeinstall
 
@@ -313,7 +313,7 @@ build_perl_core()
 build_perl()
 {
  uncompress perl $fn_perl || { echo "Failed uncompress for: $fn_perl"; return 1; }
- build_perl_core perl $srcdir_perl 
+ build_perl_core perl $srcdir_perl
 }
 
 #
@@ -330,14 +330,14 @@ build_gnuconf()
  typeset pkgbuilddir="$BUILDDIR/$id"
 
  build_sanity_gnuconf $dir
- rc=$? 
+ rc=$?
 
- # rc=2: buildconf.sh was found without configure: try run buildconf.sh and check again 
+ # rc=2: buildconf.sh was found without configure: try run buildconf.sh and check again
  [ $rc -eq 2 ] && { $dir/buildconf.sh; bc_rc=$?; build_sanity_gnuconf $dir; rc=$?; }
 
  [ $rc -ne 0 ] && { echo "build_gnuconf: build sanity tests failed for $dir"; return $rc; }
 
- [ ! -d "$pkgbuilddir" ] && 
+ [ ! -d "$pkgbuilddir" ] &&
    { mkdir -p "$pkgbuilddir"; } ||
    { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
 
@@ -345,7 +345,7 @@ build_gnuconf()
  {
   echo "build_gnuconf: Failed to change to build directory: " $pkgbuilddir;
   return 1;
- } 
+ }
 
  # some "configure"s do not supporting building in a directory different than the source directory
  # TODO: cwd to "$dir"
@@ -400,7 +400,7 @@ EOF
 
  echo "Running make install..."
  {
-  make install 2>&1 
+  make install 2>&1
   rc_makeinstall=$?
  } | build_logger ${id}_makeinstall
 
@@ -430,8 +430,34 @@ build_libbsd()
 }
 
 #
-# libexpat
+build_libffi()
+{
+ typeset rc=0 dir=""
+
+ uncompress libffi $fn_libffi || { echo "Failed uncompress for: $fn_libffi"; return 1; }
+ build_gnuconf libffi $srcdir_libffi
+ rc=$?
+ [ $? -ne 0 ] && return $rc
+
+ # libffi ingores --libdir and --includedir options of configure
+ # installs includes in $prefix/lib/libffi-version/include/ etc
+ # installs all other files in $prefix/lib64
+ # the lib64 path is *NOT* detectd by python while include is (pkg-config?)
+ # leaving commented includes copy as a "temporary" note
+ #
+ [ -d "$prefix/lib64" ] && mv $prefix/lib64/* $prefix/lib/
+
+ mkdir -p "$prefix/include" # make sure target directory exists
+ #for dir in $prefix/lib/libffi-*/include
+ #do
+ # [ -d "$dir" ] && cp -p $dir/* $prefix/include/
+ #done
+
+ return 0
+}
+
 #
+# libexpat
 build_libexpat()
 {
  uncompress expat $fn_expat || { echo "Failed uncompress for: $fn_expat"; return 1; }
@@ -483,8 +509,9 @@ build_apr()
  build_gnuconf apr $srcdir_apr
  return $?
 }
-#
 
+#
+# bison
 #
 build_bison()
 {
@@ -543,9 +570,9 @@ build_aprutil()
  #build_gnuconf aprutil $srcdir_aprutil --with-apr="${prefix}" \
  #                   --with-openssl="${prefix}" --with-crypto \
  #                    --with-sqlite3="${prefix}" \
- #                  --with-apr="${prefix}" # --with-openssl="${prefix}" --with-crypto 
+ #                  --with-apr="${prefix}" # --with-openssl="${prefix}" --with-crypto
  build_gnuconf aprutil $srcdir_aprutil \
-                         --with-apr="${prefix}" 
+                         --with-apr="${prefix}"
  return $?
 }
 
@@ -595,16 +622,16 @@ build_bzip2_core()
  typeset dir="$1"; shift  # src directory
  typeset pkgbuilddir="$BUILDDIR/$id"
 
- [ ! -d "$pkgbuilddir" ] && 
-  { mkdir -p "$pkgbuilddir"; } ||
-  { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
- 
+ [ ! -d "$pkgbuilddir" ] &&
+   { mkdir -p "$pkgbuilddir"; } ||
+   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+
  cd "$pkgbuilddir" ||
  {
   echo "build_gzip2_core: Failed to change to build directory: " $pkgbuilddir;
   return 1;
- } 
- 
+ }
+
  #bzip2 does not have a configure but just a raw makefile
  {
   dirList=$(find $dir -type d)
@@ -635,7 +662,7 @@ build_bzip2_core()
   echo "Running make: logging at ${logFile}"
   cwd="$PWD"
   cd "$dir"
-  make > ${logFile} 2>&1 
+  make > ${logFile} 2>&1
   rc_make="$?"
   cd "$cwd"
  }
@@ -648,26 +675,26 @@ build_bzip2_core()
   cwd="$PWD"
   cd "$dir"
   make clean # the next step will not rebuild and the "linker" will fail without this
-  make -f Makefile-libbz2_so  > ${logFile} 2>&1 
+  make -f Makefile-libbz2_so  > ${logFile} 2>&1
   rc_makeso="$?"
   cd "$cwd"
  }
  [ "$rc_makeso" -ne 0 ] && return "$rc_make"
 
- # make install 
+ # make install
  {
   logFile=$(logger_file ${id}_makeinstall)
   echo "Running make install: logging at ${logFile}"
   cwd="$PWD"
   cd "$dir"
-  make install PREFIX="${prefix}" > ${logFile} 2>&1 
+  make install PREFIX="${prefix}" > ${logFile} 2>&1
   cp "libbz2.so.1.0.6" "${prefix}/lib"
   ln -s "${prefix}/lib/libbz2.so.1.0.6" "${prefix}/lib/libbz2.so.1.0"
   rc_makeinstall="$?"
   cd "$cwd"
  }
  [ "$rc_makeinstall" -ne 0 ] && return "$rc_makeinstall"
- 
+
  return 0
 }
 
@@ -683,13 +710,12 @@ build_bzip2()
 # zlib
 # Needed by some python packages
 #
-
 build_zlib()
 {
  uncompress zlib $fn_zlib || { echo "Failed uncompress for: $fn_zlib"; return 1; }
 
  # zlib's configure does not support building in a different directory than source
- opt="BADCONFIGURE" build_gnuconf zlib $srcdir_zlib 
+ opt="BADCONFIGURE" build_gnuconf zlib $srcdir_zlib
 
  return $?
 }
@@ -697,13 +723,14 @@ build_zlib()
 #
 # python3
 #
-
 build_python3()
 {
  uncompress python3 $fn_python3 || { echo "Failed uncompress for: $fn_python3"; return 1; }
  LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"  \
  CFLAGS="-I${prefix}/include"                        \
- build_gnuconf python3 $srcdir_python3 --enable-shared 
+ build_gnuconf python3 $srcdir_python3 --enable-shared  --with-system-expat \
+            --with-system-ffi   \
+            --with-ensurepip=yes
 
  return $?
 }
@@ -711,7 +738,6 @@ build_python3()
 #
 # php
 #
-
 build_php()
 {
  uncompress php $fn_php || { echo "Failed uncompress for: $fn_php"; return 1; }
@@ -729,38 +755,38 @@ build_openssl()
 {
  uncompress openssl $fn_openssl || { echo "Failed uncompress for: $fn_openssl"; return 1; }
  export rc=0
- 
+
  (
-  echo
-  echo Building OpenSSL
-  echo
+   echo
+   echo Building OpenSSL
+   echo
 
-  cd $srcdir_openssl || return 1
+   cd $srcdir_openssl || return 1
 
-  echo "Configuring..."
-  {
-   ./config shared --prefix=$prefix 2>&1
-   rc=$?
-  } | build_logger openssl_configure
+   echo "Configuring..."
+   {
+     ./config shared --prefix=$prefix 2>&1
+     rc=$?
+   } | build_logger openssl_configure
 
-  [ $rc -eq 0 ]  || { echo ; echo "Failed configure for OpenSSL";  return 1; } 
+   [ $rc -eq 0 ]  || { echo ; echo "Failed configure for OpenSSL";  return 1; }
 
-  echo "Running make..."
-  {
-   make 2>&1
-   rc=$?
-  } | build_logger openssl_make
+   echo "Running make..."
+   {
+     make 2>&1
+     rc=$?
+   } | build_logger openssl_make
 
-  [ $rc -eq 0 ]  || { echo ; echo "Failed make for OpenSSL";  return 1; } 
+   [ $rc -eq 0 ]  || { echo ; echo "Failed make for OpenSSL";  return 1; }
 
-  echo "Running make install..."
-  {
-   make install 2>&1
-   rc=$?
-  } | build_logger openssl_makeinstall
+   echo "Running make install..."
+   {
+     make install 2>&1
+     rc=$?
+   } | build_logger openssl_makeinstall
 
-  [ $rc -eq 0 ]  || { echo ; echo "Failed make install for OpenSSL";  return 1; } 
- ) 
+   [ $rc -eq 0 ]  || { echo ; echo "Failed make install for OpenSSL";  return 1; }
+ )
 }
 
 ### EOF ###
