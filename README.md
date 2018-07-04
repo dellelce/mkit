@@ -12,5 +12,5 @@ Download and Build a complete Apache/PHP/Python(mod_wsgi) stack.
 ## REQUIREMENTS:
   * gcc
   * g++ (pcre)
-  * perl, Data/Dumper.pm 
+  * perl (> 5.10), Data/Dumper.pm
 
