@@ -765,7 +765,7 @@ build_openssl()
 
    echo "Configuring..."
    {
-     ./config shared --prefix=$prefix 2>&1
+     ./config shared --prefix=$prefix --libdir=lib 2>&1
      rc=$?
    } | build_logger openssl_configure
 
