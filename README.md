@@ -8,6 +8,12 @@ Download and Build a complete Apache/PHP/Python(mod_wsgi) stack.
   * YES: Add ability to re-use installed system component (use installed pcre instead of downloading it)
   * Give more options (i.e. force download)
   * Test if after "make install" component is actually there 
+  * add a default "local install" directory ($HOME/.srcget maybe?)
+  * Better & more options (there is only one now.... and it is not really optional!)
+  * arguments: profile name (examples: http slim, http-php, http-python, etc)
+  * arguments: nodocs: do not build docs! do we need them in production or in a docker image?
+  * arguments: strip: do we need fat binaries in docker images (sometimes?)
+  * arguments: debug builds: sometimes we need more symbols (-g2 etc)
 
 ## REQUIREMENTS:
   * gcc
