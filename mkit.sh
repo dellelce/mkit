@@ -55,6 +55,7 @@ mkit_setup()
 
  mkit_setup $*
  .  mkit.lib.sh
+ .  mkit.components.sh
 
  echo "Install directory is ${prefix}"
 
