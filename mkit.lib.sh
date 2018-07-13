@@ -86,7 +86,7 @@ download()
   srcget_rc=$?
   fn="$PWD/$fn"
   [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
-  echo $pkg " has been downloaded as: " $fn
+  echo "${BOLD}$pkg${RESET} has been downloaded as: " $fn
 
   # save directory to a variable named after the package
   eval "fn_${pkg}=$fn"
@@ -195,7 +195,7 @@ uncompress()
  mkdir -p "$bdir"
 
  echo
- echo "$id: uncompressing $fn"
+ echo "$id: uncompressing ${BOLD}$(basename $fn)${RESET}"
 
  [ "$fn" != "${fn%.xz}" ] && { dir=$(uncompress_xz "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
  [ "$fn" != "${fn%.bz2}" ] && { dir=$(uncompress_bz2 "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
@@ -334,7 +334,6 @@ build_gnuconf()
 
  # rc=2: buildconf.sh was found without configure: try run buildconf.sh and check again
  [ $rc -eq 2 ] && { $dir/buildconf.sh; bc_rc=$?; build_sanity_gnuconf $dir; rc=$?; }
-
  [ $rc -ne 0 ] && { echo "build_gnuconf: build sanity tests failed for $dir"; return $rc; }
 
  [ ! -d "$pkgbuilddir" ] &&
@@ -349,7 +348,6 @@ build_gnuconf()
 
  # some "configure"s do not supporting building in a directory different than the source directory
  # TODO: cwd to "$dir"
-
  [ "$opt" == "BADCONFIGURE" ] &&
  {
   dirList=$(find $dir -type d)
@@ -371,16 +369,16 @@ build_gnuconf()
  }
 
  echo
- echo "Building $id in $pkgbuilddir at $(date)"
+ echo "Building $id at $(date)"
  echo
 
  [ -z "$CFLAGS" ] && export CFLAGS="-I${prefix}/include"
  [ -z "$LDFLAGS" ] && export LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"
 
-cat << EOF
- CFLAGS="${CFLAGS}"
- LDFLAGS="${LDFLAGS}"
-EOF
+#cat << EOF
+# CFLAGS="${CFLAGS}"
+# LDFLAGS="${LDFLAGS}"
+#EOF
 
  echo "Configuring..."
  {
