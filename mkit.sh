@@ -81,6 +81,22 @@ EOF
  # download latest archives / builds name mapping
  download || { echo "Download failed for one of the components"; exit 1; }
 
+ [ ! -z "$DOWNLOAD_MAP" ] &&
+ {
+   echo "Downloaded software:"
+   echo
+   for item in $DOWNLOAD_MAP
+   do
+     echo $item| awk -F: '
+         {
+           cnt=split($2,bn_a,"/");
+           bn=bn_a[cnt]
+           printf("%-12s %s\n", $1, bn);
+         }
+'
+   done
+ }
+
  # launch default profile
  profile_default
  exit $?

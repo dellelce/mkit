@@ -78,6 +78,7 @@ get_srcget()
 download()
 {
  typeset pkg fn
+ export DOWNLOAD_MAP=""
 
  for pkg in $SRCLIST
  do
@@ -87,6 +88,8 @@ download()
   fn="$PWD/$fn"
   [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
   echo "${BOLD}$pkg${RESET} has been downloaded as: " $fn
+
+  DOWNLOAD_MAP="${DOWNLOAD_MAP} ${pkg}:${fn}"  # this will fail if ${fn} has spaces!
 
   # save directory to a variable named after the package
   eval "fn_${pkg}=$fn"
@@ -246,7 +249,6 @@ build_logger()
 
 #
 # Build perl - custom function only for perl
-
 build_perl_core()
 {
  typeset rc=0
@@ -375,11 +377,6 @@ build_gnuconf()
 
  [ -z "$CFLAGS" ] && export CFLAGS="-I${prefix}/include"
  [ -z "$LDFLAGS" ] && export LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"
-
-#cat << EOF
-# CFLAGS="${CFLAGS}"
-# LDFLAGS="${LDFLAGS}"
-#EOF
 
  echo "Configuring..."
  {
@@ -577,7 +574,6 @@ build_aprutil()
 
 #
 # mod_wsgi
-
 build_mod_wsgi()
 {
  uncompress mod_wsgi $fn_mod_wsgi || { echo "Failed uncompress for: $fn_mod_wsgi"; return 1; }
