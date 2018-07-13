@@ -109,7 +109,7 @@ getfilename()
 #
 # xz
 #
-uncompress_xz()
+un_xz()
 {
  typeset fn="$1" rc=0 dir=""; shift
  typeset bdir="$1"
@@ -125,14 +125,14 @@ uncompress_xz()
   return 0
  }
 
- echo "uncompress_xz return code: $rc"
+ echo "un_xz return code: $rc"
  return $rc
 }
 
 #
 # bz2
 #
-uncompress_bz2()
+un_bz2()
 {
  typeset fn="$1" rc=0 dir=""; shift
  typeset bdir="$*"
@@ -148,14 +148,14 @@ uncompress_bz2()
   return 0
  }
 
- echo "uncompress_bz2 return code: $rc"
+ echo "un_bz2 return code: $rc"
  return $rc
 }
 
 #
 # gz
 #
-uncompress_gz()
+un_gz()
 {
  typeset fn="$1" rc=0 dir=""; shift
  typeset bdir="$*"
@@ -166,7 +166,7 @@ uncompress_gz()
  rc=$?
  [ "$rc" -eq 0 ] && { dir=$(ls -d1t ${bdir}/* | head -1); [ -d "$dir" ] && echo $dir; return 0; }
 
- echo "uncompress_gz return code: $rc"
+ echo "un_gz return code: $rc"
  return $rc
 }
 
@@ -197,9 +197,10 @@ uncompress()
  echo
  echo "$id: uncompressing ${BOLD}$(basename $fn)${RESET}"
 
- [ "$fn" != "${fn%.xz}" ] && { dir=$(uncompress_xz "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
- [ "$fn" != "${fn%.bz2}" ] && { dir=$(uncompress_bz2 "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
- [ "$fn" != "${fn%.gz}" ] && { dir=$(uncompress_gz "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
+ [ "$fn" != "${fn%.xz}" ] && { dir=$(un_xz "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
+ [ "$fn" != "${fn%.bz2}" ] && { dir=$(un_bz2 "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
+ [ "$fn" != "${fn%.tgz}" ] && { dir=$(un_gz "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
+ [ "$fn" != "${fn%.gz}" ] && { dir=$(un_gz "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
 
  echo "uncompress: Can't handle $fn type"
  return 1
