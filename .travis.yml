@@ -1,2 +1,2 @@
 language: c
-script: mkdir /tmp/build && ./mkit.sh /tmp/build && echo "import _ssl; print(OPENSSL_VERSION);" | /tmp/build/bin/python3
+script: mkdir /tmp/build && ./mkit.sh /tmp/build && echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | /tmp/build/bin/python3
