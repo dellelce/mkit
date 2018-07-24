@@ -490,7 +490,7 @@ build_openssl()
 
  [ $rc -ne 0 ] && { cd "$cwd"; cat "${logFile}"; echo ; echo "Failed make install for OpenSSL";  return $rc; }
 
- retun 0
+ return 0
 }
 
 ### EOF ###
