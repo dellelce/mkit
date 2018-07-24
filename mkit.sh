@@ -19,6 +19,7 @@ mkit_setup()
  export WORKDIR="$PWD/mkit_workdir"
  export SRCGET="${WORKDIR}/srcget"
  export PATH="$PATH:$SRCGET"
+ export BUILDLIST=""
  export DOWNLOADS="${WORKDIR}/downloads"
 
  [ -z "$NO_TIMESTAMP" ] &&

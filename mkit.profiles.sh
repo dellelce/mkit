@@ -3,39 +3,39 @@
 # TODO: automate build orders & list
 profile_default()
 {
- build_libffi || exit $?
- build_libbsd || exit $?
- build_libexpat  || exit $?
- build_readline || exit $?
- build_sqlite3 || exit $?
- build_m4 || exit $?
- build_autoconf || exit $?
- build_bison || exit $?
- build_pcre || exit $?
- build_zlib || exit $?
- build_bzip2 || exit $?
+ add_build libffi
+ add_build libbsd
+ add_build libexpat
+ add_build readline
+ add_build sqlite3
+ add_build m4
+ add_build autoconf
+ add_build bison
+ add_build pcre
+ add_build zlib
+ add_build bzip2
 
- [ ! -z "$PERL_NEEDED" -a "$PERL_NEEDED" -eq 1 ] &&
+ [ "$PERL_NEEDED" == "1" ] &&
  {
-  build_perl
-  rc=$?
-  [ "$rc" -ne 0 ] && exit "$rc"
- }
- 
- build_openssl || exit $?
- build_apr || exit $?
- build_aprutil || exit $?
- build_libxml2 || exit $?
- build_httpd || exit $?
-
- [ ! -z "$PHP_NEEDED" -a "$PHP_NEEDED" == 1 ] &&
- {
-  build_php || exit $?
-  build_suhosin || exit $?
+  add_build perl
  }
 
- build_python3 || exit $?
- build_mod_wsgi || exit $?
+ add_build openssl
+ add_build apr
+ add_build aprutil
+ add_build libxml2
+ add_build httpd
+
+ [ "$PHP_NEEDED" == "1" ] &&
+ {
+  add_build php
+  add_build suhosin
+ }
+
+ add_build python3
+ add_build mod_wsgi
+
+ run_build
 }
 
 ### EOF ###

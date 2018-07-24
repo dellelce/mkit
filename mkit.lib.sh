@@ -335,4 +335,40 @@ build_gnuconf()
  return $rc_makeinstall
 }
 
+#
+# add_build
+#
+add_build()
+{
+ while [ ! -z "$1" ]
+ do
+  export BUILDLIST="$BUILDLIST $1"
+  shift
+ done
+}
+
+#
+# run_build: build all "packages" in BUILDLIST
+#
+run_build()
+{
+ typeset pkg=""
+ typeset rc=$?
+
+ for pkg in $BUILDLIST
+ do
+   func="build_${pkg}"
+   type $func >/dev/null 2>&1 # we expect $func to be..... a function!! everything else will fail
+   [ $? -ne 0 ] && { echo "Build function for $pkg is invalid or does not exist"; return 1; }
+   $func
+   rc=$?
+
+   [ "$rc" -ne 0 ] &&
+   {
+     echo "Failed build $pkg with return code: $rc"
+     return $rc
+   }
+ done
+}
+
 ### EOF ###
