@@ -456,40 +456,41 @@ build_openssl()
  uncompress openssl $fn_openssl || { echo "Failed uncompress for: $fn_openssl"; return 1; }
  export rc=0
 
- (
-   echo
-   echo Building OpenSSL
-   echo
+ echo
+ echo Building OpenSSL
+ echo
 
-   cd $srcdir_openssl || return 1
+ typeset cwd="$PWD"
+ cd $srcdir_openssl || return 1
 
-   echo "Configuring..."
-   {
-     logFile=$(logger_file ${id}_configure)
-     ./config shared --prefix=$prefix --libdir=lib > ${logFile} 2>&1
-     rc=$?
-   }
+ echo "Configuring..."
+ {
+   logFile=$(logger_file ${id}_configure)
+   ./config shared --prefix=$prefix --libdir=lib > ${logFile} 2>&1
+   rc=$?
+ }
 
-   [ $rc -ne 0 ] && { echo ; echo "Failed configure for OpenSSL";  return $rc; }
+ [ $rc -ne 0 ] && { cd "$cwd"; cat "${logFile}"; echo ; echo "Failed configure for OpenSSL";  return $rc; }
 
-   echo "Running make..."
-   {
-     logFile=$(logger_file ${id}_make)
-     make > ${logFile} 2>&1
-     rc=$?
-   }
+ echo "Running make..."
+ {
+   logFile=$(logger_file ${id}_make)
+   make > ${logFile} 2>&1
+   rc=$?
+ }
 
-   [ $rc -ne 0 ] && { echo ; echo "Failed make for OpenSSL";  return $rc; }
+ [ $rc -ne 0 ] && { cd "$cwd"; cat "${logFile}"; echo ; echo "Failed make for OpenSSL";  return $rc; }
 
-   echo "Running make install..."
-   {
-     logFile=$(logger_file ${id}_install)
-     make install > ${logFile} 2>&1
-     rc=$?
-   }
+ echo "Running make install..."
+ {
+   logFile=$(logger_file ${id}_install)
+   make install > ${logFile} 2>&1
+   rc=$?
+ }
 
-   [ $rc -ne 0 ] && { echo ; echo "Failed make install for OpenSSL";  return $rc; }
- )
+ [ $rc -ne 0 ] && { cd "$cwd"; cat "${logFile}"; echo ; echo "Failed make install for OpenSSL";  return $rc; }
+
+ retun 0
 }
 
 ### EOF ###
