@@ -1,5 +1,7 @@
 # mkit
 
+[![Build Status](https://travis-ci.org/dellelce/mkit.svg?branch=master)](https://travis-ci.org/dellelce/mkit)
+
 Download and Build a complete Apache/PHP/Python(mod_wsgi) stack.
 
 ## Configuration variables
