@@ -310,28 +310,32 @@ build_gnuconf()
 
  echo "Configuring..."
  {
-  $dir/configure --prefix="${prefix}" $* 2>&1
+  logFile=$(logger_file ${id}_configure)
+  $dir/configure --prefix="${prefix}" $* > ${logFile} 2>&1
   rc_conf=$?
- } | build_logger ${id}_configure
+ }
 
- [ "$rc_conf" -ne 0 ] && return $rc_conf
+ [ "$rc_conf" -ne 0 ] && { cat "${logFile}"; return $rc_conf; }
 
  echo "Running make..."
  {
-  make 2>&1
+  logFile=$(logger_file ${id}_make)
+  make > ${logFile} 2>&1
   rc_make=$?
- } | build_logger ${id}_make
+ }
 
- [ "$rc_make" -ne 0 ] && return $rc_make
+ [ "$rc_make" -ne 0 ] && { cat "${logFile}"; return $rc_make; }
 
  echo "Running make install..."
  {
-  make install 2>&1
+  logFile=$(logger_file ${id}_makeinstall)
+  make install > ${logFile} 2>&1
   rc_makeinstall=$?
- } | build_logger ${id}_makeinstall
+ }
 
  cd "$WORKDIR"
 
+ [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; }
  return $rc_makeinstall
 }
 

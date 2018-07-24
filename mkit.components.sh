@@ -452,6 +452,7 @@ build_php()
 #
 build_openssl()
 {
+ typeset id="openssl"
  uncompress openssl $fn_openssl || { echo "Failed uncompress for: $fn_openssl"; return 1; }
  export rc=0
 
@@ -464,27 +465,30 @@ build_openssl()
 
    echo "Configuring..."
    {
-     ./config shared --prefix=$prefix --libdir=lib 2>&1
+     logFile=$(logger_file ${id}_configure)
+     ./config shared --prefix=$prefix --libdir=lib > ${logFile} 2>&1
      rc=$?
-   } | build_logger openssl_configure
+   }
 
-   [ $rc -eq 0 ]  || { echo ; echo "Failed configure for OpenSSL";  return 1; }
+   [ $rc -ne 0 ] && { echo ; echo "Failed configure for OpenSSL";  return $rc; }
 
    echo "Running make..."
    {
-     make 2>&1
+     logFile=$(logger_file ${id}_make)
+     make > ${logFile} 2>&1
      rc=$?
-   } | build_logger openssl_make
+   }
 
-   [ $rc -eq 0 ]  || { echo ; echo "Failed make for OpenSSL";  return 1; }
+   [ $rc -ne 0 ] && { echo ; echo "Failed make for OpenSSL";  return $rc; }
 
    echo "Running make install..."
    {
-     make install 2>&1
+     logFile=$(logger_file ${id}_install)
+     make install > ${logFile} 2>&1
      rc=$?
-   } | build_logger openssl_makeinstall
+   }
 
-   [ $rc -eq 0 ]  || { echo ; echo "Failed make install for OpenSSL";  return 1; }
+   [ $rc -ne 0 ] && { echo ; echo "Failed make install for OpenSSL";  return $rc; }
  )
 }
 
