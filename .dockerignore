@@ -1,0 +1,8 @@
+logs
+*.bz2
+*.xz
+*.gz
+srcget*
+mkit_workdir
+tmp
+*.log
