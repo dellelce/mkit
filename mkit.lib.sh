@@ -23,6 +23,8 @@ getPerlVersions()
 {
  typeset perlBin="perl"
 
+ type ${perlBin} 2>/dev/null && return $?
+
  ${perlBin} -V | awk '
 FNR == 1 \
 {
