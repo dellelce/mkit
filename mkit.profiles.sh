@@ -3,13 +3,13 @@
 # TODO: automate build orders & list
 profile_default()
 {
+ add_build m4
  add_build autoconf
  add_build libffi
  add_build libbsd
  add_build libexpat
  add_build readline
  add_build sqlite3
- add_build m4
  add_build bison
  add_build pcre
  add_build zlib
