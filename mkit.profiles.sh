@@ -36,6 +36,7 @@ profile_default()
  add_build mod_wsgi
 
  run_build
+ return $?
 }
 
 ### EOF ###

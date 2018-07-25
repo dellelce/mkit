@@ -377,6 +377,8 @@ run_build()
      return $rc
    }
  done
+
+ return 0 # we hate bash bugs so we had a return 0 here
 }
 
 #
