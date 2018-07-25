@@ -13,16 +13,13 @@ test_file()
  typeset f="$1"
  typeset basef="$(basename $f)"
 
- [ ! -x "$f" ] && return 1
+ [ ! -f "$f" ] && { echo "File $f does not exist."; return 1; }
 
  echo "${basef} exists."
  ls -lt "$f"
 
  # shared library test
- [ "${basef%.so}" != "${basef}" ] &&
- {
-   ldd "$f" ||  return $?
- }
+ [ "${basef%.so}" != "${basef}" ] && { ldd "$f" ||  return $?; }
 
  return 0
 }
@@ -30,7 +27,7 @@ test_file()
 ### ENV ###
 
 prefix="$1"
-python="$prefix/bin/python3"
+python="$prefix/bin/python3.7"
 
 ### MAIN ###
 
