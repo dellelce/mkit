@@ -11,7 +11,7 @@
 
  SRCLIST="libffi libbsd expat sqlite3 m4 autoconf suhosin bison apr aprutil bzip2
              httpd openssl php pcre libxml2 zlib mod_wsgi readline python3 "
- export srcget="0.0.8.0"  #  srcget version
+ export srcget="0.0.8.1"  #  srcget version
 
  # vt100 family sequences
  export ESC=""
