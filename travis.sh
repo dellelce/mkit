@@ -13,7 +13,7 @@ python="$prefix/bin/python3"
 
 ### MAIN ###
 
-mkdir $prefix && ./mkit.sh $prefix
+mkdir $prefix && bash -x ./mkit.sh $prefix
 rc=$?
 
 echo "mkit rc: $rc"
