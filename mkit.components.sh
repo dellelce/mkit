@@ -75,6 +75,8 @@ build_perl_core()
  echo "Building Perl in $pkgbuilddir at $(date)"
  echo
 
+ time_start
+
  echo "Configuring..."
  {
   $dir/Configure  -des                          \
@@ -146,7 +148,7 @@ build_libffi()
  rc=$?
  [ $? -ne 0 ] && return $rc
 
- # libffi ingores --libdir and --includedir options of configure
+ # libffi ignores --libdir and --includedir options of configure
  # installs includes in $prefix/lib/libffi-version/include/ etc
  # installs all other files in $prefix/lib64
  # the lib64 path is *NOT* detectd by python while include is (pkg-config?)
@@ -351,7 +353,6 @@ build_bzip2_core()
   done
  }
 
- #
  echo
  echo "Building $id in $pkgbuilddir at $(date)"
  echo
@@ -359,10 +360,13 @@ build_bzip2_core()
  {
   logFile=$(logger_file ${id}_make)
   echo "Running make: logging at ${logFile}"
+
   cwd="$PWD"
   cd "$dir"
+
   make > ${logFile} 2>&1
   rc_make="$?"
+
   cd "$cwd"
  }
  [ "$rc_make" -ne 0 ] && return "$rc_make"
@@ -371,11 +375,14 @@ build_bzip2_core()
  {
   logFile=$(logger_file ${id}_makeso)
   echo "Running make shared: logging at ${logFile}"
+
   cwd="$PWD"
   cd "$dir"
+
   make clean # the next step will not rebuild and the "linker" will fail without this
   make -f Makefile-libbz2_so  > ${logFile} 2>&1
   rc_makeso="$?"
+
   cd "$cwd"
  }
  [ "$rc_makeso" -ne 0 ] && return "$rc_make"
@@ -384,12 +391,15 @@ build_bzip2_core()
  {
   logFile=$(logger_file ${id}_makeinstall)
   echo "Running make install: logging at ${logFile}"
+
   cwd="$PWD"
   cd "$dir"
+
   make install PREFIX="${prefix}" > ${logFile} 2>&1
   cp "libbz2.so.1.0.6" "${prefix}/lib"
   ln -s "${prefix}/lib/libbz2.so.1.0.6" "${prefix}/lib/libbz2.so.1.0"
   rc_makeinstall="$?"
+
   cd "$cwd"
  }
  [ "$rc_makeinstall" -ne 0 ] && return "$rc_makeinstall"
@@ -463,6 +473,8 @@ build_openssl()
  typeset cwd="$PWD"
  cd $srcdir_openssl || return 1
 
+ time_start
+
  echo "Configuring..."
  {
    logFile=$(logger_file ${id}_configure)
@@ -470,7 +482,7 @@ build_openssl()
    rc=$?
  }
 
- [ $rc -ne 0 ] && { cd "$cwd"; cat "${logFile}"; echo ; echo "Failed configure for OpenSSL";  return $rc; }
+ [ $rc -ne 0 ] && { cd "$cwd"; time_end; cat "${logFile}"; echo ; echo "Failed configure for OpenSSL";  return $rc; }
 
  echo "Running make..."
  {
@@ -479,7 +491,7 @@ build_openssl()
    rc=$?
  }
 
- [ $rc -ne 0 ] && { cd "$cwd"; cat "${logFile}"; echo ; echo "Failed make for OpenSSL";  return $rc; }
+ [ $rc -ne 0 ] && { cd "$cwd"; time_end; cat "${logFile}"; echo ; echo "Failed make for OpenSSL";  return $rc; }
 
  echo "Running make install..."
  {
@@ -488,8 +500,9 @@ build_openssl()
    rc=$?
  }
 
- [ $rc -ne 0 ] && { cd "$cwd"; cat "${logFile}"; echo ; echo "Failed make install for OpenSSL";  return $rc; }
+ [ $rc -ne 0 ] && { cd "$cwd"; time_end; cat "${logFile}"; echo ; echo "Failed make install for OpenSSL";  return $rc; }
 
+ time_end
  return 0
 }
 

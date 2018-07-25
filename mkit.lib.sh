@@ -305,6 +305,8 @@ build_gnuconf()
  echo "Building $id at $(date)"
  echo
 
+ time_start # setup timer
+
  [ -z "$CFLAGS" ] && export CFLAGS="-I${prefix}/include"
  [ -z "$LDFLAGS" ] && export LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"
 
@@ -336,6 +338,8 @@ build_gnuconf()
  cd "$WORKDIR"
 
  [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; }
+ time_end
+
  return $rc_makeinstall
 }
 
@@ -352,17 +356,17 @@ add_build()
 }
 
 #
-# run_build: build all "packages" in BUILDLIST
+# run_build: build all in BUILDLIST
 #
 run_build()
 {
  typeset pkg=""
- typeset rc=$?
+ typeset rc=0
 
  for pkg in $BUILDLIST
  do
    func="build_${pkg}"
-   type $func >/dev/null 2>&1 # we expect $func to be..... a function!! everything else will fail
+   type $func >/dev/null 2>&1
    [ $? -ne 0 ] && { echo "Build function for $pkg is invalid or does not exist"; return 1; }
    $func
    rc=$?
@@ -373,6 +377,22 @@ run_build()
      return $rc
    }
  done
+}
+
+#
+# timing functions
+#
+time_start()
+{
+ export start=$(date +%s)
+}
+
+time_end()
+{
+ export end=$(date +%s)
+
+ let  elapsed="(( $end - $start ))"
+ echo "Elapsed: ${elapsed}secs"
 }
 
 ### EOF ###
