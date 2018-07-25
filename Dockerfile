@@ -8,13 +8,11 @@ ENV BUILDDIR  /app-build
 ARG INSTALLDIR
 ENV INSTALLDIR  /app/httpd
 
+ARG PACKAGES
+ENV PACKAGES gcc bash wget perl file xz make libc-dev linux-headers
+
 WORKDIR $BUILDDIR
 COPY . $BUILDDIR
 
-RUN  apk add --no-cache  gcc bash wget perl file xz make libc-dev &&  \
-     ls -lta $BUILDDIR &&      \
-     bash ${BUILDDIR}/mkit.sh $INSTALLDIR && \
-     ls -lt $INSTALLDIR && \
-     ls -lt $INSTALLDIR/bin && \
-     echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | $INSTALLDIR/bin/python3
-
+RUN  apk add --no-cache  $PACKAGES &&  \
+     bash ${BUILDDIR}/docker.sh $INSTALLDIR
