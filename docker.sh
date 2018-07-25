@@ -18,9 +18,6 @@ test_file()
  echo "${basef} exists."
  ls -lt "$f"
 
- # shared library test
- [ "${basef%.so}" != "${basef}" ] && { ldd "$f" ||  return $?; }
-
  return 0
 }
 
