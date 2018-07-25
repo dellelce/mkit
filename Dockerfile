@@ -9,7 +9,7 @@ ARG INSTALLDIR
 ENV INSTALLDIR  /app/httpd
 
 ARG PACKAGES
-ENV PACKAGES gcc bash wget perl file xz make libc-dev linux-headers
+ENV PACKAGES gcc bash wget perl file xz make libc-dev linux-headers g++
 
 WORKDIR $BUILDDIR
 COPY . $BUILDDIR
