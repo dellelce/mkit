@@ -39,23 +39,29 @@ fails=0
 
 # even if rc != 0: we do some tests anyway
 
-[ -x "$python" ] &&
+test_file $python
+rc_python=$?
+
+rc_sslversion=0
+
+[ "$rc_python" -eq 0 ] &&
 {
  echo "Testing correct OpenSSL module is built:"
  echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | ${python}
- [ $? -ne 0 ] && let fails="(( $fails + 1))"
+ rc_sslversion=$?
 } ||
 {
- echo "No python executable!!"
  let fails="(( $fails + 1))"
 }
 
+[ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))" 
+
 # mod_wsgi checks
 
-f="$prefix/mod_wsgi.so"
+f="$prefix/modules/mod_wsgi.so"
 test_file  $f || let fails="(( $fails + 1))"
 
-f="$prefix/mod_proxy_uwsgi.so"
+f="$prefix/modules/mod_proxy_uwsgi.so"
 test_file  $f || let fails="(( $fails + 1))"
 
 #
