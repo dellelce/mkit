@@ -6,6 +6,6 @@ service:
 matrix:
 - name: "With Docker"
   env: USEDOCKER="yes"
-- name: "Without Docker":
+- name: "Without Docker"
   env: USEDOCKER="no"
 script: ./travis-plex.sh "$USEDOCKER" /tmp/build
