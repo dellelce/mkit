@@ -1,7 +1,7 @@
 language: c
 notifications:
    slack: skydreams:1FLUnEeqaNLinKq1p0lJf9F5
-service:
+services:
  - docker
 env:
  - USEDOCKER="yes"
