@@ -1,4 +1,11 @@
 language: c
-script: ./travis.sh /tmp/build
 notifications:
     slack: skydreams:1FLUnEeqaNLinKq1p0lJf9F5
+service:
+- docker
+matrix:
+- name: "With Docker"
+  env: USEDOCKER="yes"
+- name: "Without Docker":
+  env: USEDOCKER="no"
+script: [ "$USEDOCKER" == yes ] && docker build -t mkitbuild . || ./travis.sh /tmp/build
