@@ -8,4 +8,4 @@ matrix:
   env: USEDOCKER="yes"
 - name: "Without Docker":
   env: USEDOCKER="no"
-script: [ "$USEDOCKER" == yes ] && docker build -t mkitbuild . || ./travis.sh /tmp/build
+script: ./travis-plex.sh "$USEDOCKER" /tmp/build
