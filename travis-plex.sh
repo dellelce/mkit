@@ -12,7 +12,7 @@
 ### MAIN ###
 
  set -x
- [ "$isdocker" ] &&
+ [ "$isdocker" == "yes" ] &&
  { docker build -t mkitbuild . ; exit $?; } ||
  { ./travis.sh "$path"; exit $?; }
 
