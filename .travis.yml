@@ -1,11 +1,9 @@
 language: c
 notifications:
-    slack: skydreams:1FLUnEeqaNLinKq1p0lJf9F5
+   slack: skydreams:1FLUnEeqaNLinKq1p0lJf9F5
 service:
-- docker
-matrix:
-- name: "With Docker"
-  env: USEDOCKER="yes"
-- name: "Without Docker"
-  env: USEDOCKER="no"
+ - docker
+env:
+ - env: USEDOCKER="yes"
+ - env: USEDOCKER="no"
 script: ./travis-plex.sh "$USEDOCKER" /tmp/build
