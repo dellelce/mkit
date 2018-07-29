@@ -166,8 +166,8 @@ build_libffi()
 }
 
 #
-# libexpat
-build_libexpat()
+# expat
+build_expat()
 {
  uncompress expat $fn_expat || { echo "Failed uncompress for: $fn_expat"; return 1; }
  build_gnuconf expat $srcdir_expat

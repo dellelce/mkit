@@ -7,7 +7,7 @@ profile_default()
  add_build autoconf
  add_build libffi
  add_build libbsd
- add_build libexpat
+ add_build expat
  add_build readline
  add_build sqlite3
  add_build bison
