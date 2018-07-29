@@ -28,7 +28,8 @@ RUN  apk add --no-cache  $PACKAGES &&  \
 # Second Stage
 FROM alpine:latest AS final
 
-RUN mkdir -p /app/httpd
+RUN mkdir -p /app/httpd && \
+    apk add --no-cache libgcc
 
 WORKDIR /app/httpd
 COPY --from=build /app/httpd .
