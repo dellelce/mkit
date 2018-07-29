@@ -15,7 +15,20 @@ test_file()
 
  [ ! -f "$f" ] && { echo "File $f does not exist."; return 1; }
 
- echo "${basef} exists."
+ echo "File ${basef} exists."
+ ls -lt "$f"
+
+ return 0
+}
+
+test_any()
+{
+ typeset f="$1"
+ typeset basef="$(basename $f)"
+
+ [ ! -e "$f" ] && { echo "$f does not exist."; return 1; }
+
+ echo "File ${basef} exists."
  ls -lt "$f"
 
  return 0
@@ -56,11 +69,16 @@ main_tests()
  [ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
 
  # mod_wsgi checks
- f="$prefix/modules/mod_wsgi.so"
- test_file  $f || let fails="(( $fails + 1))"
+ test_file "$prefix/modules/mod_wsgi.so" || let fails="(( $fails + 1))"
+ test_file "$prefix/modules/mod_proxy_uwsgi.so" || let fails="(( $fails + 1))"
 
- f="$prefix/modules/mod_proxy_uwsgi.so"
- test_file  $f || let fails="(( $fails + 1))"
+ # readline
+ test_any "$prefix/lib/libhistory.a" || let fails="(( $fails + 1))"
+ test_any "$prefix/lib/libhistory.so.7.0" || let fails="(( $fails + 1))"
+ test_any "$prefix/lib/libhistory.so.7" || let fails="(( $fails + 1))"
+ test_any "$prefix/lib/libhistory.so" || let fails="(( $fails + 1))"
+ test_any "$prefix/lib/libreadline.a" || let fails="(( $fails + 1))"
+ test_any "$prefix/lib/libreadline.so.7.0" || let fails="(( $fails + 1))"
 
  echo
  ls -lt "${prefix}/bin"
@@ -89,6 +107,5 @@ echo "mkit rc: $rc"
 
 # even if rc != 0: we do some tests anyway
 main_tests || exit $?
-
 
 ### EOF ###
