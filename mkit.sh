@@ -69,34 +69,13 @@ mkit_setup()
 
  [ "$PERL_REVISION" -eq 5 -a "$PERL_VERSION" -lt 10 ] &&
  {
-  export SRCLIST="perl ${SRCLIST}"
+  export BUILDLIST="perl ${BUILDLIST}"
   export PERL_NEEDED=1
   cat << EOF
    Detected version of perl is ${PERL_REVISION}.${PERL_VERSION}.${PERL_SUBVERSION} minimum required version is 5.10.
    Will download and build local version.
 
 EOF
- }
-
- # the next function (download) uses the variable SRCLIST to determine
- # which packages to download
- # download latest archives / builds name mapping
- download || { echo "Download failed for one of the components"; exit 1; }
-
- [ ! -z "$DOWNLOAD_MAP" ] &&
- {
-   echo "Downloaded software:"
-   echo
-   for item in $DOWNLOAD_MAP
-   do
-     echo $item| awk -F: '
-         {
-           cnt=split($2,bn_a,"/");
-           bn=bn_a[cnt]
-           printf("%-12s %s\n", $1, bn);
-         }
-'
-   done
  }
 
  # launch default profile

@@ -73,8 +73,7 @@ get_srcget()
 #
 # download
 #
-# Used Globals:
-#   SRCLIST
+# Used Global:
 #   DOWNLOADS
 #
 download()
@@ -82,7 +81,7 @@ download()
  typeset pkg fn
  export DOWNLOAD_MAP=""
 
- for pkg in $SRCLIST
+ for pkg in $BUILDLIST
  do
   pushdir "$DOWNLOADS"
   fn=$(srcget.sh -n $pkg)
@@ -375,6 +374,27 @@ run_build()
 {
  typeset pkg=""
  typeset rc=0
+
+ # the next function (download) uses the variable SRCLIST to determine
+ # which packages to download
+ # download latest archives / builds name mapping
+ download || { echo "Download failed for one of the components"; exit 1; }
+
+ [ ! -z "$DOWNLOAD_MAP" ] &&
+ {
+   echo "Downloaded software:"
+   echo
+   for item in $DOWNLOAD_MAP
+   do
+     echo $item| awk -F: '
+         {
+           cnt=split($2,bn_a,"/");
+           bn=bn_a[cnt]
+           printf("%-12s %s\n", $1, bn);
+         }
+'
+   done
+ }
 
  for pkg in $BUILDLIST
  do
