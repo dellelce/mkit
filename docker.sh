@@ -55,18 +55,24 @@ main_tests()
  rc_python=$?
 
  rc_sslversion=0
+ rc_readline=0
 
  [ "$rc_python" -eq 0 ] &&
  {
   echo "Testing correct OpenSSL module is built:"
   echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | ${python}
   rc_sslversion=$?
+
+  echo "Testing readline"
+  echo "import readline;" | ${python}
+  rc_readline="$?"
  } ||
  {
   let fails="(( $fails + 1))"
  }
 
  [ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
+ [ "$rc_readline" -ne 0 ] && let fails="(( $fails + 1))"
 
  # mod_wsgi checks
  test_file "$prefix/modules/mod_wsgi.so" || let fails="(( $fails + 1))"
