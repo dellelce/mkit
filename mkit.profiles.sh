@@ -39,4 +39,11 @@ profile_default()
  return $?
 }
 
+profile_redis()
+{
+ add_build redis
+ run_build
+ return $?
+}
+
 ### EOF ###
