@@ -10,14 +10,14 @@ ENV INSTALLDIR  /app/httpd
 
 # gcc             most of the source needs gcc
 # bash            busybox does not support some needed features of bash like "typeset"
-# wget            builtin wget does not
+# wget            builtin wget does not work for us
 # perl            I'll pass...
 # file            no magic inside
-# xz              xz is the "best" 
+# xz              xz is the "best"
 # libc-dev        headers
 # linux-headers   more headers
 ARG PACKAGES
-ENV PACKAGES gcc bash wget perl file xz make libc-dev linux-headers g++
+ENV PACKAGES gcc bash ncurses wget perl file xz make libc-dev linux-headers g++
 
 WORKDIR $BUILDDIR
 COPY . $BUILDDIR
@@ -28,8 +28,8 @@ RUN  apk add --no-cache  $PACKAGES &&  \
 # Second Stage
 FROM alpine:latest AS final
 
-RUN mkdir -p /app/httpd && \
-    apk add --no-cache libgcc
+RUN mkdir -p ${INSTALLDIR} && \
+    apk add --no-cache libgcc ncurses
 
-WORKDIR /app/httpd
-COPY --from=build /app/httpd .
+WORKDIR ${INSTALLDIR}
+COPY --from=build ${INSTALLDIR} .
