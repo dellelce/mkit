@@ -364,8 +364,7 @@ build_bzip2_core()
   cwd="$PWD"
   cd "$dir"
 
-  make > ${logFile} 2>&1
-  rc_make="$?"
+  make > ${logFile} 2>&1; rc_make="$?"
 
   cd "$cwd"
  }
@@ -504,6 +503,90 @@ build_openssl()
 
  time_end
  return 0
+}
+
+#
+# redis
+#
+build_redis_core()
+{
+ typeset rc=0 cwd=""
+ export rc_conf=0 rc_make=0 rc_makeinstall=0
+ typeset id="$1"; shift   # build id
+ typeset dir="$1"; shift  # src directory
+ typeset pkgbuilddir="$BUILDDIR/$id"
+
+ [ ! -d "$pkgbuilddir" ] &&
+   { mkdir -p "$pkgbuilddir"; } ||
+   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+
+ cd "$pkgbuilddir" ||
+ {
+  echo "build_gzip2_core: Failed to change to build directory: " $pkgbuilddir;
+  return 1;
+ }
+
+ #redis does not have a configure but just a raw makefile
+ {
+  dirList=$(find $dir -type d)
+  fileList=$(find $dir -type f)
+
+  #make directores
+  for bad in $dirList
+  do
+   baseDir=${bad#${dir}/} #remove "base" directory
+   mkdir -p "$baseDir" || return "$?"
+  done
+
+  # link files
+  for bad in $fileList
+  do
+   baseFile=${bad#${dir}/} #remove "base" directory
+   ln -s "$bad" "$baseFile" || return "$?"
+  done
+ }
+
+ echo
+ echo "Building $id in $pkgbuilddir at $(date)"
+ echo
+ # make
+ {
+  logFile=$(logger_file ${id}_make)
+  echo "Running make: logging at ${logFile}"
+
+  cwd="$PWD"
+  cd "$dir"
+
+  make > ${logFile} 2>&1; rc_make="$?"
+
+  cd "$cwd"
+ }
+ [ "$rc_make" -ne 0 ] && return "$rc_make"
+
+ # make install
+ {
+  logFile=$(logger_file ${id}_makeinstall)
+  echo "Running make install: logging at ${logFile}"
+
+  cwd="$PWD"
+  cd "$dir"
+
+  make install PREFIX="${prefix}" > ${logFile} 2>&1
+  rc_makeinstall="$?"
+
+  cd "$cwd"
+ }
+ [ "$rc_makeinstall" -ne 0 ] && return "$rc_makeinstall"
+
+ return 0
+}
+
+build_redis()
+{
+ uncompress redis $fn_redis || { echo "Failed uncompress for: $fn_redis"; return 1; }
+ build_redis_core redis $srcdir_redis
+
+ return $?
 }
 
 ### EOF ###
