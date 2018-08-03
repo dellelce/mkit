@@ -238,6 +238,15 @@ build_automake()
 build_readline()
 {
  uncompress readline $fn_readline || { echo "Failed uncompress for: $fn_readline"; return 1; }
+ [ -f "/etc/alpine-release" -a -f "$srcdir_readline/shlib/Makefile.in" ] &&
+ {
+   rlmk="$srcdir_readline/shlib/Makefile.in"
+
+   ls -lt $rlmk
+   sed -i -e 's/SHLIB_LIBS = @SHLIB_LIBS@/SHLIB_LIBS = @SHLIB_LIBS@ -lncurses/'
+   ls -lt $rlmk
+ }
+
  build_gnuconf readline $srcdir_readline
  return $?
 }
