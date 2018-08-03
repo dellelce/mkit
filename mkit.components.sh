@@ -243,7 +243,7 @@ build_readline()
    rlmk="$srcdir_readline/shlib/Makefile.in"
 
    ls -lt $rlmk
-   sed -i -e 's/SHLIB_LIBS = @SHLIB_LIBS@/SHLIB_LIBS = @SHLIB_LIBS@ -lncurses/'
+   sed -i -e 's/SHLIB_LIBS = @SHLIB_LIBS@/SHLIB_LIBS = @SHLIB_LIBS@ -lncurses/' $rlmk
    ls -lt $rlmk
  }
 
