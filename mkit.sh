@@ -1,18 +1,12 @@
 #!/bin/bash
 #
 # requirements:
-#   wget    : download srcget & software
-#   GNU tar : j option (bzip2)
+#   GNU wget  : download srcget & software
+#   GNU tar   : j option (bzip2)
 #
 
-### ENV ###
+### FUNCTIONS ###
 
- . mkit.config.sh
- . mkit.profiles.sh
-
- export srcgetUrl="https://github.com/dellelce/srcget/archive"
-
-#
 mkit_setup()
 {
  export TIMESTAMP="$(date +%H%M_%d%m%y)"
@@ -54,6 +48,11 @@ mkit_setup()
 
 ### MAIN ###
 
+ . mkit.config.sh
+ . mkit.profiles.sh
+
+ export srcgetUrl="https://github.com/dellelce/srcget/archive"
+
  mkit_setup $*
  .  mkit.lib.sh
  .  mkit.components.sh
@@ -63,8 +62,7 @@ mkit_setup()
  # download srcget
  get_srcget || { echo "Failed getting srcget, exiting..."; exit 1; }
 
- # TODO: check if perl is not installed at all?
- #       this does not clarify which component requires perl > 5.10
+ # autotools/automake require perl
  eval $(getPerlVersions)
 
  [ "$PERL_REVISION" -eq 5 -a "$PERL_VERSION" -lt 10 ] &&

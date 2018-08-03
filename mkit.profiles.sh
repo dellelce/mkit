@@ -14,12 +14,6 @@ profile_default()
  add_build pcre
  add_build zlib
  add_build bzip2
-
- [ "$PERL_NEEDED" == "1" ] &&
- {
-  add_build perl
- }
-
  add_build openssl
  add_build apr
  add_build aprutil
