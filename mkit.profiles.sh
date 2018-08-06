@@ -6,6 +6,7 @@ profile_default()
  add_build m4
  add_build autoconf
  add_build libffi
+ add_build ncurses
  add_build libbsd
  add_build expat
  add_build readline

@@ -139,6 +139,16 @@ build_libbsd()
 }
 
 #
+# ncurses
+#
+build_ncurses()
+{
+ uncompress ncurses $fn_ncurses || { echo "Failed uncompress for: $fn_ncurses"; return 1; }
+ build_gnuconf ncurses $srcdir_ncurses
+ return $?
+}
+
+#
 build_libffi()
 {
  typeset rc=0 dir=""
