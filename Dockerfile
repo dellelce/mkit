@@ -31,3 +31,4 @@ RUN mkdir -p ${INSTALLDIR} && \
 
 WORKDIR ${INSTALLDIR}
 COPY --from=build ${INSTALLDIR} .
+RUN du -ks .
