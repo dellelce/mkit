@@ -144,7 +144,8 @@ build_libbsd()
 build_ncurses()
 {
  uncompress ncurses $fn_ncurses || { echo "Failed uncompress for: $fn_ncurses"; return 1; }
- build_gnuconf ncurses $srcdir_ncurses
+ build_gnuconf ncurses $srcdir_ncurses --with-shared --with-cxx-shared  \
+                                       --without-ada --enable-reentrant
  return $?
 }
 
