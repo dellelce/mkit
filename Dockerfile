@@ -13,7 +13,7 @@ ENV INSTALLDIR  /app/httpd
 # xz              xz is the "best"
 # libc-dev        headers
 # linux-headers   more headers
-ENV PACKAGES gcc bash ncurses ncurses-libs wget perl file xz make libc-dev linux-headers g++
+ENV PACKAGES gcc bash wget perl file xz make libc-dev linux-headers g++
 
 WORKDIR $BUILDDIR
 COPY . $BUILDDIR
@@ -27,7 +27,7 @@ FROM alpine:latest AS final
 ENV INSTALLDIR  /app/httpd
 
 RUN mkdir -p ${INSTALLDIR} && \
-    apk add --no-cache libgcc ncurses-libs
+    apk add --no-cache libgcc
 
 WORKDIR ${INSTALLDIR}
 COPY --from=build ${INSTALLDIR} .
