@@ -323,29 +323,21 @@ build_gnuconf()
  [ -z "$LDFLAGS" ] && export LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"
 
  echo "Configuring..."
- {
-  logFile=$(logger_file ${id}_configure)
-  $dir/configure --prefix="${prefix}" $* > ${logFile} 2>&1
-  rc_conf=$?
- }
-
+ logFile=$(logger_file ${id}_configure)
+ $dir/configure --prefix="${prefix}" $* > ${logFile} 2>&1
+ rc_conf=$?
  [ "$rc_conf" -ne 0 ] && { cat "${logFile}"; return $rc_conf; }
 
  echo "Running make..."
- {
-  logFile=$(logger_file ${id}_make)
-  make > ${logFile} 2>&1
-  rc_make=$?
- }
-
+ logFile=$(logger_file ${id}_make)
+ make > ${logFile} 2>&1
+ rc_make=$?
  [ "$rc_make" -ne 0 ] && { cat "${logFile}"; return $rc_make; }
 
  echo "Running make install..."
- {
-  logFile=$(logger_file ${id}_makeinstall)
-  make install > ${logFile} 2>&1
-  rc_makeinstall=$?
- }
+ logFile=$(logger_file ${id}_makeinstall)
+ make install > ${logFile} 2>&1
+ rc_makeinstall=$?
 
  cd "$WORKDIR"
 
