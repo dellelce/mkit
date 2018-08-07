@@ -256,6 +256,9 @@ build_readline()
    ls -lt $rlmk
    sed -i -e 's/SHLIB_LIBS = @SHLIB_LIBS@/SHLIB_LIBS = @SHLIB_LIBS@ -lncurses/' $rlmk
    ls -lt $rlmk
+
+   echo "Debug: lib in install target"
+   ls -lt "$prefix/lib"
  }
 
  build_gnuconf readline $srcdir_readline
