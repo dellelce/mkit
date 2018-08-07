@@ -24,6 +24,8 @@ RUN  apk add --no-cache  $PACKAGES &&  \
 # Second Stage
 FROM alpine:latest AS final
 
+ENV INSTALLDIR  /app/httpd
+
 RUN mkdir -p ${INSTALLDIR} && \
     apk add --no-cache libgcc ncurses-libs
 
