@@ -26,7 +26,7 @@ test_file()
 
 ### ENV ###
 
-prefix="$1"
+prefix="$1"; shift
 python="$prefix/bin/python3.7"
 
 ### MAIN ###
@@ -54,7 +54,7 @@ rc_sslversion=0
  let fails="(( $fails + 1))"
 }
 
-[ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))" 
+[ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
 
 # mod_wsgi checks
 
