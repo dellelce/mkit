@@ -111,6 +111,13 @@ rc=$?
 
 echo "mkit rc: $rc"
 
+for dir in $prefix/lib/python*/test
+do
+  [ -d "$dir" ] && pytestlib="$dir"
+done
+
+echo "Deleting unneeded test lib"; rm -rf "$pytestlib"
+
 # even if rc != 0: we do some tests anyway
 main_tests || exit $?
 
