@@ -6,4 +6,4 @@ services:
 env:
  - USEDOCKER="yes"
  - USEDOCKER="no"
-script: ./travis-plex.sh "$USEDOCKER" /tmp/build
+script: ./travis-plex.sh "$USEDOCKER" /tmp/build dellelce/mkit
