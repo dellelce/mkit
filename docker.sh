@@ -98,10 +98,24 @@ main_tests()
  return $rc
 }
 
+docker_hub()
+{
+ typeset target="$1"
+
+ [ -z "$DOCKER_PASSWORD" -o -z "$DOCKER_USERNAME" ] && return 1
+ echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+ rc=$?
+ [ $rc -ne 0 ] && return $rc
+
+ [ ! -z "$target" ] && { docker push "$target"; return $?; }
+ return 0
+}
+
 ### ENV ###
 
 prefix="$1"
 python="$prefix/bin/python3.7"
+docker_target="dellelce/mkit"
 export fails=0
 
 ### MAIN ###
@@ -120,5 +134,7 @@ echo "Deleting unneeded test lib"; rm -rf "$pytestlib"
 
 # even if rc != 0: we do some tests anyway
 main_tests || exit $?
+
+docker_hub "$docker_target"
 
 ### EOF ###
