@@ -23,14 +23,14 @@
 
  isdocker="$1"; shift
  path="$1"; shift
- image="$1"; shift
+ image="${1:-dellelce/mkit}"; shift
 
 ### MAIN ###
 
  set -x
  [ "$isdocker" == "yes" ] &&
  {
-  docker build -t mkitbuild .
+  docker build -t "$image" .
   build_rc="$?"
   [ $build_rc -eq 0 -a ! -z "$image" ] && docker_hub "$image"
   exit $build_rc

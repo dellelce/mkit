@@ -3,7 +3,8 @@ FROM alpine:latest as build
 MAINTAINER Antonio Dell'Elce
 
 ENV BUILDDIR  /app-build
-ENV INSTALLDIR  /app/httpd
+ARG installpath=/app/httpd
+ENV INSTALLDIR  ${installpath}
 
 # gcc             most of the source needs gcc
 # bash            busybox does not support some needed features of bash like "typeset"
@@ -18,8 +19,10 @@ ENV PACKAGES gcc bash wget perl file xz make libc-dev linux-headers g++
 WORKDIR $BUILDDIR
 COPY . $BUILDDIR
 
+# Build and do not keep "static libraries"
 RUN  apk add --no-cache  $PACKAGES &&  \
-     bash ${BUILDDIR}/docker.sh $INSTALLDIR
+     bash ${BUILDDIR}/docker.sh $INSTALLDIR && \
+     rm ${INSTALLDIR}/lib/*.a
 
 # Second Stage
 FROM alpine:latest AS final
