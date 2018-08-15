@@ -51,6 +51,7 @@ profile_uwsgi()
  add_build openssl
  add_build sqlite3
  add_build expat
+ add_build libxml2
  add_build python3
  add_build uwsgi
  run_build
