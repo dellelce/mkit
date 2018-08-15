@@ -551,7 +551,9 @@ build_raw_core()
   return 1;
  }
 
- #redis & many thers does not have a GNU configure but just a raw makefile
+ # redis & many others does not have a GNU configure but just a raw makefile
+ # or some other sometimes fancy buil systems.
+ # we create a build directory different than source directory for them.
  {
   dirList=$(find $dir -type d)
   fileList=$(find $dir -type f)
@@ -616,11 +618,32 @@ build_redis()
  return $?
 }
 
+#
+#
 build_uwsgi()
 {
  typeset rc=0 dir=""
 
  uncompress uwsgi $fn_uwsgi || { echo "Failed uncompress for: $fn_uwsgi"; return 1; }
+
+ [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
+
+ # we kindly ask you to use our preferred version of python
+ sed -i -e 's/python$/python3/' ${srcdir_uwsgi}/Makefile
+
+ # a proper makefile has always a "make install"...
+ {
+ cat << EOF
+
+install:
+	@cp uwsgi ${prefix}/bin
+	@ls -lt ${prefix}/bin/uwsgi
+
+EOF
+ } >> "${srcdir_uwsgi}"/Makefile
+
+ CPUCOUNT=1 \
+ PYTHON=$prefix/bin/python3 \
  build_raw_core uwsgi $srcdir_uwsgi
 
  return $?
