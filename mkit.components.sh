@@ -524,6 +524,9 @@ build_openssl()
 
  [ $rc -ne 0 ] && { cd "$cwd"; time_end; cat "${logFile}"; echo ; echo "Failed make install for OpenSSL";  return $rc; }
 
+ # no to disable manual generation: we delete ssl/man after the "build"
+ [ -d "$prefix/ssl/man" ] && rm -rf "$prefix/ssl/man"
+
  time_end
  return 0
 }
