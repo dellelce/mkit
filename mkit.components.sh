@@ -168,10 +168,10 @@ build_libffi()
  [ -d "$prefix/lib64" ] && mv $prefix/lib64/* $prefix/lib/
 
  mkdir -p "$prefix/include" # make sure target directory exists
- #for dir in $prefix/lib/libffi-*/include
- #do
- # [ -d "$dir" ] && cp -p $dir/* $prefix/include/
- #done
+ for header in $prefix/lib/libffi-*/include/*
+ do
+  [ -f "$header" ] && ln -sf $header $prefix/include/$(basename $header)
+ done
 
  return 0
 }
