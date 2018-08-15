@@ -372,7 +372,7 @@ build_bzip2_core()
   for bad in $fileList
   do
    baseFile=${bad#${dir}/} #remove "base" directory
-   ln -s "$bad" "$baseFile" || return "$?"
+   ln -sf "$bad" "$baseFile" || return "$?"
   done
  }
 
@@ -419,7 +419,7 @@ build_bzip2_core()
 
   make install PREFIX="${prefix}" > ${logFile} 2>&1
   cp "libbz2.so.1.0.6" "${prefix}/lib"
-  ln -s "${prefix}/lib/libbz2.so.1.0.6" "${prefix}/lib/libbz2.so.1.0"
+  ln -sf "${prefix}/lib/libbz2.so.1.0.6" "${prefix}/lib/libbz2.so.1.0"
   rc_makeinstall="$?"
 
   cd "$cwd"
