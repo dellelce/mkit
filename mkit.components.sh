@@ -529,9 +529,8 @@ build_openssl()
 }
 
 #
-# redis
 #
-build_redis_core()
+build_raw_core()
 {
  typeset rc=0 cwd=""
  export rc_conf=0 rc_make=0 rc_makeinstall=0
@@ -545,11 +544,11 @@ build_redis_core()
 
  cd "$pkgbuilddir" ||
  {
-  echo "build_gzip2_core: Failed to change to build directory: " $pkgbuilddir;
+  echo "build: Failed to change to build directory: " $pkgbuilddir;
   return 1;
  }
 
- #redis does not have a configure but just a raw makefile
+ #redis & many thers does not have a GNU configure but just a raw makefile
  {
   dirList=$(find $dir -type d)
   fileList=$(find $dir -type f)
@@ -604,10 +603,22 @@ build_redis_core()
  return 0
 }
 
+#
+# redis
 build_redis()
 {
  uncompress redis $fn_redis || { echo "Failed uncompress for: $fn_redis"; return 1; }
- build_redis_core redis $srcdir_redis
+ build_raw_core redis $srcdir_redis
+
+ return $?
+}
+
+build_uwsgi()
+{
+ typeset rc=0 dir=""
+
+ uncompress uwsgi $fn_uwsgi || { echo "Failed uncompress for: $fn_uwsgi"; return 1; }
+ build_raw_core uwsgi $srcdir_uwsgi
 
  return $?
 }

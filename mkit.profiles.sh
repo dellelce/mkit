@@ -41,4 +41,20 @@ profile_redis()
  return $?
 }
 
+profile_uwsgi()
+{
+ add_build libffi
+ add_build ncurses
+ add_build zlib
+ add_build bzip2
+ add_build readline
+ add_build openssl
+ add_build sqlite3
+ add_build expat
+ add_build python3
+ add_build uwsgi
+ run_build
+ return $?
+}
+
 ### EOF ###
