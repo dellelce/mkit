@@ -588,7 +588,7 @@ build_raw_core()
 
   cd "$cwd"
  }
- [ "$rc_make" -ne 0 ] && return "$rc_make"
+ [ "$rc_make" -ne 0 ] && { cat ${logFile}; return "$rc_make"; }
 
  # make install
  {
@@ -603,7 +603,7 @@ build_raw_core()
 
   cd "$cwd"
  }
- [ "$rc_makeinstall" -ne 0 ] && return "$rc_makeinstall"
+ [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; return "$rc_makeinstall"; }
 
  return 0
 }
