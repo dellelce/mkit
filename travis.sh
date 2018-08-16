@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # Building for travis
+# This is only used by non-Docker build as a wrapper to mkit.sh to add testing
 #
 # File:         travis.sh
 # Created:      250718
