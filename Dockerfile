@@ -3,8 +3,11 @@ FROM alpine:latest as build
 MAINTAINER Antonio Dell'Elce
 
 ENV BUILDDIR  /app-build
-ARG installpath=/app/httpd
-ENV INSTALLDIR  ${installpath}
+
+ARG PREFIX=/app/httpd
+ENV INSTALLDIR  ${PREFIX}
+
+ARG PROFILE=default
 
 # gcc             most of the source needs gcc
 # bash            busybox does not support some needed features of bash like "typeset"
@@ -27,7 +30,8 @@ RUN  apk add --no-cache  $PACKAGES &&  \
 # Second Stage
 FROM alpine:latest AS final
 
-ENV INSTALLDIR  /app/httpd
+ARG PREFIX=/app/httpd
+ENV INSTALLDIR  ${PREFIX}
 
 RUN mkdir -p ${INSTALLDIR} && \
     apk add --no-cache libgcc
