@@ -36,6 +36,6 @@
   [ $build_rc -eq 0 -a ! -z "$image" ] && docker_hub "$image"
   exit $build_rc
  } ||
- { ./travis.sh "$path"; exit $?; }
+ { ./travis.sh "$prefix"; exit $?; }
 
 ### EOF ###
