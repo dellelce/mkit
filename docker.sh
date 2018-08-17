@@ -91,7 +91,57 @@ main_tests_default()
  test_any "$prefix/lib/libreadline.so.7.0" || let fails="(( $fails + 1))"
 
  echo
- ls -lt "${prefix}/bin"
+ ls -lt "${prefix}/bin" || let fails="(( $fails + 1))"
+
+ [ "$rc" -eq 0 -a "$fails" -ne 0 ] &&
+ {
+  echo "Build succeeded but there were $fails test failures!"
+  return 1
+ }
+
+ return $rc
+}
+
+main_tests_uwsgi()
+{
+ echo "Starting tests..."
+ test_dir  "$prefix/bin"
+ rc_bin=$?
+ [ "$rc_bin" -ne 0 ] && let fails="(( $fails + 1))"
+
+ fails=0
+
+ test_file $python
+ rc_python=$?
+
+ rc_sslversion=0
+ rc_readline=0
+
+ [ "$rc_python" -eq 0 ] &&
+ {
+  echo "Testing correct OpenSSL module is built:"
+  echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | ${python}
+  rc_sslversion=$?
+
+  echo "Testing readline"
+  echo "import readline;" | ${python}
+  rc_readline="$?"
+ } ||
+ {
+  let fails="(( $fails + 1))"
+ }
+
+ [ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
+ [ "$rc_readline" -ne 0 ] && let fails="(( $fails + 1))"
+
+
+ # readline
+ test_any "$prefix/lib/libhistory.a" || let fails="(( $fails + 1))"
+ test_any "$prefix/lib/libhistory.so.7.0" || let fails="(( $fails + 1))"
+ test_any "$prefix/lib/libhistory.so.7" || let fails="(( $fails + 1))"
+
+ echo
+ ls -lt "${prefix}/bin" || let fails="(( $fails + 1))"
 
  [ "$rc" -eq 0 -a "$fails" -ne 0 ] &&
  {
