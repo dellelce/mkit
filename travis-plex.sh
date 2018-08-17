@@ -22,15 +22,16 @@
 ### ENV ###
 
  isdocker="$1"; shift
- path="$1"; shift
- image="${1:-dellelce/mkit}"; shift
+ image="${1:-${DOCKER_IMAGE}}"; shift
+
+ prefix="${1:-${PREFIX}}"; shift
+ prefix="${prefix:-/app/httpd}" # sanity check
 
 ### MAIN ###
 
- set -x
  [ "$isdocker" == "yes" ] &&
  {
-  docker build -t "$image" .
+  docker build -t "$image" --build-arg PROFILE=$PROFILE --build-arg PREFIX=$prefix .
   build_rc="$?"
   [ $build_rc -eq 0 -a ! -z "$image" ] && docker_hub "$image"
   exit $build_rc

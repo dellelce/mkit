@@ -1,6 +1,9 @@
 #!/bin/bash
 #
-# Building for docker // this is only needed until mkit does not have proper testing
+# Building for docker
+# This is:
+# * only needed until mkit does not have proper testing
+# * meant to invoked by Dockerfile
 #
 # File:         docker.sh
 # Created:      250718
@@ -42,7 +45,8 @@ test_dir()
  return 0
 }
 
-main_tests()
+# tests for "default" profile
+main_tests_default()
 {
  echo "Starting tests..."
  test_dir  "$prefix/bin"
@@ -100,13 +104,15 @@ main_tests()
 
 ### ENV ###
 
-prefix="$1"
+prefix="$1"; shift
+profile="${1:-${PROFILE}}"; shift
+profile="${profile:-default}" # sanity check
 python="$prefix/bin/python3.7"
 export fails=0
 
 ### MAIN ###
 
-mkdir -p $prefix && ./mkit.sh $prefix
+mkdir -p $prefix && ./mkit.sh $prefix profile="${profile}"
 rc=$?
 
 echo "mkit rc: $rc"
@@ -119,7 +125,12 @@ done
 echo "Deleting unneeded test lib"; rm -rf "$pytestlib"
 
 # even if rc != 0: we do some tests anyway
-main_tests || exit $?
+tests="main_tests_${profile}"
+type $tests > /dev/null 2>&1 # only execute the test function if it exists...
+[ $? -eq 0 ] &&
+{
+ $tests || exit $?
+}
 
 exit 0
 

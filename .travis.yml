@@ -4,6 +4,7 @@ notifications:
 services:
  - docker
 env:
- - USEDOCKER="yes"
+ - USEDOCKER="yes" PROFILE="default" DOCKER_IMAGE="dellelce/mkit" PREFIX="/app/httpd"
+ - USEDOCKER="yes" PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi"
  - USEDOCKER="no"
-script: ./travis-plex.sh "$USEDOCKER" /tmp/build dellelce/mkit
+script: ./travis-plex.sh "$USEDOCKER"
