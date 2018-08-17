@@ -48,12 +48,12 @@ test_dir()
 # tests for "default" profile
 main_tests_default()
 {
+ fails=0
+
  echo "Starting tests..."
  test_dir  "$prefix/bin"
  rc_bin=$?
  [ "$rc_bin" -ne 0 ] && let fails="(( $fails + 1))"
-
- fails=0
 
  test_file $python
  rc_python=$?
@@ -104,15 +104,24 @@ main_tests_default()
 
 main_tests_uwsgi()
 {
+ typeset any
+ fails=0
+
  echo "Starting tests..."
  test_dir  "$prefix/bin"
  rc_bin=$?
  [ "$rc_bin" -ne 0 ] && let fails="(( $fails + 1))"
 
- fails=0
-
  test_file $python
  rc_python=$?
+
+ # libs test for: openssl & readline
+ typeset any_ssl="libcrypto.so.1.0.0 libssl.so.1.0.0"
+ typeset any_readline="libhistory.a libhistory.so.7.0 libhistory.so.7"
+ for any in $any_ssl $any_readline
+ do
+  test_any "$prefix/lib/$any" || let fails="(( $fails + 1))"
+ done
 
  rc_sslversion=0
  rc_readline=0
@@ -133,15 +142,6 @@ main_tests_uwsgi()
 
  [ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
  [ "$rc_readline" -ne 0 ] && let fails="(( $fails + 1))"
-
-
- # readline
- test_any "$prefix/lib/libhistory.a" || let fails="(( $fails + 1))"
- test_any "$prefix/lib/libhistory.so.7.0" || let fails="(( $fails + 1))"
- test_any "$prefix/lib/libhistory.so.7" || let fails="(( $fails + 1))"
-
- echo
- ls -lt "${prefix}/bin" || let fails="(( $fails + 1))"
 
  [ "$rc" -eq 0 -a "$fails" -ne 0 ] &&
  {
