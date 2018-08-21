@@ -459,7 +459,10 @@ build_python3()
  uncompress python3 $fn_python3 || { echo "Failed uncompress for: $fn_python3"; return 1; }
  LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"  \
  CFLAGS="-I${prefix}/include"                        \
- build_gnuconf python3 $srcdir_python3 --enable-shared  --with-system-expat \
+ build_gnuconf python3 $srcdir_python3 \
+            --with-openssl="${prefix}" \
+            --enable-shared \
+            --with-system-expat \
             --with-system-ffi   \
             --with-ensurepip=yes
 
