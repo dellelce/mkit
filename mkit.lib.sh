@@ -235,9 +235,7 @@ build_sanity_gnuconf()
   typeset cwd="$PWD"
   typeset rc_autoconf=0
   cd "$1"
-  mkdir -p m4  &&
-  $prefix/bin/autoheader &&
-  $prefix/bin/autoconf -i
+  mkdir -p m4  && $prefix/bin/autoheader && $prefix/bin/autoconf -i
   rc_autoconf=$?
   cd "$cwd"
   return $rc_autoconf
@@ -245,7 +243,7 @@ build_sanity_gnuconf()
  [ ! -f "$1/configure" -a -f "$1/buildconf.sh" ] &&
  {
   echo "build_sanity_gnuconf: no configure file in: $1 but buildconf.sh is present"
-   return 2
+  return 2
  }
  [ ! -f "$1/configure" ] && { echo "build_sanity_gnuconf: no configure file in: $1"; return 1; }
 
@@ -324,20 +322,20 @@ build_gnuconf()
 
  echo "Configuring..."
  logFile=$(logger_file ${id}_configure)
- $dir/configure --prefix="${prefix}" $* > ${logFile} 2>&1
- rc_conf=$?
+ $dir/configure --prefix="${prefix}" $* > ${logFile} 2>&1; rc_conf=$?
+
  [ "$rc_conf" -ne 0 ] && { cat "${logFile}"; return $rc_conf; }
 
  echo "Running make..."
  logFile=$(logger_file ${id}_make)
- make > ${logFile} 2>&1
- rc_make=$?
+ make > ${logFile} 2>&1; rc_make=$?
+
  [ "$rc_make" -ne 0 ] && { cat "${logFile}"; return $rc_make; }
 
  echo "Running make install..."
+
  logFile=$(logger_file ${id}_makeinstall)
- make install > ${logFile} 2>&1
- rc_makeinstall=$?
+ make install > ${logFile} 2>&1; rc_makeinstall=$?
 
  cd "$WORKDIR"
 
@@ -374,33 +372,33 @@ run_build()
 
  [ ! -z "$DOWNLOAD_MAP" ] &&
  {
-   echo "Downloaded software:"
-   echo
-   for item in $DOWNLOAD_MAP
-   do
-     echo $item| awk -F: '
-         {
-           cnt=split($2,bn_a,"/");
-           bn=bn_a[cnt]
-           printf("%-12s %s\n", $1, bn);
-         }
+  echo "Downloaded software:"
+  echo
+  for item in $DOWNLOAD_MAP
+  do
+   echo $item| awk -F: '
+   {
+    cnt=split($2,bn_a,"/");
+    bn=bn_a[cnt]
+    printf("%-12s %s\n", $1, bn);
+   }
 '
-   done
+  done
  }
 
  for pkg in $BUILDLIST
  do
-   func="build_${pkg}"
-   type $func >/dev/null 2>&1
-   [ $? -ne 0 ] && { echo "Build function for $pkg is invalid or does not exist"; return 1; }
-   $func
-   rc=$?
+  func="build_${pkg}"
+  type $func >/dev/null 2>&1
+  [ $? -ne 0 ] && { echo "Build function for $pkg is invalid or does not exist"; return 1; }
+  $func
+  rc=$?
 
-   [ "$rc" -ne 0 ] &&
-   {
-     echo "Failed build $pkg with return code: $rc"
-     return $rc
-   }
+  [ "$rc" -ne 0 ] &&
+  {
+    echo "Failed build $pkg with return code: $rc"
+    return $rc
+  }
  done
 
  return 0 # we hate bash bugs so we had a return 0 here
