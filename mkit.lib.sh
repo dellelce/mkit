@@ -272,6 +272,7 @@ build_gnuconf()
  typeset dir="$1"; shift  # src directory
  typeset pkgbuilddir="$BUILDDIR/$id"
 
+ [ -z "$dir" ] && { echo "usage: build_gnuconf id source_dir_path"; return 1; }
  build_sanity_gnuconf $dir
  rc=$?
 
