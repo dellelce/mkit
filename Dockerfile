@@ -25,7 +25,7 @@ COPY . $BUILDDIR
 # Build and do not keep "static libraries"
 RUN  apk add --no-cache  $PACKAGES &&  \
      bash ${BUILDDIR}/docker.sh $INSTALLDIR && \
-     rm ${INSTALLDIR}/lib/*.a
+     rm -f ${INSTALLDIR}/lib/*.a
 
 # Second Stage
 FROM alpine:latest AS final
