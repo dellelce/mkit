@@ -62,6 +62,7 @@ profile_postgres()
 {
  add_build libressl
  add_build libxml2
+ add_build zlib
  add_build ncurses
  add_build readline
  add_build postgresql
