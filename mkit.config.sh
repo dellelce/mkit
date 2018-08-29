@@ -5,11 +5,9 @@
 # Description:  mkit configuration (shell format)
 #
 
-### FUNCTIONS ###
-
 ### ENV ###
 
- export srcget="0.0.8.4"  #  srcget version
+ export srcget="0.0.8.5"  #  srcget version
 
  # vt100 family sequences
  export ESC=""
