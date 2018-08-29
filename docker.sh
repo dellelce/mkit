@@ -166,6 +166,7 @@ mkdir -p $prefix && ./mkit.sh $prefix profile="${profile}"
 rc=$?
 
 echo "mkit rc: $rc"
+[ "$rc" -ne 0 ] && exit $rc
 
 for dir in $prefix/lib/python*/test
 do
