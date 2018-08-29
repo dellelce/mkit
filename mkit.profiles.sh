@@ -58,4 +58,14 @@ profile_uwsgi()
  return $?
 }
 
+profile_postgres()
+{
+ add_build libressl
+ add_build libxml2
+ add_build readline
+ add_build postgresql
+ run_build
+ return $?
+}
+
 ### EOF ###

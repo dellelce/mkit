@@ -128,13 +128,30 @@ build_sqlite3()
  return $?
 }
 
-#
 # libbsd
 #
 build_libbsd()
 {
  uncompress libbsd $fn_libbsd || { echo "Failed uncompress for: $fn_libbsd"; return 1; }
  build_gnuconf libbsd $srcdir_libbsd
+ return $?
+}
+
+# libressl
+#
+build_libressl()
+{
+ uncompress libressl $fn_libressl || { echo "Failed uncompress for: $fn_libressl"; return 1; }
+ build_gnuconf libressl $srcdir_libressl
+ return $?
+}
+
+# postgresql
+#
+build_postgresql()
+{
+ uncompress postgresql $fn_postgresql || { echo "Failed uncompress for: $fn_postgresql"; return 1; }
+ build_gnuconf postgresql $srcdir_postgresql
  return $?
 }
 
