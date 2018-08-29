@@ -5,6 +5,7 @@ services:
  - docker
 env:
  - USEDOCKER="yes" PROFILE="default" DOCKER_IMAGE="dellelce/mkit" PREFIX="/app/httpd"
+ - USEDOCKER="yes" PROFILE="postgresql" DOCKER_IMAGE="dellelce/postgresql" PREFIX="/app/pg"
  - USEDOCKER="yes" PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi"
  - USEDOCKER="no"
 script: ./travis-plex.sh "$USEDOCKER"
