@@ -151,6 +151,7 @@ build_libressl()
 build_postgresql()
 {
  uncompress postgresql $fn_postgresql || { echo "Failed uncompress for: $fn_postgresql"; return 1; }
+ [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
  build_gnuconf postgresql $srcdir_postgresql
  return $?
 }
