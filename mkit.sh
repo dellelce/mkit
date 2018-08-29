@@ -98,7 +98,9 @@ EOF
 
  # launch default profile
  profile="${profile:-default}"
- profile_${profile}
+ profile_func="$profile_${profile}"
+ unset profile
+ $profile_func
 
  exit $?
 
