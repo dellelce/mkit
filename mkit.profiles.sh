@@ -74,7 +74,8 @@ profile_openvpn()
 {
  add_build openssl
  add_build lzo
- add_build linuxpam
+ #we don't want you "linuxpam"
+ #add_build linuxpam
  add_build openvpn
  run_build
  return $?
