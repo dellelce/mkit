@@ -148,6 +148,16 @@ build_lzo()
  return $?
 }
 
+#
+# linux-pam
+#
+build_linuxpam()
+{
+ uncompress linuxpam $fn_linuxpam || { echo "Failed uncompress for: $fn_linuxpam"; return 1; }
+ build_gnuconf linuxpam $srcdir_linuxpam --disable-nls --disable-db
+ return $?
+}
+
 # libbsd
 #
 build_libbsd()
