@@ -138,6 +138,16 @@ build_openvpn()
  return $?
 }
 
+#
+# lzo
+#
+build_lzo()
+{
+ uncompress lzo $fn_lzo || { echo "Failed uncompress for: $fn_lzo"; return 1; }
+ build_gnuconf lzo $srcdir_lzo
+ return $?
+}
+
 # libbsd
 #
 build_libbsd()
