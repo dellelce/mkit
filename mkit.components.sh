@@ -128,6 +128,16 @@ build_sqlite3()
  return $?
 }
 
+#
+# openvpn
+#
+build_openvpn()
+{
+ uncompress openvpn $fn_openvpn || { echo "Failed uncompress for: $fn_openvpn"; return 1; }
+ build_gnuconf openvpn $srcdir_openvpn
+ return $?
+}
+
 # libbsd
 #
 build_libbsd()

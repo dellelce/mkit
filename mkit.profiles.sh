@@ -70,4 +70,12 @@ profile_postgres()
  return $?
 }
 
+profile_openvpn()
+{
+ add_build openssl
+ add_build openvpn
+ run_build
+ return $?
+}
+
 ### EOF ###
