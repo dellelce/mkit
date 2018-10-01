@@ -487,7 +487,6 @@ build_bzip2()
 
 #
 # zlib
-# Needed by some python packages
 #
 build_zlib()
 {
@@ -504,6 +503,9 @@ build_zlib()
 #
 build_python3()
 {
+ typeset rc=0
+ typeset fn
+
  uncompress python3 $fn_python3 || { echo "Failed uncompress for: $fn_python3"; return 1; }
  LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"  \
  CFLAGS="-I${prefix}/include"                        \
@@ -513,8 +515,16 @@ build_python3()
             --with-system-expat \
             --with-system-ffi   \
             --with-ensurepip=yes
+ rc=$?
 
- return $?
+ # remove this file until I have proof I need it ;)
+ # is it for building modules? Not clear in Makefile's "libainstall" target
+ for fn in $prefix/lib/python*/config-*/lib*.a
+ do
+   [ -f "$fn" ] && rm -f "$fn"
+ done
+
+ return $rc
 }
 
 #
