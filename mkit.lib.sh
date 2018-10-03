@@ -3,8 +3,6 @@
 # mkit core library
 #
 
-### FUNCTIONS ###
-
 # Wrapping bash's popd/pushd for "portability"
 pushdir()
 {
@@ -70,12 +68,10 @@ get_srcget()
  export PATH="$PWD/srcget:$PATH"
 }
 
-#
 # download
 #
 # Used Global:
-#   DOWNLOADS
-#
+#   DOWNLOADS DOWNLOAD_MAP
 download()
 {
  typeset pkg fn
@@ -110,9 +106,7 @@ getfilename()
  eval echo "\$fn_${pkg}"
 }
 
-#
-# xz
-#
+# xz handler
 un_xz()
 {
  typeset fn="$1" rc=0 dir=""; shift
@@ -134,8 +128,7 @@ un_xz()
 }
 
 #
-# bz2
-#
+# bz2 handler
 un_bz2()
 {
  typeset fn="$1" rc=0 dir=""; shift
@@ -300,15 +293,13 @@ build_gnuconf()
   #make directores
   for bad in $dirList
   do
-   baseDir=${bad#${dir}/} #remove "base" directory
-   mkdir -p "$baseDir" || return "$?"
+   baseDir=${bad#${dir}/}; mkdir -p "$baseDir" || return "$?"
   done
 
   # link files
   for bad in $fileList
   do
-   baseFile=${bad#${dir}/} #remove "base" directory
-   ln -s "$bad" "$baseFile" || return "$?"
+   baseFile=${bad#${dir}/}; ln -s "$bad" "$baseFile" || return "$?"
   done
  }
 
@@ -334,7 +325,6 @@ build_gnuconf()
  [ "$rc_make" -ne 0 ] && { cat "${logFile}"; return $rc_make; }
 
  echo "Running make install..."
-
  logFile=$(logger_file ${id}_makeinstall)
  make install > ${logFile} 2>&1; rc_makeinstall=$?
 
@@ -359,8 +349,8 @@ add_build()
 }
 
 #
-# run_build: build all in BUILDLIST
-#
+# run_build: build all
+# globals used: BUILDLIST DOWNLOAD_MAP
 run_build()
 {
  typeset pkg=""
