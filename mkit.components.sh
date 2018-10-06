@@ -541,6 +541,47 @@ build_php()
 }
 
 #
+build_binutils()
+{
+ uncompress binutils $fn_binutils || { echo "Failed uncompress for: $fn_binutils"; return 1; }
+ build_gnuconf binutils $srcdir_binutils MAKEINFO=:
+ return $?
+}
+
+build_gmp()
+{
+ uncompress gmp $fn_gmp || { echo "Failed uncompress for: $fn_gmp"; return 1; }
+ build_gnuconf gmp $srcdir_gmp
+ return $?
+}
+
+build_mpfr()
+{
+ uncompress mpfr $fn_mpfr || { echo "Failed uncompress for: $fn_mpfr"; return 1; }
+ build_gnuconf mpfr $srcdir_mpfr
+ return $?
+}
+
+build_mpc()
+{
+ uncompress mpc $fn_mpc || { echo "Failed uncompress for: $fn_mpc"; return 1; }
+ build_gnuconf mpc $srcdir_mpc
+ return $?
+}
+
+
+build_gcc()
+{
+ uncompress gcc $fn_gcc || { echo "Failed uncompress for: $fn_gcc"; return 1; }
+
+ MAKEINFO=: \
+ build_gnuconf gcc $srcdir_gcc  --enable-languages=c \
+                   --with-gmp=${prefix} --with-mpfr=${prefix} --with-mpc=${prefix} \
+                   --disable-multilib
+ return $?
+}
+
+#
 # Custom build for openssl
 #
 build_openssl()

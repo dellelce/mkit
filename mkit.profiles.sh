@@ -81,4 +81,15 @@ profile_openvpn()
  return $?
 }
 
+profile_gcc()
+{
+ add_build binutils
+ add_build gmp
+ add_build mpfr
+ add_build mpc
+ add_build gcc
+ run_build
+ return $?
+}
+
 ### EOF ###
