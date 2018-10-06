@@ -108,4 +108,16 @@ profile_gcc()
  return $?
 }
 
+profile_varnish()
+{
+ # it needs python / probably
+ #
+ add_build pcre
+ add_build readline
+ add_build varnish
+
+ run_build
+ return $?
+}
+
 ### EOF ###

@@ -581,6 +581,15 @@ build_gcc()
  return $?
 }
 
+build_varnish()
+{
+ uncompress varnish $fn_varnish || { echo "Failed uncompress for: $fn_varnish"; return 1; }
+
+ RST2MAN=: SPHINX=: \
+ build_gnuconf varnish $srcdir_varnish
+ return $?
+}
+
 #
 # Custom build for openssl
 #
