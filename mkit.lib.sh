@@ -341,11 +341,19 @@ build_gnuconf()
 #
 add_build()
 {
- while [ ! -z "$1" ]
- do
-  export BUILDLIST="$BUILDLIST $1"
-  shift
- done
+ typeset id_list="$*" item=""
+
+ [ -z "$id_list" ] && return 1 # sanitycheck
+ [ -z "$BUILDLIST" ] && { export BUILDLIST="$id_list"; } || { export BUILDLIST="$BUILDLIST $id_list"; }
+
+ # remove possible duplicates
+ BUILDLIST=$(
+   for item in $BUILDLIST
+   do
+     echo $item
+   done | awk '!x[$0]++'
+)
+
 }
 
 #
