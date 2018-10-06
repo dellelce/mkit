@@ -5,6 +5,7 @@ services:
  - docker
 env:
  - USEDOCKER="yes" PROFILE="default" DOCKER_IMAGE="dellelce/mkit" PREFIX="/app/httpd"
+ - USEDOCKER="yes" PROFILE="python" DOCKER_IMAGE="dellelce/py-base" PREFIX="/app/python"
  - USEDOCKER="yes" PROFILE="postgres" DOCKER_IMAGE="dellelce/pgbase" PREFIX="/app/pg"
  - USEDOCKER="yes" PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi"
  - USEDOCKER="yes" PROFILE="openvpn" DOCKER_IMAGE="dellelce/openvpnbase" PREFIX="/app/openvpn"
