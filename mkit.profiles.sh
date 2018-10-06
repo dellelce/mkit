@@ -43,15 +43,8 @@ profile_redis()
 
 profile_python()
 {
- add_build libffi
- add_build ncurses
- add_build zlib
- add_build bzip2
- add_build readline
- add_build openssl
- add_build sqlite3
- add_build expat
- add_build libxml2
+ add_build libffi ncurses zlib bzip2 readline
+ add_build openssl sqlite3 expat libxml2
  add_build python3
  run_build
  return $?
@@ -110,8 +103,13 @@ profile_gcc()
 
 profile_varnish()
 {
- # it needs python / probably
+ # varnish needs python (">= 2.7") for generating some files
+ # build time dependency only so these should not stay here...
  #
+ add_build libffi ncurses zlib bzip2 readline
+ add_build openssl sqlite3 expat libxml2
+ add_build python3
+
  add_build pcre
  add_build ncurses
  add_build readline
