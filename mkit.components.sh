@@ -585,6 +585,8 @@ build_varnish()
 {
  uncompress varnish $fn_varnish || { echo "Failed uncompress for: $fn_varnish"; return 1; }
 
+ [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
+
  RST2MAN=: SPHINX=: \
  build_gnuconf varnish $srcdir_varnish
  return $?
