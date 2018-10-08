@@ -110,6 +110,12 @@ profile_varnish()
  add_build openssl sqlite3 expat libxml2
  add_build python3
 
+ # temporary workaround for missing backtrace() in musl
+ [ -f "/etc/alpine-release" ] &&
+ {
+   apk add --no-cache libexecinfo-dev
+ }
+
  add_build pcre
  add_build ncurses
  add_build readline
