@@ -1,4 +1,5 @@
-FROM alpine:latest as build
+ARG BASE=alpine:latest
+FROM $BASE as build
 
 MAINTAINER Antonio Dell'Elce
 
@@ -28,7 +29,8 @@ RUN  apk add --no-cache  $PACKAGES &&  \
      rm -f ${INSTALLDIR}/lib/*.a
 
 # Second Stage
-FROM alpine:latest AS final
+ARG BASE=alpine:latest
+FROM $BASE AS final
 
 ARG PREFIX=/app/httpd
 ENV INSTALLDIR  ${PREFIX}
