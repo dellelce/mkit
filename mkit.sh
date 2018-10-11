@@ -82,20 +82,6 @@ mkit_setup()
  # download srcget
  get_srcget || { echo "Failed getting srcget, exiting..."; exit 1; }
 
- # autotools/automake require perl
- eval $(getPerlVersions)
-
- [ "$PERL_REVISION" -eq 5 -a "$PERL_VERSION" -lt 10 ] &&
- {
-  export BUILDLIST="perl ${BUILDLIST}"
-  export PERL_NEEDED=1
-  cat << EOF
-   Detected version of perl is ${PERL_REVISION}.${PERL_VERSION}.${PERL_SUBVERSION} minimum required version is 5.10.
-   Will download and build local version.
-
-EOF
- }
-
  # launch default profile
  profile="${profile:-default}"
  profile_func="profile_${profile}"
