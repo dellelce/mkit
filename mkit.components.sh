@@ -3,7 +3,31 @@
 # mkit functions library
 #
 
-### FUNCTIONS ###
+# prepare_build: only for those that do not support explicitly a build directory
+#                different than source
+# This function expects to be in the build directory
+prepare_build()
+{
+ typeset dir="$1"
+ [ ! -d "$dir" ] && return 1
+
+ dirList=$(find $dir -type d)
+ fileList=$(find $dir -type f)
+
+ #make directores
+ for bad in $dirList
+ do
+  baseDir=${bad#${dir}/} #remove "base" directory
+  mkdir -p "$baseDir" || return "$?"
+ done
+
+ # link files
+ for bad in $fileList
+ do
+  baseFile=${bad#${dir}/} #remove "base" directory
+  ln -sf "$bad" "$baseFile" || return "$?"
+ done
+}
 
 # get perl versions as variables
 getPerlVersions()
@@ -57,10 +81,7 @@ build_perl_core()
  # No Sanity checks!
 
  # Other steps
- [ ! -d "$pkgbuilddir" ] &&
- {
-  mkdir -p "$pkgbuilddir";
- } ||
+ [ ! -d "$pkgbuilddir" ] && { mkdir -p "$pkgbuilddir"; } ||
  {
   pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir";
  }
@@ -106,7 +127,6 @@ build_perl_core()
  } | build_logger ${id}_makeinstall
 
  cd "$WORKDIR"
-
  return $rc_makeinstall
 }
 
@@ -205,7 +225,7 @@ build_libffi()
  uncompress libffi $fn_libffi || { echo "Failed uncompress for: $fn_libffi"; return 1; }
  build_gnuconf libffi $srcdir_libffi
  rc=$?
- [ $? -ne 0 ] && return $rc
+ [ $rc -ne 0 ] && return $rc
 
  # libffi ignores --libdir and --includedir options of configure
  # installs includes in $prefix/lib/libffi-version/include/ etc
@@ -485,6 +505,84 @@ build_bzip2()
  return $?
 }
 
+lua_platform()
+{
+ typeset platform=$(uname -s| awk -F_ ' { print tolower($1); } ')
+
+ [ "$platform" == "cygwin" ] && platform="mingw"
+
+ echo $platform
+}
+
+#
+# Build lua
+build_lua_core()
+{
+ typeset rc=0
+ export rc_conf=0 rc_make=0 rc_makeinstall=0
+ typeset id="$1";  shift  # build id
+ typeset dir="$1"; shift  # src directory
+ typeset pkgbuilddir="$BUILDDIR/$id"
+
+ # No Sanity checks!
+
+ # Other steps
+ [ ! -d "$pkgbuilddir" ] && { mkdir -p "$pkgbuilddir"; } ||
+ {
+  pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir";
+ }
+
+ cd "$pkgbuilddir" ||
+ {
+  echo "build_lua: Failed to change to build directory: " $pkgbuilddir;
+  return 1;
+ }
+
+ prepare_build $dir
+
+ echo
+ echo "Building LUA in $pkgbuilddir at $(date)"
+ echo
+
+ time_start
+
+ # no configure step for lua
+ #build_logger "${id}_configure"
+ #[ "$rc_conf" -ne 0 ] && return $rc_conf
+
+ logFile=$(logger_file ${id}_make)
+ echo "Running make..."
+ {
+  conf="$(lua_platform) INSTALL_TOP=${prefix}"
+  conf="${conf} MYCFLAGS=-I${prefix}/include MYLDFLAGS=-L${prefix}/lib"
+  conf="${conf} MYLIBS=-lncurses"
+  echo "Configuration: $conf"
+  make $conf 2>&1
+  rc_make=$?
+ } > ${logFile}
+ [ $rc_make -ne 0 ] && { cd "$cwd"; time_end; cat "${logFile}"; echo ; echo "Failed make for ${id}";  return $rc_make; }
+
+ echo "Running make install..."
+ logFile=$(logger_file ${id}_makeinstall)
+ {
+  make install INSTALL_TOP=${prefix} 2>&1
+  rc_makeinstall=$?
+ } > ${logFile}
+
+ cd "$WORKDIR"
+ [ $rc_makeinstall -ne 0 ] && { cat "${logFile}"; echo ; echo "Failed make install for ${id}"; }
+
+ time_end
+ return $rc_makeinstall
+}
+
+# build_lua: wrapper to handle "standard" arguments and uncompression
+build_lua()
+{
+ uncompress lua $fn_lua || { echo "Failed uncompress for: $fn_lua"; return 1; }
+ build_lua_core lua $srcdir_lua
+}
+
 #
 # zlib
 #
@@ -569,7 +667,6 @@ build_mpc()
  return $?
 }
 
-
 build_gcc()
 {
  uncompress gcc $fn_gcc || { echo "Failed uncompress for: $fn_gcc"; return 1; }
@@ -600,10 +697,8 @@ build_curl()
  return $?
 }
 
-
 #
 # Custom build for openssl
-#
 build_openssl()
 {
  typeset id="openssl"
@@ -634,7 +729,6 @@ build_openssl()
    make > ${logFile} 2>&1
    rc=$?
  }
-
  [ $rc -ne 0 ] && { cd "$cwd"; time_end; cat "${logFile}"; echo ; echo "Failed make for OpenSSL";  return $rc; }
 
  echo "Running make install..."
