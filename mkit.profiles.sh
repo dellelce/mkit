@@ -125,4 +125,25 @@ profile_varnish()
  return $?
 }
 
+profile_curl()
+{
+ add_build openssl
+ add_build curl
+
+ run_build
+ return $?
+}
+
+profile_haproxy()
+{
+ add_build pcre
+ add_build zlip
+ add_build readline # required by lua
+ add_build lua
+ add_build haproxy
+
+ run_build
+ return $?
+}
+
 ### EOF ###
