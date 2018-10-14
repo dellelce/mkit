@@ -4,6 +4,7 @@ notifications:
 services:
  - docker
 env:
+ - USEDOCKER="yes" PROFILE="haproxy" DOCKER_IMAGE="dellelce/haproxy-base" PREFIX="/app/haproxy"
  - USEDOCKER="yes" PROFILE="default" DOCKER_IMAGE="dellelce/mkit" PREFIX="/app/httpd"
  - USEDOCKER="yes" PROFILE="python" DOCKER_IMAGE="dellelce/py-base" PREFIX="/app/python"
  - USEDOCKER="yes" PROFILE="postgres" DOCKER_IMAGE="dellelce/pgbase" PREFIX="/app/pg"
