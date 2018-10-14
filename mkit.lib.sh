@@ -353,7 +353,6 @@ add_build()
      echo $item
    done | awk '!x[$0]++'
 )
-
 }
 
 #
@@ -435,7 +434,5 @@ test_perl_automake()
 EOF
  }
 }
-
-
 
 ### EOF ###
