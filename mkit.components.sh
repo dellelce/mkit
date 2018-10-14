@@ -592,6 +592,15 @@ build_varnish()
  return $?
 }
 
+build_curl()
+{
+ uncompress curl $fn_curl || { echo "Failed uncompress for: $fn_curl"; return 1; }
+
+ build_gnuconf curl $srcdir_curl
+ return $?
+}
+
+
 #
 # Custom build for openssl
 #
