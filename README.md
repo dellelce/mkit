@@ -2,11 +2,12 @@
 
 [![Build Status](https://travis-ci.org/dellelce/mkit.svg?branch=master)](https://travis-ci.org/dellelce/mkit)
 
-Download and Build a complete Apache/PHP/Python(mod_wsgi) stack.
+Download and Build (from source) complete stacks. The latest version available for each package is downloaded.
 
 ## Configuration variables
 
   * NO_TIMESTAMP: do not use a time stamp for "build" and "src" directories
+  * KEEP_DOCS (Docker only): do not delete documentation directories.
 
 ## TODO:
   * SANITY CHECKS: Test if basic pre-requisites: gcc/g++ are there (we are not going to installed them!)
