@@ -178,7 +178,10 @@ done
 # if KEEP_DOCS is not set delete documentation directories
 [ -z "$KEEP_DOCS" ] &&
 {
- for dir in $prefix/man $prefix/share/man $prefix/share/info
+ for dir in $prefix/man \
+            $prefix/share/doc \
+            $prefix/share/man \
+            $prefix/share/info
  do
   [ -d "$dir" ] && rm -rf "$dir"
  done
