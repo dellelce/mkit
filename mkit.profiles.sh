@@ -137,7 +137,8 @@ profile_curl()
 profile_haproxy()
 {
  add_build pcre
- add_build zlip
+ add_build zlib
+ add_build ncurses # needed by readline
  add_build readline # required by lua
  add_build lua
  add_build haproxy
