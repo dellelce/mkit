@@ -631,6 +631,7 @@ build_haproxy_core()
   conf="${conf} ZLIB_LIB=${prefix}/lib"
   conf="${conf} ZLIB_INC=${prefix}/include"
   conf="${conf} SSL_LIB=${prefix}/lib"
+  conf="${conf} SSL_INC=${prefix}/include"
   conf="${conf} PCREDIR=${prefix}"
   conf="${conf} USE_PCRE=1"
   conf="${conf} USE_OPENSSL=1"

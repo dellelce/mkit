@@ -140,6 +140,7 @@ profile_haproxy()
  add_build zlib
  add_build ncurses # needed by readline
  add_build readline # required by lua
+ add_build openssl
  add_build lua
  add_build haproxy
 
