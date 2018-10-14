@@ -40,4 +40,7 @@ RUN mkdir -p ${INSTALLDIR} && \
 
 WORKDIR ${INSTALLDIR}
 COPY --from=build ${INSTALLDIR} .
-RUN du -ks .
+RUN { du -ks .; du -ks *| sort -n; } | awk ' \
+    BEGIN { print "Space usage in install directory: KB, % & directory name"; } \
+    FNR == 1 { total = $1; next; }           \
+    $1 > 500 { printf ("%10d %03.3f%% %s\n", $1, ($1 / total) * 100, $2); } '
