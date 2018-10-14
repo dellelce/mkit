@@ -173,7 +173,16 @@ do
   [ -d "$dir" ] && pytestlib="$dir"
 done
 
-echo "Deleting unneeded test lib"; rm -rf "$pytestlib"
+[ -d "$pytestlib" ] && { echo "Deleting unneeded test lib"; rm -rf "$pytestlib"; }
+
+# if KEEP_DOCS is not set delete documentation directories
+[ -z "$KEEP_DOCS" ] &&
+{
+ for dir in $prefix/man $prefix/share/man $prefix/share/info
+ do
+  [ -d "$dir" ] && rm -rf "$dir"
+ done
+}
 
 # even if rc != 0: we do some tests anyway
 tests="main_tests_${profile}"
