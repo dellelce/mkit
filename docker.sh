@@ -179,11 +179,13 @@ done
 [ -z "$KEEP_DOCS" ] &&
 {
  for dir in $prefix/man \
+            $prefix/doc \
             $prefix/share/doc \
+            $prefix/share/*-doc \
             $prefix/share/man \
             $prefix/share/info
  do
-  [ -d "$dir" ] && rm -rf "$dir"
+  [ -d "$dir" ] && { echo "Removing doc dir: " $dir; rm -rf "$dir"; }
  done
 }
 
