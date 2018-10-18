@@ -3,19 +3,6 @@
 # mkit core library
 #
 
-# Wrapping bash's popd/pushd for "portability"
-pushdir()
-{
- pushd "$1" > /dev/null
- return "$?"
-}
-
-popdir()
-{
- popd > /dev/null
- return "$?"
-}
-
 # get perl versions as variables
 getPerlVersions()
 {
@@ -70,16 +57,21 @@ get_srcget()
 
 # download
 #
-# Used Global:
-#   DOWNLOADS DOWNLOAD_MAP
+# Used Globals:
+#   DOWNLOADS
+#   DOWNLOAD_MAP
+#   RUNTIME_LIST
+#   BUILDTIME_LIST
 download()
 {
  typeset pkg fn
+ typeset wd="$PWD"
  export DOWNLOAD_MAP=""
+
+ cd "$DOWNLOADS" || return $?
 
  for pkg in $RUNTIME_LIST
  do
-  pushdir "$DOWNLOADS"
   fn=$(srcget.sh -n $pkg)
   srcget_rc=$?
   fn="$PWD/$fn"
@@ -90,8 +82,26 @@ download()
 
   # save directory to a variable named after the package
   eval "fn_${pkg}=$fn"
-  popdir
  done
+
+ # build-time packages need only be downloaded if not already installed
+ for pkg in $BUILDTIME_LIST
+ do
+  hook $pkg is_installed || continue # if NOT just continue
+
+  fn=$(srcget.sh -n $pkg)
+  srcget_rc=$?
+  fn="$PWD/$fn"
+  [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
+  echo "${BOLD}$pkg${RESET} has been downloaded as: " $fn
+
+  DOWNLOAD_MAP="${DOWNLOAD_MAP} ${pkg}:${fn}"  # this will fail if ${fn} has spaces!
+
+  # save directory to a variable named after the package
+  eval "fn_${pkg}=$fn"
+ done
+
+ cd "$wd"
 }
 
 #
@@ -354,6 +364,24 @@ add_run_dep()
 )
 }
 
+# add_build_dep: buildtime dependencies
+#
+add_build_dep()
+{
+ typeset id_list="$*" item=""
+
+ [ -z "$id_list" ] && return 1 # sanitycheck
+ [ -z "$BUILDTIME_LIST" ] && { export BUILDTIME_LIST="$id_list"; } || { export BUILDTIME_LIST="$BUILDTIME_LIST $id_list"; }
+
+ # remove possible duplicates
+ BUILDTIME_LIST=$(
+   for item in $BUILDTIME_LIST
+   do
+     echo $item
+   done | awk '!x[$0]++'
+)
+}
+
 #
 # run_build: build all
 # globals used: RUNTIME_LIST DOWNLOAD_MAP
@@ -383,7 +411,7 @@ run_build()
   done
  }
 
- for pkg in $RUNTIME_LIST
+ for pkg in $BUILDTIME_LIST $RUNTIME_LIST
  do
   func="build_${pkg}"
   type $func >/dev/null 2>&1
@@ -432,6 +460,16 @@ test_perl_automake()
 
 EOF
  }
+}
+
+#
+# hooks!
+hook()
+{
+ # package name, hook name, arguments
+ # coming soon
+
+ return 0
 }
 
 ### EOF ###
