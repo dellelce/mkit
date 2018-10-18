@@ -3,32 +3,32 @@
 # TODO: automate build orders & list
 profile_default()
 {
- add_build m4
- add_build autoconf
- add_build libffi
- add_build ncurses
- add_build libbsd
- add_build expat
- add_build readline
- add_build sqlite3
- add_build bison
- add_build pcre
- add_build zlib
- add_build bzip2
- add_build openssl
- add_build apr
- add_build aprutil
- add_build libxml2
- add_build httpd
+ add_run_dep m4
+ add_run_dep autoconf
+ add_run_dep libffi
+ add_run_dep ncurses
+ add_run_dep libbsd
+ add_run_dep expat
+ add_run_dep readline
+ add_run_dep sqlite3
+ add_run_dep bison
+ add_run_dep pcre
+ add_run_dep zlib
+ add_run_dep bzip2
+ add_run_dep openssl
+ add_run_dep apr
+ add_run_dep aprutil
+ add_run_dep libxml2
+ add_run_dep httpd
 
  [ "$PHP_NEEDED" == "1" ] &&
  {
-  add_build php
-  add_build suhosin
+  add_run_dep php
+  add_run_dep suhosin
  }
 
- add_build python3
- add_build mod_wsgi
+ add_run_dep python3
+ add_run_dep mod_wsgi
 
  run_build
  return $?
@@ -36,67 +36,67 @@ profile_default()
 
 profile_redis()
 {
- add_build redis
+ add_run_dep redis
  run_build
  return $?
 }
 
 profile_python()
 {
- add_build libffi ncurses zlib bzip2 readline
- add_build openssl sqlite3 expat libxml2
- add_build python3
+ add_run_dep libffi ncurses zlib bzip2 readline
+ add_run_dep openssl sqlite3 expat libxml2
+ add_run_dep python3
  run_build
  return $?
 }
 
 profile_uwsgi()
 {
- add_build libffi
- add_build ncurses
- add_build zlib
- add_build bzip2
- add_build readline
- add_build openssl
- add_build sqlite3
- add_build expat
- add_build libxml2
- add_build python3
- add_build uwsgi
+ add_run_dep libffi
+ add_run_dep ncurses
+ add_run_dep zlib
+ add_run_dep bzip2
+ add_run_dep readline
+ add_run_dep openssl
+ add_run_dep sqlite3
+ add_run_dep expat
+ add_run_dep libxml2
+ add_run_dep python3
+ add_run_dep uwsgi
  run_build
  return $?
 }
 
 profile_postgres()
 {
- add_build libressl
- add_build libxml2
- add_build zlib
- add_build ncurses
- add_build readline
- add_build postgresql
+ add_run_dep libressl
+ add_run_dep libxml2
+ add_run_dep zlib
+ add_run_dep ncurses
+ add_run_dep readline
+ add_run_dep postgresql
  run_build
  return $?
 }
 
 profile_openvpn()
 {
- add_build openssl
- add_build lzo
+ add_run_dep openssl
+ add_run_dep lzo
  #we don't want you "linuxpam"
- #add_build linuxpam
- add_build openvpn
+ #add_run_dep linuxpam
+ add_run_dep openvpn
  run_build
  return $?
 }
 
 profile_gcc()
 {
- add_build binutils
- add_build gmp
- add_build mpfr
- add_build mpc
- add_build gcc
+ add_run_dep binutils
+ add_run_dep gmp
+ add_run_dep mpfr
+ add_run_dep mpc
+ add_run_dep gcc
  run_build
  return $?
 }
@@ -106,9 +106,9 @@ profile_varnish()
  # varnish needs python (">= 2.7") for generating some files
  # build time dependency only so these should not stay here...
  #
- add_build libffi ncurses zlib bzip2 readline
- add_build openssl sqlite3 expat libxml2
- add_build python3
+ add_run_dep libffi ncurses zlib bzip2 readline
+ add_run_dep openssl sqlite3 expat libxml2
+ add_run_dep python3
 
  # temporary workaround for missing backtrace() in musl
  [ -f "/etc/alpine-release" ] &&
@@ -116,10 +116,10 @@ profile_varnish()
    apk add --no-cache libexecinfo-dev
  }
 
- add_build pcre
- add_build ncurses
- add_build readline
- add_build varnish
+ add_run_dep pcre
+ add_run_dep ncurses
+ add_run_dep readline
+ add_run_dep varnish
 
  run_build
  return $?
@@ -127,8 +127,8 @@ profile_varnish()
 
 profile_curl()
 {
- add_build openssl
- add_build curl
+ add_run_dep openssl
+ add_run_dep curl
 
  run_build
  return $?
@@ -136,13 +136,13 @@ profile_curl()
 
 profile_haproxy()
 {
- add_build pcre
- add_build zlib
- add_build ncurses # needed by readline
- add_build readline # required by lua
- add_build openssl
- add_build lua
- add_build haproxy
+ add_run_dep pcre
+ add_run_dep zlib
+ add_run_dep ncurses # needed by readline
+ add_run_dep readline # required by lua
+ add_run_dep openssl
+ add_run_dep lua
+ add_run_dep haproxy
 
  run_build
  return $?

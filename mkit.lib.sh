@@ -77,7 +77,7 @@ download()
  typeset pkg fn
  export DOWNLOAD_MAP=""
 
- for pkg in $BUILDLIST
+ for pkg in $RUNTIME_LIST
  do
   pushdir "$DOWNLOADS"
   fn=$(srcget.sh -n $pkg)
@@ -336,19 +336,18 @@ build_gnuconf()
  return $rc_makeinstall
 }
 
+# add_run_dep: runtime dependencies
 #
-# add_build
-#
-add_build()
+add_run_dep()
 {
  typeset id_list="$*" item=""
 
  [ -z "$id_list" ] && return 1 # sanitycheck
- [ -z "$BUILDLIST" ] && { export BUILDLIST="$id_list"; } || { export BUILDLIST="$BUILDLIST $id_list"; }
+ [ -z "$RUNTIME_LIST" ] && { export RUNTIME_LIST="$id_list"; } || { export RUNTIME_LIST="$RUNTIME_LIST $id_list"; }
 
  # remove possible duplicates
- BUILDLIST=$(
-   for item in $BUILDLIST
+ RUNTIME_LIST=$(
+   for item in $RUNTIME_LIST
    do
      echo $item
    done | awk '!x[$0]++'
@@ -357,7 +356,7 @@ add_build()
 
 #
 # run_build: build all
-# globals used: BUILDLIST DOWNLOAD_MAP
+# globals used: RUNTIME_LIST DOWNLOAD_MAP
 run_build()
 {
  typeset pkg=""
@@ -384,7 +383,7 @@ run_build()
   done
  }
 
- for pkg in $BUILDLIST
+ for pkg in $RUNTIME_LIST
  do
   func="build_${pkg}"
   type $func >/dev/null 2>&1
@@ -425,7 +424,7 @@ test_perl_automake()
 
  [ "$PERL_REVISION" -eq 5 -a "$PERL_VERSION" -lt 10 ] &&
  {
-  add_build perl
+  add_run_dep perl
   export PERL_NEEDED=1
   cat << EOF
    Detected version of perl is ${PERL_REVISION}.${PERL_VERSION}.${PERL_SUBVERSION} minimum required version is 5.10.
