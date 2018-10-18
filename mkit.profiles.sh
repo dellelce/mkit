@@ -92,6 +92,7 @@ profile_openvpn()
 
 profile_gcc()
 {
+ add_build_dep m4
  add_run_dep binutils
  add_run_dep gmp
  add_run_dep mpfr
