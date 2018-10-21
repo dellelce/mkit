@@ -179,6 +179,7 @@ done
 [ -z "$KEEP_DOCS" ] &&
 {
  for dir in $prefix/man \
+            $prefix/manual \
             $prefix/doc \
             $prefix/share/doc \
             $prefix/share/*-doc \
