@@ -7,6 +7,18 @@
 
 ### FUNCTIONS ###
 
+getdirfullpath()
+{
+ export dp="$1";
+
+ [ -z "$dp" ] && { unset dp; echo $PWD; return 0; }
+
+ ( cd $dp; echo $PWD; )
+ unset dp
+
+ return $?
+}
+
 mkit_setup_prefix()
 {
  ## "prefix" is the usual "GNU prefix" option i.e. the root of our install
@@ -67,6 +79,8 @@ mkit_setup()
 }
 
 ### MAIN ###
+
+ export MKIT=$(getdirfullpath $(dirname $0))
 
  . mkit.config.sh
  . mkit.profiles.sh
