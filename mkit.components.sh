@@ -138,15 +138,22 @@ build_perl()
  build_perl_core perl $srcdir_perl
 }
 
-#
 # sqlite3
-#
 build_sqlite3()
 {
  uncompress sqlite3 $fn_sqlite3 || { echo "Failed uncompress for: $fn_sqlite3"; return 1; }
  build_gnuconf sqlite3 $srcdir_sqlite3
  return $?
 }
+
+# git
+build_git()
+{
+ uncompress git $fn_git || { echo "Failed uncompress for: $fn_git"; return 1; }
+ build_gnuconf git $srcdir_git
+ return $?
+}
+
 
 #
 # openvpn
