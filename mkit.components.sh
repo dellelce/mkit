@@ -134,14 +134,12 @@ build_perl_core()
 # build_perl: wrapper to handle "standard" arguments and uncompression
 build_perl()
 {
- uncompress perl $fn_perl || { echo "Failed uncompress for: $fn_perl"; return 1; }
  build_perl_core perl $srcdir_perl
 }
 
 # sqlite3
 build_sqlite3()
 {
- uncompress sqlite3 $fn_sqlite3 || { echo "Failed uncompress for: $fn_sqlite3"; return 1; }
  build_gnuconf sqlite3 $srcdir_sqlite3
  return $?
 }
@@ -149,7 +147,6 @@ build_sqlite3()
 # git
 build_git()
 {
- uncompress git $fn_git || { echo "Failed uncompress for: $fn_git"; return 1; }
  build_gnuconf git $srcdir_git
  return $?
 }
@@ -160,7 +157,6 @@ build_git()
 #
 build_openvpn()
 {
- uncompress openvpn $fn_openvpn || { echo "Failed uncompress for: $fn_openvpn"; return 1; }
  enable_plugin_auth_pam=no build_gnuconf openvpn $srcdir_openvpn
  return $?
 }
@@ -170,7 +166,6 @@ build_openvpn()
 #
 build_lzo()
 {
- uncompress lzo $fn_lzo || { echo "Failed uncompress for: $fn_lzo"; return 1; }
  build_gnuconf lzo $srcdir_lzo
  return $?
 }
@@ -180,7 +175,6 @@ build_lzo()
 #
 build_linuxpam()
 {
- uncompress linuxpam $fn_linuxpam || { echo "Failed uncompress for: $fn_linuxpam"; return 1; }
  build_gnuconf linuxpam $srcdir_linuxpam --disable-nls --disable-db
  return $?
 }
@@ -189,7 +183,6 @@ build_linuxpam()
 #
 build_libbsd()
 {
- uncompress libbsd $fn_libbsd || { echo "Failed uncompress for: $fn_libbsd"; return 1; }
  build_gnuconf libbsd $srcdir_libbsd
  return $?
 }
@@ -198,7 +191,6 @@ build_libbsd()
 #
 build_libressl()
 {
- uncompress libressl $fn_libressl || { echo "Failed uncompress for: $fn_libressl"; return 1; }
  build_gnuconf libressl $srcdir_libressl
  return $?
 }
@@ -207,7 +199,6 @@ build_libressl()
 #
 build_postgresql()
 {
- uncompress postgresql $fn_postgresql || { echo "Failed uncompress for: $fn_postgresql"; return 1; }
  [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
  build_gnuconf postgresql $srcdir_postgresql
  return $?
@@ -218,7 +209,6 @@ build_postgresql()
 #
 build_ncurses()
 {
- uncompress ncurses $fn_ncurses || { echo "Failed uncompress for: $fn_ncurses"; return 1; }
  build_gnuconf ncurses $srcdir_ncurses --with-shared --with-cxx-shared  \
                                        --without-ada
  return $?
@@ -229,7 +219,6 @@ build_libffi()
 {
  typeset rc=0 dir=""
 
- uncompress libffi $fn_libffi || { echo "Failed uncompress for: $fn_libffi"; return 1; }
  build_gnuconf libffi $srcdir_libffi
  rc=$?
  [ $rc -ne 0 ] && return $rc
@@ -255,7 +244,6 @@ build_libffi()
 # expat
 build_expat()
 {
- uncompress expat $fn_expat || { echo "Failed uncompress for: $fn_expat"; return 1; }
  build_gnuconf expat $srcdir_expat
  return $?
 }
@@ -264,7 +252,6 @@ build_expat()
 # M4 Macro Processor
 build_m4()
 {
- uncompress m4 $fn_m4 || { echo "Failed uncompress for: $fn_m4"; return 1; }
  build_gnuconf m4 $srcdir_m4
  return $?
 }
@@ -276,7 +263,6 @@ build_m4()
 #
 build_suhosin()
 {
- uncompress suhosin $fn_suhosin || { echo "Failed uncompress for: $fn_suhosin"; return 1; }
  {
   echo "Running phpize in $srcdir_suhosin"
   cwd="$PWD"
@@ -293,7 +279,6 @@ build_suhosin()
 #
 build_apr()
 {
- uncompress apr $fn_apr || { echo "Failed uncompress for: $fn_apr"; return 1; }
  build_gnuconf apr $srcdir_apr
  return $?
 }
@@ -303,7 +288,6 @@ build_apr()
 #
 build_bison()
 {
- uncompress bison $fn_bison || { echo "Failed uncompress for: $fn_bison"; return 1; }
  build_gnuconf bison $srcdir_bison MAKEINFO=:
  return $?
 }
@@ -313,7 +297,6 @@ build_bison()
 #
 build_automake()
 {
- uncompress automake $fn_automake || { echo "Failed uncompress for: $fn_automake"; return 1; }
  build_gnuconf automake $srcdir_automake
  return $?
 }
@@ -323,7 +306,6 @@ build_automake()
 #
 build_readline()
 {
- uncompress readline $fn_readline || { echo "Failed uncompress for: $fn_readline"; return 1; }
  [ -f "/etc/alpine-release" -a -f "$srcdir_readline/shlib/Makefile.in" ] &&
  {
    rlmk="$srcdir_readline/shlib/Makefile.in"
@@ -345,7 +327,6 @@ build_readline()
 #
 build_autoconf()
 {
- uncompress autoconf $fn_autoconf || { echo "Failed uncompress for: $fn_autoconf"; return 1; }
  build_gnuconf autoconf $srcdir_autoconf
  return $?
 }
@@ -355,7 +336,6 @@ build_autoconf()
 #
 build_pcre()
 {
- uncompress pcre $fn_pcre || { echo "Failed uncompress for: $fn_pcre"; return 1; }
  build_gnuconf pcre $srcdir_pcre # AUTOCONF=: AUTOHEADER=: AUTOMAKE=: ACLOCAL=:
  return $?
 }
@@ -365,7 +345,6 @@ build_pcre()
 #
 build_aprutil()
 {
- uncompress aprutil $fn_aprutil || { echo "Failed uncompress for: $fn_aprutil"; return 1; }
  # both crypto/openssl & sqlite3 do not appear to work (link) with the following options.... ignoring for now
  #build_gnuconf aprutil $srcdir_aprutil --with-apr="${prefix}" \
  #                   --with-openssl="${prefix}" --with-crypto \
@@ -380,7 +359,6 @@ build_aprutil()
 # mod_wsgi
 build_mod_wsgi()
 {
- uncompress mod_wsgi $fn_mod_wsgi || { echo "Failed uncompress for: $fn_mod_wsgi"; return 1; }
  opt="BADCONFIGURE" build_gnuconf mod_wsgi $srcdir_mod_wsgi \
                                        --with-apxs="${prefix}/bin/apxs" \
                                        --with-python="${prefix}/bin/python3"
@@ -392,7 +370,6 @@ build_mod_wsgi()
 #
 build_httpd()
 {
- uncompress httpd $fn_httpd || { echo "Failed uncompress for: $fn_httpd"; return 1; }
  [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
  build_gnuconf httpd $srcdir_httpd \
                                --with-z="${prefix}"		\
@@ -404,7 +381,6 @@ build_httpd()
 
 build_libxml2()
 {
- uncompress libxml2 $fn_libxml2 || { echo "Failed uncompress for: $fn_libxml2"; return 1; }
  build_gnuconf libxml2 $srcdir_libxml2 --without-python
 
  return $?
@@ -506,7 +482,6 @@ build_bzip2_core()
 
 build_bzip2()
 {
- uncompress bzip2 $fn_bzip2 || { echo "Failed uncompress for: $fn_bzip2"; return 1; }
  build_bzip2_core bzip2 $srcdir_bzip2
 
  return $?
@@ -586,7 +561,6 @@ build_lua_core()
 # build_lua: wrapper to handle "standard" arguments and uncompression
 build_lua()
 {
- uncompress lua $fn_lua || { echo "Failed uncompress for: $fn_lua"; return 1; }
  build_lua_core lua $srcdir_lua
 }
 
@@ -668,8 +642,8 @@ build_haproxy_core()
 # build_haproxy: wrapper to handle "standard" arguments and uncompression
 build_haproxy()
 {
- uncompress haproxy $fn_haproxy || { echo "Failed uncompress for: $fn_haproxy"; return 1; }
  build_haproxy_core haproxy $srcdir_haproxy
+ return $?
 }
 
 #
@@ -677,8 +651,6 @@ build_haproxy()
 #
 build_zlib()
 {
- uncompress zlib $fn_zlib || { echo "Failed uncompress for: $fn_zlib"; return 1; }
-
  # zlib's configure does not support building in a different directory than source
  opt="BADCONFIGURE" build_gnuconf zlib $srcdir_zlib
 
@@ -693,7 +665,6 @@ build_python3()
  typeset rc=0
  typeset fn
 
- uncompress python3 $fn_python3 || { echo "Failed uncompress for: $fn_python3"; return 1; }
  LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"  \
  CFLAGS="-I${prefix}/include"                        \
  build_gnuconf python3 $srcdir_python3 \
@@ -719,7 +690,6 @@ build_python3()
 #
 build_php()
 {
- uncompress php $fn_php || { echo "Failed uncompress for: $fn_php"; return 1; }
  build_gnuconf php $srcdir_php \
                  --enable-shared --with-libxml-dir=${prefix} \
                  --with-openssl=${prefix} --with-openssl-dir="${prefix}"     \
@@ -730,36 +700,30 @@ build_php()
 #
 build_binutils()
 {
- uncompress binutils $fn_binutils || { echo "Failed uncompress for: $fn_binutils"; return 1; }
  build_gnuconf binutils $srcdir_binutils MAKEINFO=:
  return $?
 }
 
 build_gmp()
 {
- uncompress gmp $fn_gmp || { echo "Failed uncompress for: $fn_gmp"; return 1; }
  build_gnuconf gmp $srcdir_gmp
  return $?
 }
 
 build_mpfr()
 {
- uncompress mpfr $fn_mpfr || { echo "Failed uncompress for: $fn_mpfr"; return 1; }
  build_gnuconf mpfr $srcdir_mpfr
  return $?
 }
 
 build_mpc()
 {
- uncompress mpc $fn_mpc || { echo "Failed uncompress for: $fn_mpc"; return 1; }
  build_gnuconf mpc $srcdir_mpc
  return $?
 }
 
 build_gcc()
 {
- uncompress gcc $fn_gcc || { echo "Failed uncompress for: $fn_gcc"; return 1; }
-
  MAKEINFO=: \
  build_gnuconf gcc $srcdir_gcc  --enable-languages=c \
                    --with-gmp=${prefix} --with-mpfr=${prefix} --with-mpc=${prefix} \
@@ -773,8 +737,6 @@ build_gcc()
 
 build_varnish()
 {
- uncompress varnish $fn_varnish || { echo "Failed uncompress for: $fn_varnish"; return 1; }
-
  [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
 
  RST2MAN=: SPHINX=: \
@@ -784,8 +746,6 @@ build_varnish()
 
 build_curl()
 {
- uncompress curl $fn_curl || { echo "Failed uncompress for: $fn_curl"; return 1; }
-
  build_gnuconf curl $srcdir_curl
  return $?
 }
@@ -795,7 +755,6 @@ build_curl()
 build_openssl()
 {
  typeset id="openssl"
- uncompress openssl $fn_openssl || { echo "Failed uncompress for: $fn_openssl"; return 1; }
  export rc=0
 
  echo
@@ -921,7 +880,6 @@ build_raw_core()
 # redis
 build_redis()
 {
- uncompress redis $fn_redis || { echo "Failed uncompress for: $fn_redis"; return 1; }
  build_raw_core redis $srcdir_redis
 
  return $?
@@ -932,8 +890,6 @@ build_redis()
 build_uwsgi()
 {
  typeset rc=0 dir=""
-
- uncompress uwsgi $fn_uwsgi || { echo "Failed uncompress for: $fn_uwsgi"; return 1; }
 
  [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
 

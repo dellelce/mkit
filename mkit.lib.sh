@@ -93,7 +93,13 @@ download()
  # build-time packages need only be downloaded if not already installed
  for pkg in $BUILDTIME_LIST
  do
-  hook $pkg is_installed || continue # if NOT just continue
+  hook $pkg is_installed ||
+  {
+   INSTALLED_LIST="$INSTALLED_LIST $pkg";
+   eval "fn_${pkg}=installed"
+   echo "${BOLD}$pkg${RESET} is a build-time dependency and already installed."
+   continue
+  }
 
   fn=$(get_source $pkg)
   srcget_rc=$?
@@ -196,7 +202,7 @@ save_srcdir()
  typeset id="$1"
  typeset dir="$2"
 
- [ -d "$dir" ] && { eval "srcdir_${id}=${dir}"; return 0; }
+ [ -d "$dir" ] && { eval "export srcdir_${id}=${dir}"; return 0; }
 
  echo "save_srcdir: $dir is not a directory."
  return 1
@@ -403,6 +409,15 @@ add_build_dep()
 )
 }
 
+
+do_uncompress ()
+{
+ typeset id=$1;
+ eval  "fn=\$fn_$id";
+ uncompress $id $fn || { echo "Failed uncompress for: $fn_$id"; return 1; }
+ return $?
+}
+
 #
 # run_build: build all
 # globals used: RUNTIME_LIST DOWNLOAD_MAP
@@ -434,9 +449,17 @@ run_build()
 
  for pkg in $BUILDTIME_LIST $RUNTIME_LIST
  do
+  fname=$(getbasename $pkg)
+  [ "$fname" == "installed" ] && continue
+
   func="build_${pkg}"
+
   type $func >/dev/null 2>&1
   [ $? -ne 0 ] && { echo "Build function for $pkg is invalid or does not exist"; return 1; }
+
+  # uncompress
+  do_uncompress ${pkg} || return $?
+
   $func
   rc=$?
 
