@@ -40,6 +40,8 @@ mkit_setup()
  export WORKDIR="$PWD/mkit_workdir"
  export SRCGET="${WORKDIR}/srcget"
  export PATH="$PATH:$SRCGET"
+ export INSTALLED_LIST=""
+ export BUILDTIME_LIST=""
  export RUNTIME_LIST=""
  export DOWNLOADS="${WORKDIR}/downloads"
 
