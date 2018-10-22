@@ -121,11 +121,11 @@ download()
  # build-time packages need only be downloaded if not already installed
  for pkg in $BUILDTIME_LIST
  do
-  hook $pkg is_installed ||
+  hook $pkg is_installed &&
   {
    INSTALLED_LIST="$INSTALLED_LIST $pkg";
    eval "fn_${pkg}=installed"
-   echo "${BOLD}$pkg${RESET} is a build-time dependency and already installed."
+   echo "${BOLD}$pkg${RESET} is a build-time dependency and is already installed."
    continue
   }
 
@@ -278,12 +278,11 @@ build_sanity_gnuconf()
 
  [ ! -f "$1/configure" -a -f "$1/configure.ac" ] &&
  {
-  echo "build_sanity_gnuconf: no configure file in: $1 but configure.ac is present"
   typeset cwd="$PWD"
   cd "$1"
-  autoreconf -vif; ar_rc=$?
+  autoreconf -vif >/dev/null 2>&1; ar_rc=$?
   cd "$cwd"
-  [ $ar_rc -ne 0 ] && { echo "autoreconf failed with rc = $rc"; return $ar_rc; }
+  [ $ar_rc -ne 0 ] && { echo "autoreconf failed with rc = $ar_rc"; return $ar_rc; }
   build_sanity_gnuconf $1
   return $?
  }
@@ -528,7 +527,7 @@ hook()
 
  [ -f "$hookfile" ] &&
  {
-  . "$hookfile" $args
+  $SHELL "$hookfile" $args
   return $?
  }
 
