@@ -150,4 +150,15 @@ profile_haproxy()
  return $?
 }
 
+profile_git()
+{
+ add_build_dep m4
+ add_build_dep autoconf
+ add_run_dep zlib
+ add_run_dep git
+
+ run_build
+ return $?
+}
+
 ### EOF ###
