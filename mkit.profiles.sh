@@ -141,6 +141,9 @@ profile_haproxy()
 
 profile_git()
 {
+ add_build_dep perl
+ add_build_dep makemaker
+ add_build_dep datadumper
  add_build_dep m4
  add_build_dep autoconf
  add_run_dep zlib
