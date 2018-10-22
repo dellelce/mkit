@@ -1,10 +1,18 @@
 #!/bin/bash
 
+profile_gnubuild()
+{
+ add_build_dep perl
+ add_build_dep makemaker
+ add_build_dep datadumper
+ add_build_dep m4
+ add_build_dep autoconf
+}
+
 # TODO: automate build orders & list
 profile_default()
 {
- add_run_dep m4
- add_run_dep autoconf
+ profile_gnubuild
  add_run_dep libffi
  add_run_dep ncurses
  add_run_dep libbsd
@@ -141,11 +149,7 @@ profile_haproxy()
 
 profile_git()
 {
- add_build_dep perl
- add_build_dep makemaker
- add_build_dep datadumper
- add_build_dep m4
- add_build_dep autoconf
+ profile_gnubuild
  add_run_dep zlib
  add_run_dep git
 
