@@ -488,7 +488,18 @@ EOF
 hook()
 {
  # package name, hook name, arguments
- # coming soon
+
+ typeset pname="$1"; shift
+ typeset hname="$1"; shift
+ typeset args="$*"; shift
+
+ typeset hookfile="$MKIT/hooks/$pname/${hname}.sh"
+
+ [ -f "$hookfile" ] &&
+ {
+  . "$hookfile" $args
+  return $?
+ }
 
  return 0
 }
