@@ -3,32 +3,6 @@
 # mkit functions library
 #
 
-# prepare_build: only for those that do not support explicitly a build directory
-#                different than source
-# This function expects to be in the build directory
-prepare_build()
-{
- typeset dir="$1"
- [ ! -d "$dir" ] && return 1
-
- dirList=$(find $dir -type d)
- fileList=$(find $dir -type f)
-
- #make directores
- for bad in $dirList
- do
-  baseDir=${bad#${dir}/} #remove "base" directory
-  mkdir -p "$baseDir" || return "$?"
- done
-
- # link files
- for bad in $fileList
- do
-  baseFile=${bad#${dir}/} #remove "base" directory
-  ln -sf "$bad" "$baseFile" || return "$?"
- done
-}
-
 # get perl versions as variables
 getPerlVersions()
 {
@@ -92,39 +66,42 @@ build_perl_core()
   return 1;
  }
 
- echo
- echo "Building Perl in $pkgbuilddir at $(date)"
+ # redis & many others does not have a GNU configure but just a raw makefile
+ # or some other sometimes fancy buil systems.
+ # we create a build directory different than source directory for them.
+ prepare_build $dir
+
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
 
  time_start
 
  echo "Configuring..."
- {
-  $dir/Configure  -des                          \
-                  -Dprefix="${prefix}"          \
-                  -Dvendorprefix="${prefix}"    \
-                  -Dman1dir=${prefix}/man/man1  \
-                  -Dman3dir=${prefix}/man3      \
-                  -Duseshrplib                  \
-                  $* 2>&1
-  rc_conf=$?
- } | build_logger "${id}_configure"
+ logFile=$(logger_file ${id}_conf)
 
- [ "$rc_conf" -ne 0 ] && return $rc_conf
+ $dir/Configure  -des                          \
+                 -Dprefix="${prefix}"          \
+                 -Dvendorprefix="${prefix}"    \
+                 -Dman1dir=${prefix}/man/man1  \
+                 -Dman3dir=${prefix}/man3      \
+                 -Duseshrplib                  \
+                 $* > ${logFile} 2>&1
+ rc_conf=$?
+ [ "$rc_conf" -ne 0 ] && { cat "${logFile}";  return $rc_conf; }
 
  echo "Running make..."
- {
-  make 2>&1
-  rc_make=$?
- } | build_logger ${id}_make
 
- [ "$rc_make" -ne 0 ] && return $rc_make
+ logFile=$(logger_file ${id}_make)
+ make > ${logFile} 2>&1
+ rc_make=$?
+ [ "$rc_make" -ne 0 ] && { cat "${logFile}"; return $rc_make; }
 
  echo "Running make install..."
- {
-  make install 2>&1
-  rc_makeinstall=$?
- } | build_logger ${id}_makeinstall
+
+ logFile=$(logger_file ${id}_makeinstall)
+ make install > ${logFile} 2>&1
+ rc_makeinstall=$?
+ [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; }
 
  cd "$WORKDIR"
  return $rc_makeinstall
@@ -147,6 +124,7 @@ build_sqlite3()
 # git
 build_git()
 {
+ opt="BADCONFIGURE" \
  build_gnuconf git $srcdir_git
  return $?
 }
@@ -234,7 +212,7 @@ build_libffi()
  mkdir -p "$prefix/include" # make sure target directory exists
  for header in $prefix/lib/libffi-*/include/*
  do
-  [ -f "$header" ] && ln -sf $header $prefix/include/$(basename $header)
+  [ -f "$header" ] && ln -sf "$header" "$prefix/include/$(basename $header)"
  done
 
  return 0
@@ -427,8 +405,7 @@ build_bzip2_core()
   done
  }
 
- echo
- echo "Building $id in $pkgbuilddir at $(date)"
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
  # make
  {
@@ -522,8 +499,7 @@ build_lua_core()
 
  prepare_build $dir
 
- echo
- echo "Building LUA in $pkgbuilddir at $(date)"
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
 
  time_start
@@ -588,10 +564,9 @@ build_haproxy_core()
   return 1;
  }
 
- prepare_build $dir
+ prepare_build "$dir"
 
- echo
- echo "Building LUA in $pkgbuilddir at $(date)"
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
 
  time_start
@@ -757,8 +732,7 @@ build_openssl()
  typeset id="openssl"
  export rc=0
 
- echo
- echo Building OpenSSL
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
 
  typeset cwd="$PWD"
@@ -822,27 +796,9 @@ build_raw_core()
  # redis & many others does not have a GNU configure but just a raw makefile
  # or some other sometimes fancy buil systems.
  # we create a build directory different than source directory for them.
- {
-  dirList=$(find $dir -type d)
-  fileList=$(find $dir -type f)
+ prepare_build "$dir"
 
-  #make directores
-  for bad in $dirList
-  do
-   baseDir=${bad#${dir}/} #remove "base" directory
-   mkdir -p "$baseDir" || return "$?"
-  done
-
-  # link files
-  for bad in $fileList
-  do
-   baseFile=${bad#${dir}/} #remove "base" directory
-   ln -s "$bad" "$baseFile" || return "$?"
-  done
- }
-
- echo
- echo "Building $id in $pkgbuilddir at $(date)"
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
  # make
  {
@@ -912,6 +868,90 @@ EOF
  PROFILE="default" \
  build_raw_core uwsgi $srcdir_uwsgi
 
+ return $?
+}
+
+#
+#
+build_perlmodule()
+{
+ typeset rc=0 cwd=""
+ export rc_conf=0 rc_make=0 rc_makeinstall=0
+ typeset id="$1"; shift   # build id
+ typeset dir="$1"; shift  # src directory
+ typeset pkgbuilddir="$BUILDDIR/$id"
+
+ [ ! -d "$pkgbuilddir" ] &&
+   { mkdir -p "$pkgbuilddir"; } ||
+   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+
+ cd "$pkgbuilddir" ||
+ {
+  echo "build: Failed to change to build directory: " $pkgbuilddir;
+  return 1;
+ }
+
+ # redis & many others does not have a GNU configure but just a raw makefile
+ # or some other sometimes fancy buil systems.
+ # we create a build directory different than source directory for them.
+ prepare_build "$dir"
+
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
+ echo
+ # configurepl
+ logFile=$(logger_file ${id}_configurepl)
+ echo "Running Makefile.PL"
+
+ cwd="$PWD"
+ cd "$dir"
+
+ PERL5LIB=$prefix/share/perl5 \
+ $prefix/bin/perl Makefile.PL PREFIX=$prefix > ${logFile} 2>&1; rc_configurepl="$?"
+
+ cd "$cwd"
+
+ [ "$rc_configurepl" -ne 0 ] && { cat ${logFile}; return "$rc_configurepl"; }
+
+ # make
+ logFile=$(logger_file ${id}_make)
+ echo "Running make"
+
+ cwd="$PWD"
+ cd "$dir"
+
+ PERL5LIB=$prefix/share/perl5 \
+ make > ${logFile} 2>&1; rc_make="$?"
+
+ cd "$cwd"
+ [ "$rc_make" -ne 0 ] && { cat ${logFile}; return "$rc_make"; }
+
+ # make install
+ logFile=$(logger_file ${id}_makeinstall)
+ echo "Running make install"
+
+ cwd="$PWD"
+ cd "$dir"
+
+ PERL5LIB=$prefix/share/perl5 \
+ make install > ${logFile} 2>&1
+ rc_makeinstall="$?"
+
+ cd "$cwd"
+ [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; return "$rc_makeinstall"; }
+
+ return 0
+}
+
+#
+build_datadumper()
+{
+ build_perlmodule datadumper $srcdir_datadumper
+ return $?
+}
+
+build_makemaker()
+{
+ build_perlmodule makemaker $srcdir_makemaker
  return $?
 }
 

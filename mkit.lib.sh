@@ -3,6 +3,34 @@
 # mkit core library
 #
 
+# prepare_build: only for those that do not support explicitly a build directory
+#                different than source
+# This function expects to be in the build directory
+prepare_build()
+{
+ typeset dir="$1"
+ [ ! -d "$dir" ] && return 1
+
+ dirList=$(find $dir -type d)
+
+ #make directores
+ for bad in $dirList
+ do
+  baseDir=${bad#${dir}/} #remove "base" directory
+  mkdir -p "$baseDir" || return "$?"
+ done
+
+ # link files
+ find $dir -type f | awk -vdir=$dir '
+  {
+   fn=$0
+   bad=$0
+   sub(dir"/", "", fn);
+   printf("ln -sf %c%s%c %c%s%c\n", 34, bad, 34, 34, fn, 34)
+  }
+ ' | $SHELL
+}
+
 # get perl versions as variables
 getPerlVersions()
 {
@@ -247,24 +275,16 @@ build_sanity_gnuconf()
 {
  [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; }
  [ ! -d "$1" ] && { echo "build_sanity_gnuconf: invalid srcdirectory: $1"; return 1; }
- [ ! -f "$1/configure" -a -f "$1/configure.ac" -a -x "$prefix/bin/autoconf" ] &&
- {
-  echo "build_sanity_gnuconf: no configure file in $1 but configure.ac is present and autoconf is available."
-  typeset cwd="$PWD"
-  typeset rc_autoconf=0
-  cd "$1"
-  mkdir -p m4  && $prefix/bin/autoheader && $prefix/bin/autoconf -i
-  rc_autoconf=$?
-  cd "$cwd"
-  return $rc_autoconf
- }
 
  [ ! -f "$1/configure" -a -f "$1/configure.ac" ] &&
  {
   echo "build_sanity_gnuconf: no configure file in: $1 but configure.ac is present"
+  typeset cwd="$PWD"
+  cd "$1"
   autoreconf -vif; ar_rc=$?
-  [ $ar_rc -ne 0 ] && return $ar_rc
-  build_sanity_gnuconf $dir
+  cd "$cwd"
+  [ $ar_rc -ne 0 ] && { echo "autoreconf failed with rc = $rc"; return $ar_rc; }
+  build_sanity_gnuconf $1
   return $?
  }
 
@@ -324,23 +344,9 @@ build_gnuconf()
  # TODO: cwd to "$dir"
  [ "$opt" == "BADCONFIGURE" ] &&
  {
-  dirList=$(find $dir -type d)
-  fileList=$(find $dir -type f)
-
-  #make directores
-  for bad in $dirList
-  do
-   baseDir=${bad#${dir}/}; mkdir -p "$baseDir" || return "$?"
-  done
-
-  # link files
-  for bad in $fileList
-  do
-   baseFile=${bad#${dir}/}; ln -s "$bad" "$baseFile" || return "$?"
-  done
+  prepare_build "$dir"
  }
 
- echo
  echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
 
@@ -451,6 +457,8 @@ run_build()
  do
   fname=$(getbasename $pkg)
   [ "$fname" == "installed" ] && continue
+
+  echo
 
   func="build_${pkg}"
 
