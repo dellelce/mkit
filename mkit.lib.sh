@@ -55,6 +55,12 @@ get_srcget()
  export PATH="$PWD/srcget:$PATH"
 }
 
+# wrapper to srcget.sh, for now
+get_source()
+{
+ srcget.sh -n $*
+}
+
 # download
 #
 # Used Globals:
@@ -72,7 +78,7 @@ download()
 
  for pkg in $RUNTIME_LIST
  do
-  fn=$(srcget.sh -n $pkg)
+  fn=$(get_source $pkg)
   srcget_rc=$?
   fn="$PWD/$fn"
   [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
@@ -89,7 +95,7 @@ download()
  do
   hook $pkg is_installed || continue # if NOT just continue
 
-  fn=$(srcget.sh -n $pkg)
+  fn=$(get_source $pkg)
   srcget_rc=$?
   fn="$PWD/$fn"
   [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
@@ -104,16 +110,22 @@ download()
  cd "$wd"
 }
 
-#
 # get filename for given package
 #
 getfilename()
 {
- typeset pkg="$1"
-
- [ -z "$pkg" ] && return 1
+ typeset pkg="$1"; [ -z "$pkg" ] && return 1
 
  eval echo "\$fn_${pkg}"
+}
+
+# get base filename for given package
+#
+getbasename()
+{
+ typeset pkg="$1"; [ -z "$pkg" ] && return 1
+
+ eval basename "\$fn_${pkg}"
 }
 
 # xz handler
@@ -201,9 +213,6 @@ uncompress()
  [ ! -f "$fn" ] && { echo "Invalid file name: $fn"; return 1; }
  mkdir -p "$bdir"
 
- echo
- echo "$id: uncompressing ${BOLD}$(basename $fn)${RESET}"
-
  [ "$fn" != "${fn%.xz}" ] && { dir=$(un_xz "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
  [ "$fn" != "${fn%.bz2}" ] && { dir=$(un_bz2 "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
  [ "$fn" != "${fn%.tgz}" ] && { dir=$(un_gz "${fn}" "${bdir}"); save_srcdir $id $dir; return $?; }
@@ -243,11 +252,25 @@ build_sanity_gnuconf()
   cd "$cwd"
   return $rc_autoconf
  }
+
+ [ ! -f "$1/configure" -a -f "$1/configure.ac" ] &&
+ {
+  echo "build_sanity_gnuconf: no configure file in: $1 but configure.ac is present"
+  autoreconf -vif; ar_rc=$?
+  [ $ar_rc -ne 0 ] && return $ar_rc
+  build_sanity_gnuconf $dir
+  return $?
+ }
+
  [ ! -f "$1/configure" -a -f "$1/buildconf.sh" ] &&
  {
   echo "build_sanity_gnuconf: no configure file in: $1 but buildconf.sh is present"
-  return 2
+  $dir/buildconf.sh; bc_rc=$?
+  [ $bc_rc -ne 0 ] && return $bc_rc
+  build_sanity_gnuconf $dir
+  return $?
  }
+
  [ ! -f "$1/configure" ] && { echo "build_sanity_gnuconf: no configure file in: $1"; return 1; }
 
  return 0
@@ -279,8 +302,6 @@ build_gnuconf()
  build_sanity_gnuconf $dir
  rc=$?
 
- # rc=2: buildconf.sh was found without configure: try run buildconf.sh and check again
- [ $rc -eq 2 ] && { $dir/buildconf.sh; bc_rc=$?; build_sanity_gnuconf $dir; rc=$?; }
  [ $rc -ne 0 ] && { echo "build_gnuconf: build sanity tests failed for $dir"; return $rc; }
 
  [ ! -d "$pkgbuilddir" ] &&
@@ -314,7 +335,7 @@ build_gnuconf()
  }
 
  echo
- echo "Building $id at $(date)"
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
 
  time_start # setup timer
