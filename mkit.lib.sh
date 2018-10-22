@@ -496,7 +496,7 @@ test_perl_automake()
 
  [ "$PERL_REVISION" -eq 5 -a "$PERL_VERSION" -lt 10 ] &&
  {
-  add_run_dep perl
+  add_build_dep perl
   export PERL_NEEDED=1
   cat << EOF
    Detected version of perl is ${PERL_REVISION}.${PERL_VERSION}.${PERL_SUBVERSION} minimum required version is 5.10.
