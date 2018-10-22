@@ -30,14 +30,12 @@ profile_default()
  add_run_dep python3
  add_run_dep mod_wsgi
 
- run_build
  return $?
 }
 
 profile_redis()
 {
  add_run_dep redis
- run_build
  return $?
 }
 
@@ -46,8 +44,6 @@ profile_python()
  add_run_dep libffi ncurses zlib bzip2 readline
  add_run_dep openssl sqlite3 expat libxml2
  add_run_dep python3
- run_build
- return $?
 }
 
 profile_uwsgi()
@@ -63,7 +59,6 @@ profile_uwsgi()
  add_run_dep libxml2
  add_run_dep python3
  add_run_dep uwsgi
- run_build
  return $?
 }
 
@@ -75,7 +70,6 @@ profile_postgres()
  add_run_dep ncurses
  add_run_dep readline
  add_run_dep postgresql
- run_build
  return $?
 }
 
@@ -86,7 +80,6 @@ profile_openvpn()
  #we don't want you "linuxpam"
  #add_run_dep linuxpam
  add_run_dep openvpn
- run_build
  return $?
 }
 
@@ -99,7 +92,6 @@ profile_gcc()
  add_run_dep mpfr
  add_run_dep mpc
  add_run_dep gcc
- run_build
  return $?
 }
 
@@ -123,7 +115,6 @@ profile_varnish()
  add_run_dep readline
  add_run_dep varnish
 
- run_build
  return $?
 }
 
@@ -132,7 +123,6 @@ profile_curl()
  add_run_dep openssl
  add_run_dep curl
 
- run_build
  return $?
 }
 
@@ -146,7 +136,6 @@ profile_haproxy()
  add_run_dep lua
  add_run_dep haproxy
 
- run_build
  return $?
 }
 
@@ -157,7 +146,6 @@ profile_git()
  add_run_dep zlib
  add_run_dep git
 
- run_build
  return $?
 }
 

@@ -103,6 +103,7 @@ mkit_setup()
  profile_func="profile_${profile}"
  unset profile
  $profile_func
+ run_build
 
  exit $?
 
