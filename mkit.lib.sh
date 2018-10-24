@@ -427,11 +427,15 @@ do_uncompress ()
 
 #
 # run_build: build all
-# globals used: RUNTIME_LIST DOWNLOAD_MAP
+# globals used:
+#    RUNTIME_LIST
+#    BUILDTIME_LIST
+#    DOWNLOAD_MAP
 run_build()
 {
  typeset pkg=""
  typeset rc=0
+ typeset buildprefix=""
 
  # the next function (download) uses the variable SRCLIST to determine
  # which packages to download
@@ -454,8 +458,29 @@ run_build()
   done
  }
 
+ [ ! -z "$BUILDTIME_LIST" ] &&
+ {
+   export buildprefix="$TMP/build_prefix_${RANDOM}${RANDOM}"
+
+   # no checks?
+   mkdir -p "$buildprefix/bin"
+   # build prefix files to be found before everything else
+   export PATH="$buildprefix/bin:$PATH"
+
+   # use underscore to mark package as "build-dep" (to simplify following loop)
+   BUILDTIME_LIST=$(
+   for _pkg in $BUILDTIME_LIST
+   do
+     echo "_"${_pkg}
+   done
+   )
+ }
+
  for pkg in $BUILDTIME_LIST $RUNTIME_LIST
  do
+  build=0
+  [ ${pkg} != "${pkg#_}" ] && { build=1; pkg="${pkg#_}"; }
+
   fname=$(getbasename $pkg)
   [ "$fname" == "installed" ] && continue
 
@@ -469,17 +494,24 @@ run_build()
   # uncompress
   do_uncompress ${pkg} || return $?
 
-  $func
-  rc=$?
+  [ "$build" -eq 1 ] &&
+  {
+    prefix="$buildprefix" $func; rc=$?
+  } ||
+  {
+    $func; rc=$?
+  }
 
   [ "$rc" -ne 0 ] &&
   {
-    echo "Failed build $pkg with return code: $rc"
+    [ -d "$buildprefix" ] && rm -rf "$buildprefix"
+    echo "Failed build of $pkg with return code: $rc"
     return $rc
   }
  done
 
- return 0 # we hate bash bugs so we had a return 0 here
+ [ -d "$buildprefix" ] && rm -rf "$buildprefix"
+ return 0 # we hate bash bugs so we add a return 0 here
 }
 
 #

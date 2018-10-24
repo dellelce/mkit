@@ -21,6 +21,8 @@ getdirfullpath()
 
 mkit_setup_prefix()
 {
+ typeset _prefix
+
  ## "prefix" is the usual "GNU prefix" option i.e. the root of our install
  export prefix="${1:-$PWD}"
 
@@ -44,6 +46,8 @@ mkit_setup()
  export BUILDTIME_LIST=""
  export RUNTIME_LIST=""
  export DOWNLOADS="${WORKDIR}/downloads"
+
+ [ -z "$TMP" ] && export TMP="/tmp"
 
  [ -z "$NO_TIMESTAMP" ] &&
  {
