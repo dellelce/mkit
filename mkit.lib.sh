@@ -79,7 +79,8 @@ get_srcget()
             "${srcgetUrl}/${srcget}.tar.gz" || return 1
 
  tar xzf ${srcget}.tar.gz  || return 2
- ln -sf srcget-${srcget} srcget
+ rm -f srcget
+ ln -s srcget-${srcget} srcget
  export PATH="$PWD/srcget:$PATH"
 }
 
