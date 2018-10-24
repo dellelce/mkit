@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# mkit functions library
+# mkit components library
 #
 
 # get perl versions as variables
@@ -129,8 +129,6 @@ build_git()
  return $?
 }
 
-
-#
 # openvpn
 #
 build_openvpn()
@@ -139,7 +137,6 @@ build_openvpn()
  return $?
 }
 
-#
 # lzo
 #
 build_lzo()
@@ -148,7 +145,6 @@ build_lzo()
  return $?
 }
 
-#
 # linux-pam
 #
 build_linuxpam()
@@ -234,10 +230,7 @@ build_m4()
  return $?
 }
 
-#
-# suhosin
-#
-# suhosin requires phpize to be run in source directory
+# suhosin: phpize required to be run in source directory
 #
 build_suhosin()
 {
@@ -292,8 +285,9 @@ build_readline()
    sed -i -e 's/SHLIB_LIBS = @SHLIB_LIBS@/SHLIB_LIBS = @SHLIB_LIBS@ -lncurses/' $rlmk
    ls -lt $rlmk
 
-   echo "Debug: lib in install target"
-   ls -lt "$prefix/lib"
+   # commenting until a proper option for debugging is added
+   #echo "Debug: lib in install target"
+   #ls -lt "$prefix/lib"
  }
 
  build_gnuconf readline $srcdir_readline
@@ -329,7 +323,7 @@ build_aprutil()
  #                    --with-sqlite3="${prefix}" \
  #                  --with-apr="${prefix}" # --with-openssl="${prefix}" --with-crypto
  build_gnuconf aprutil $srcdir_aprutil \
-                         --with-apr="${prefix}"
+                       --with-apr="${prefix}"
  return $?
 }
 
@@ -337,9 +331,10 @@ build_aprutil()
 # mod_wsgi
 build_mod_wsgi()
 {
- opt="BADCONFIGURE" build_gnuconf mod_wsgi $srcdir_mod_wsgi \
-                                       --with-apxs="${prefix}/bin/apxs" \
-                                       --with-python="${prefix}/bin/python3"
+ opt="BADCONFIGURE" \
+ build_gnuconf mod_wsgi $srcdir_mod_wsgi \
+                        --with-apxs="${prefix}/bin/apxs" \
+                        --with-python="${prefix}/bin/python3"
  return $?
 }
 
@@ -350,9 +345,9 @@ build_httpd()
 {
  [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
  build_gnuconf httpd $srcdir_httpd \
-                               --with-z="${prefix}"		\
-                               --with-apr="${prefix}"		\
-                               --with-apr-util="${prefix}"
+                     --with-z="${prefix}"		\
+                     --with-apr="${prefix}"		\
+                     --with-apr-util="${prefix}"
 
  return $?
 }
@@ -386,24 +381,7 @@ build_bzip2_core()
  }
 
  #bzip2 does not have a configure but just a raw makefile
- {
-  dirList=$(find $dir -type d)
-  fileList=$(find $dir -type f)
-
-  #make directores
-  for bad in $dirList
-  do
-   baseDir=${bad#${dir}/} #remove "base" directory
-   mkdir -p "$baseDir" || return "$?"
-  done
-
-  # link files
-  for bad in $fileList
-  do
-   baseFile=${bad#${dir}/} #remove "base" directory
-   ln -sf "$bad" "$baseFile" || return "$?"
-  done
- }
+ prepare_build
 
  echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
@@ -412,8 +390,7 @@ build_bzip2_core()
   logFile=$(logger_file ${id}_make)
   echo "Running make: logging at ${logFile}"
 
-  cwd="$PWD"
-  cd "$dir"
+  cwd="$PWD"; cd "$dir"
 
   make > ${logFile} 2>&1; rc_make="$?"
 
@@ -426,8 +403,7 @@ build_bzip2_core()
   logFile=$(logger_file ${id}_makeso)
   echo "Running make shared: logging at ${logFile}"
 
-  cwd="$PWD"
-  cd "$dir"
+  cwd="$PWD"; cd "$dir"
 
   make clean # the next step will not rebuild and the "linker" will fail without this
   make -f Makefile-libbz2_so  > ${logFile} 2>&1
@@ -442,8 +418,7 @@ build_bzip2_core()
   logFile=$(logger_file ${id}_makeinstall)
   echo "Running make install: logging at ${logFile}"
 
-  cwd="$PWD"
-  cd "$dir"
+  cwd="$PWD"; cd "$dir"
 
   make install PREFIX="${prefix}" > ${logFile} 2>&1
   cp "libbz2.so.1.0.6" "${prefix}/lib"
@@ -621,18 +596,17 @@ build_haproxy()
  return $?
 }
 
-#
 # zlib
 #
 build_zlib()
 {
  # zlib's configure does not support building in a different directory than source
- opt="BADCONFIGURE" build_gnuconf zlib $srcdir_zlib
+ opt="BADCONFIGURE" \
+ build_gnuconf zlib $srcdir_zlib
 
  return $?
 }
 
-#
 # python3
 #
 build_python3()
@@ -660,14 +634,15 @@ build_python3()
  return $rc
 }
 
-#
 # php
 #
 build_php()
 {
  build_gnuconf php $srcdir_php \
-                 --enable-shared --with-libxml-dir=${prefix} \
-                 --with-openssl=${prefix} --with-openssl-dir="${prefix}"     \
+                 --enable-shared \
+                 --with-libxml-dir=${prefix} \
+                 --with-openssl=${prefix} \
+                 --with-openssl-dir="${prefix}"     \
                  --with-apxs2="${prefix}/bin/apxs"
  return $?
 }
@@ -700,8 +675,11 @@ build_mpc()
 build_gcc()
 {
  MAKEINFO=: \
- build_gnuconf gcc $srcdir_gcc  --enable-languages=c \
-                   --with-gmp=${prefix} --with-mpfr=${prefix} --with-mpc=${prefix} \
+ build_gnuconf gcc $srcdir_gcc \
+                   --enable-languages=c \
+                   --with-gmp=${prefix}
+                   --with-mpfr=${prefix}
+                   --with-mpc=${prefix} \
                    --disable-multilib \
                    --disable-lto \
                    --with-system-zlib \
@@ -800,6 +778,7 @@ build_raw_core()
 
  echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
+ time_start
  # make
  {
   logFile=$(logger_file ${id}_make)
@@ -829,6 +808,7 @@ build_raw_core()
  }
  [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; return "$rc_makeinstall"; }
 
+ time_end
  return 0
 }
 
@@ -898,6 +878,7 @@ build_perlmodule()
 
  echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
+ time_start
  # configurepl
  logFile=$(logger_file ${id}_configurepl)
  echo "Running Makefile.PL"
@@ -939,6 +920,7 @@ build_perlmodule()
  cd "$cwd"
  [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; return "$rc_makeinstall"; }
 
+ time_end
  return 0
 }
 

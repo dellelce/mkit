@@ -414,7 +414,8 @@ add_build_dep()
 )
 }
 
-
+# generic wrapper for uncompress
+# TODO: these two functions may be merged?
 do_uncompress ()
 {
  typeset id=$1;
