@@ -535,4 +535,131 @@ hook()
  return 0
 }
 
+#
+#
+build_raw_core()
+{
+ typeset rc=0 cwd=""
+ export rc_conf=0 rc_make=0 rc_makeinstall=0
+ typeset id="$1"; shift   # build id
+ typeset dir="$1"; shift  # src directory
+ typeset pkgbuilddir="$BUILDDIR/$id"
+
+ [ ! -d "$pkgbuilddir" ] &&
+   { mkdir -p "$pkgbuilddir"; } ||
+   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+
+ cd "$pkgbuilddir" ||
+ {
+  echo "build: Failed to change to build directory: " $pkgbuilddir;
+  return 1;
+ }
+
+ # we create a build directory different than source directory for them.
+ prepare_build "$dir"
+
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
+ echo
+ time_start
+ # make
+ {
+  logFile=$(logger_file ${id}_make)
+  echo "Running make: logging at ${logFile}"
+
+  cwd="$PWD"; cd "$dir"
+
+  make > ${logFile} 2>&1; rc_make="$?"
+
+  cd "$cwd"
+ }
+ [ "$rc_make" -ne 0 ] && { cat ${logFile}; return "$rc_make"; }
+
+ # make install
+ {
+  logFile=$(logger_file ${id}_makeinstall)
+  echo "Running make install: logging at ${logFile}"
+
+  cwd="$PWD"; cd "$dir"
+
+  make install PREFIX="${prefix}" > ${logFile} 2>&1
+  rc_makeinstall="$?"
+
+  cd "$cwd"
+ }
+ [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; return "$rc_makeinstall"; }
+
+ time_end
+ return 0
+}
+
+#
+#
+build_perlmodule()
+{
+ typeset rc=0 cwd=""
+ export rc_conf=0 rc_make=0 rc_makeinstall=0
+ typeset id="$1"; shift   # build id
+ typeset dir="$1"; shift  # src directory
+ typeset pkgbuilddir="$BUILDDIR/$id"
+
+ [ ! -d "$pkgbuilddir" ] &&
+   { mkdir -p "$pkgbuilddir"; } ||
+   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+
+ cd "$pkgbuilddir" ||
+ {
+  echo "build: Failed to change to build directory: " $pkgbuilddir;
+  return 1;
+ }
+
+ # redis & many others does not have a GNU configure but just a raw makefile
+ # or some other sometimes fancy buil systems.
+ # we create a build directory different than source directory for them.
+ prepare_build "$dir"
+
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
+ echo
+ time_start
+ # configurepl
+ logFile=$(logger_file ${id}_configurepl)
+ echo "Running Makefile.PL"
+
+ cwd="$PWD"; cd "$dir"
+
+ PERL5LIB=$prefix/share/perl5 \
+ $prefix/bin/perl Makefile.PL PREFIX=$prefix > ${logFile} 2>&1; rc_configurepl="$?"
+
+ cd "$cwd"
+
+ [ "$rc_configurepl" -ne 0 ] && { cat ${logFile}; return "$rc_configurepl"; }
+
+ # make
+ logFile=$(logger_file ${id}_make)
+ echo "Running make"
+
+ cwd="$PWD"; cd "$dir"
+
+ PERL5LIB=$prefix/share/perl5 \
+ make > ${logFile} 2>&1; rc_make="$?"
+
+ cd "$cwd"
+ [ "$rc_make" -ne 0 ] && { cat ${logFile}; return "$rc_make"; }
+
+ # make install
+ logFile=$(logger_file ${id}_makeinstall)
+ echo "Running make install"
+
+ cwd="$PWD"; cd "$dir"
+
+ PERL5LIB=$prefix/share/perl5 \
+ make install > ${logFile} 2>&1
+ rc_makeinstall="$?"
+
+ cd "$cwd"
+ [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; return "$rc_makeinstall"; }
+
+ time_end
+ return 0
+}
+
 ### EOF ###
