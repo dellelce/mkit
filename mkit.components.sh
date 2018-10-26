@@ -294,12 +294,19 @@ build_readline()
  return $?
 }
 
-#
-# autoconf
+# GNU autoconf
 #
 build_autoconf()
 {
  build_gnuconf autoconf $srcdir_autoconf
+ return $?
+}
+
+# GNU libtool
+#
+build_libtool()
+{
+ build_gnuconf libtool $srcdir_libtool
  return $?
 }
 
