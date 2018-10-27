@@ -442,6 +442,7 @@ run_build()
  # download latest archives / builds name mapping
  download || { echo "Download failed for one of the components"; exit 1; }
 
+ # print download map ==== do we really need to print this?
  [ ! -z "$DOWNLOAD_MAP" ] &&
  {
   echo "Downloaded software:"
@@ -458,6 +459,7 @@ run_build()
   done
  }
 
+ # if there is any build-time dep prepare a custom prefix for them.
  [ ! -z "$BUILDTIME_LIST" ] &&
  {
    export buildprefix="$TMP/build_prefix_${RANDOM}${RANDOM}"
@@ -489,7 +491,24 @@ run_build()
   func="build_${pkg}"
 
   type $func >/dev/null 2>&1
-  [ $? -ne 0 ] && { echo "Build function for $pkg is invalid or does not exist"; return 1; }
+  func_rc=$?
+
+  [ $func_rc -ne 0 ] &&
+  {
+    # module was not found built-in: try as module
+    module_func="$MKIT/modules/build/${pkg}.sh"
+
+    [ -f "$module_func" ] &&
+    {
+      . "$module_func"
+      type $func >/dev/null 2>&1
+      func_rc=$?
+    } ||
+    {
+      echo "Build function for $pkg is invalid or does not exist"
+      return 1
+    }
+  }
 
   # uncompress
   do_uncompress ${pkg} || return $?
