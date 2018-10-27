@@ -121,9 +121,7 @@ profile_varnish()
  # varnish needs python (">= 2.7") for generating some files
  # build time dependency only so these should not stay here...
  #
- add_run_dep libffi ncurses zlib bzip2 readline
- add_run_dep openssl sqlite3 expat libxml2
- add_run_dep python3
+ profile_python
 
  # temporary workaround for missing backtrace() in musl
  [ -f "/etc/alpine-release" ] &&
