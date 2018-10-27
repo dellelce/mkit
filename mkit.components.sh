@@ -125,7 +125,8 @@ build_sqlite3()
 build_git()
 {
  opt="BADCONFIGURE" \
- build_gnuconf git $srcdir_git
+ build_gnuconf git $srcdir_git \
+          --with-zlib="${prefix}"
  return $?
 }
 
