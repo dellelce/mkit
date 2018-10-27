@@ -121,15 +121,6 @@ build_sqlite3()
  return $?
 }
 
-# git
-build_git()
-{
- opt="BADCONFIGURE" \
- build_gnuconf git $srcdir_git \
-          --with-zlib="${prefix}"
- return $?
-}
-
 # openvpn
 #
 build_openvpn()
