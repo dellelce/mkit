@@ -18,7 +18,7 @@ ARG PROFILE=default
 # xz              xz is the "best"
 # libc-dev        headers
 # linux-headers   more headers
-ENV PACKAGES gcc bash wget perl file xz make libc-dev linux-headers g++
+ENV PACKAGES gcc bash wget perl perl-dev file xz make libc-dev linux-headers g++
 
 WORKDIR $BUILDDIR
 COPY . $BUILDDIR
