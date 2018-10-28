@@ -130,11 +130,20 @@ download()
    continue
   }
 
-  fn=$(get_source $pkg)
-  srcget_rc=$?
-  fn="$PWD/$fn"
-  [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
-  echo "${BOLD}$pkg${RESET} has been downloaded as: " $fn
+  typeset custom_download=$(hook $pkg custom_download)
+
+  [ ! -z "$custom_download" ] &&
+  {
+   fn="$custom_download"
+   echo "${BOLD}$pkg${RESET} has been \"custom\" downloaded as: " $fn
+  } ||
+  {
+   fn=$(get_source $pkg)
+   srcget_rc=$?
+   fn="$PWD/$fn"
+   [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
+   echo "${BOLD}$pkg${RESET} has been downloaded as: " $fn
+  }
 
   DOWNLOAD_MAP="${DOWNLOAD_MAP} ${pkg}:${fn}"  # this will fail if ${fn} has spaces!
 
