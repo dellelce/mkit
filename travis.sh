@@ -44,7 +44,6 @@ test_file $python
 rc_python=$?
 
 rc_sslversion=0
-
 [ "$rc_python" -eq 0 ] &&
 {
  echo "Testing correct OpenSSL module is built:"
@@ -58,12 +57,11 @@ rc_sslversion=0
 [ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
 
 # mod_wsgi checks
-
 f="$prefix/modules/mod_wsgi.so"
-test_file  $f || let fails="(( $fails + 1))"
+test_file  $f || let fails="(( $fails + 1 ))"
 
 f="$prefix/modules/mod_proxy_uwsgi.so"
-test_file  $f || let fails="(( $fails + 1))"
+test_file  $f || let fails="(( $fails + 1 ))"
 
 #
 echo
