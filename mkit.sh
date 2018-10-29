@@ -1,8 +1,17 @@
 #!/bin/bash
 #
+# This file has the "main" code of mkit.
+# mkit builds software from source (dowloaded by srcget).
+# Each "software"/package is defined by a function in mkit.profiles.sh in format:
+#
+# profile_NAME
+#
+# where "NAME" is the name of the package to pass as argument profile=NAME to mkit.sh.
+#
 # requirements:
 #   GNU wget  : download srcget & software
 #   GNU tar   : j option (bzip2)
+#   srcget    : download packages
 #
 
 ### FUNCTIONS ###
@@ -102,7 +111,7 @@ mkit_setup()
  # download srcget
  get_srcget || { echo "Failed getting srcget, exiting..."; exit 1; }
 
- # launch default profile
+ # launch default profile if none is set already
  profile="${profile:-default}"
  profile_func="profile_${profile}"
  unset profile
