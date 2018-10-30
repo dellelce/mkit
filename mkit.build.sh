@@ -189,16 +189,6 @@ add_build_dep()
 )
 }
 
-# generic wrapper for uncompress
-# TODO: these two functions may be merged?
-do_uncompress ()
-{
- typeset id=$1;
- eval  "fn=\$fn_$id";
- uncompress $id $fn || { echo "Failed uncompress for: $fn_$id"; return 1; }
- return $?
-}
-
 #
 # run_build: build all
 # globals used:
