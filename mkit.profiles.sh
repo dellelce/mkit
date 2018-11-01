@@ -122,6 +122,7 @@ profile_varnish()
  # build time dependency only so these should not stay here...
  #
  profile_python
+ profile_gnubuild
 
  # temporary workaround for missing backtrace() in musl
  [ -f "/etc/alpine-release" ] &&
