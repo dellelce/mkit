@@ -235,6 +235,11 @@ do_uncompress ()
  typeset id=$1;
  eval  "fn=\$fn_$id";
  uncompress $id $fn || { echo "Failed uncompress for: $fn_$id"; return 1; }
+
+ eval  "hook_srcdir=\$srcdir_$id";
+ hook global after_download $hook_srcdir
+ hook $id    after_download $hook_srcdir
+
  return 0
 }
 
