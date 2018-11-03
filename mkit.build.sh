@@ -114,7 +114,7 @@ build_gnuconf()
   return 1;
  }
 
- # some "configure"s do not supporting building in a directory different than the source directory
+ # some "configure"s do not support building in a directory different than the source directory
  # TODO: cwd to "$dir"
  [ "$opt" == "BADCONFIGURE" ] &&
  {
@@ -292,7 +292,6 @@ run_build()
 
   [ "$rc" -ne 0 ] &&
   {
-    [ -d "$buildprefix" ] && rm -rf "$buildprefix"
     echo "Failed build of $pkg with return code: $rc"
     return $rc
   }
