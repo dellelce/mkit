@@ -126,8 +126,8 @@ build_gnuconf()
 
  time_start # setup timer
 
- [ -z "$CFLAGS" ] && export CFLAGS="-I${prefix}/include"
- [ -z "$LDFLAGS" ] && export LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"
+ export CFLAGS="${BASE_CFLAGS} -I${prefix}/include"
+ export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
 
  echo "Configuring..."
  logFile=$(logger_file ${id}_configure)
@@ -195,11 +195,16 @@ add_build_dep()
 #    RUNTIME_LIST
 #    BUILDTIME_LIST
 #    DOWNLOAD_MAP
+#    BASE_CFLAGS
+#    BASE_LDFLAGS
 run_build()
 {
  typeset pkg=""
  typeset rc=0
  typeset buildprefix=""
+
+ [ ! -z "$CFLAGS" ] && { export BASE_CFLAGS="$CFLAGS"; unset CFLAGS; }
+ [ ! -z "$LDFLAGS" ] && { export BASE_LDFLAGS="$CFLAGS"; unset LDFLAGS; }
 
  # the next function (download) uses the variable SRCLIST to determine
  # which packages to download
