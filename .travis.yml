@@ -12,4 +12,4 @@ env:
  - USEDOCKER="yes" PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi"
  - USEDOCKER="yes" PROFILE="openvpn" DOCKER_IMAGE="dellelce/openvpnbase" PREFIX="/app/openvpn"
  - USEDOCKER="no" PREFIX="/tmp/build"
-script: ./travis-plex.sh "$USEDOCKER"
+script: ./mkit-wrapper.sh "$USEDOCKER"

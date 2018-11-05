@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# File:         travis-plex.sh
+# File:         mkit-wrapper.sh
 # Created:      270718
 #
 
