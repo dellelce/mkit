@@ -197,6 +197,7 @@ add_build_dep()
 #    DOWNLOAD_MAP
 #    BASE_CFLAGS
 #    BASE_LDFLAGS
+#    all variables set by add_options if any
 run_build()
 {
  typeset pkg=""
@@ -255,6 +256,8 @@ run_build()
   fname=$(getbasename $pkg)
   [ "$fname" == "installed" ] && continue
 
+  eval options="\$options_${pkg}"
+
   echo
 
   func="build_${pkg}"
@@ -284,10 +287,10 @@ run_build()
 
   [ "$build" -eq 1 ] &&
   {
-    prefix="$buildprefix" $func; rc=$?
+    prefix="$buildprefix" $func $options; rc=$?
   } ||
   {
-    $func; rc=$?
+    $func $options; rc=$?
   }
 
   [ "$rc" -ne 0 ] &&
@@ -442,6 +445,15 @@ build_perlmodule()
 
  time_end
  return 0
+}
+
+# add_options: allow to pass custom options from profiles to build functions
+add_options()
+{
+ typeset pkg="$1"; shift
+ typeset options="$*"
+
+ eval "export options_${pkg}=\"${options}\""
 }
 
 ### EOF ###
