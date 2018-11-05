@@ -2,8 +2,18 @@ build_gcc7()
 {
  typeset languages="c"
  typeset args="$*"
+ typeset rc=0
 
  [ ! -z "$args" ] && languages="${languages},${args}"
+
+ [ -z "$LD_LIBRARY_PATH" ] &&
+ {
+   export LD_LIBRARY_PATH="$prefix/lib"
+ } ||
+ {
+   OLD_LP="$LD_LIBRARY_PATH"
+   export LD_LIBRARY_PATH="$prefix/lib:$LD_LIBRARY_PATH"
+ }
 
  MAKEINFO=: \
  build_gnuconf gcc7 $srcdir_gcc7 \
@@ -15,5 +25,9 @@ build_gcc7()
                    --disable-lto \
                    --with-system-zlib \
                    --disable-nls
- return $?
+ rc=$?
+
+ [ ! -z "$OLD_LP" ] && { LD_LIBRARY_PATH="$OLD_LP"; unset OLD_LP; }
+
+ return $rc
 }
