@@ -55,6 +55,13 @@ build_sanity_gnuconf()
  {
   typeset cwd="$PWD"
   cd "$1"
+
+  # Allow mixing aclocals......
+  [ -d "/usr/share/aclocal" ] &&
+  {
+    export ACLOCAL_PATH="/usr/share/aclocal:${prefix}/share/aclocal"
+  }
+
   autoreconf -vif >/dev/null 2>&1; ar_rc=$?
   cd "$cwd"
   [ $ar_rc -ne 0 ] && { echo "autoreconf failed with rc = $ar_rc"; return $ar_rc; }
