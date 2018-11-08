@@ -31,9 +31,7 @@ prepare_build()
  ' | $SHELL
 }
 
-#
 # logger_file: return a full file name to be used for the specified id
-#
 logger_file()
 {
  typeset logid="$1"
@@ -41,8 +39,6 @@ logger_file()
 
  echo $LAST_LOG
 }
-
-### BEGIN OF BUILD FUNCTIONS ###
 
 #
 #
@@ -85,17 +81,13 @@ build_sanity_gnuconf()
 
 #
 # logging function to be used by build functions
-#
 build_logger()
 {
  export LAST_LOG=$(logger_file "$1")
  cat >> "${LAST_LOG}"
 }
 
-#
-# Build  functions need to be executed from build directory
-#
-# all build here use GNU Configure
+# GNU Configure wrapper with layers to generate "configure" file if needed
 #
 build_gnuconf()
 {
@@ -214,8 +206,6 @@ run_build()
  [ ! -z "$CFLAGS" ] && { export BASE_CFLAGS="$CFLAGS"; unset CFLAGS; }
  [ ! -z "$LDFLAGS" ] && { export BASE_LDFLAGS="$CFLAGS"; unset LDFLAGS; }
 
- # the next function (download) uses the variable SRCLIST to determine
- # which packages to download
  # download latest archives / builds name mapping
  download || { echo "Download failed for one of the components"; exit 1; }
 
@@ -268,7 +258,6 @@ run_build()
   echo
 
   func="build_${pkg}"
-
   type $func >/dev/null 2>&1
   func_rc=$?
 
@@ -338,8 +327,8 @@ build_raw_core()
  typeset pkgbuilddir="$BUILDDIR/$id"
 
  [ ! -d "$pkgbuilddir" ] &&
-   { mkdir -p "$pkgbuilddir"; } ||
-   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+ { mkdir -p "$pkgbuilddir"; } ||
+ { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
 
  cd "$pkgbuilddir" ||
  {
@@ -395,8 +384,8 @@ build_perlmodule()
  typeset pkgbuilddir="$BUILDDIR/$id"
 
  [ ! -d "$pkgbuilddir" ] &&
-   { mkdir -p "$pkgbuilddir"; } ||
-   { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+ { mkdir -p "$pkgbuilddir"; } ||
+ { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
 
  cd "$pkgbuilddir" ||
  {
