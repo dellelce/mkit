@@ -26,17 +26,10 @@ profile_gnudev()
 profile_default()
 {
  profile_gnubuild
- add_run_dep libffi
- add_run_dep ncurses
- add_run_dep libbsd
+ profile_python
+ add_build_dep bison
  add_run_dep expat
- add_run_dep readline
- add_run_dep sqlite3
- add_run_dep bison
  add_run_dep pcre
- add_run_dep zlib
- add_run_dep bzip2
- add_run_dep openssl
  add_run_dep apr
  add_run_dep aprutil
  add_run_dep libxml2
@@ -69,16 +62,7 @@ profile_python()
 
 profile_uwsgi()
 {
- add_run_dep libffi
- add_run_dep ncurses
- add_run_dep zlib
- add_run_dep bzip2
- add_run_dep readline
- add_run_dep openssl
- add_run_dep sqlite3
- add_run_dep expat
- add_run_dep libxml2
- add_run_dep python3
+ profile_python
  add_run_dep uwsgi
  return $?
 }
