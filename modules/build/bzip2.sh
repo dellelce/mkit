@@ -22,12 +22,14 @@ build_bzip2_core()
  #bzip2 does not have a configure but just a raw makefile
  prepare_build
 
+ time_stat
+
  echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
  # make
  {
   logFile=$(logger_file ${id}_make)
-  echo "Running make: logging at ${logFile}"
+  echo "Running make"
 
   cwd="$PWD"; cd "$dir"
 
@@ -40,7 +42,7 @@ build_bzip2_core()
  # make shared (not needed on cygwin?)
  {
   logFile=$(logger_file ${id}_makeso)
-  echo "Running make shared: logging at ${logFile}"
+  echo "Running make shared"
 
   cwd="$PWD"; cd "$dir"
 
@@ -67,6 +69,7 @@ build_bzip2_core()
   cd "$cwd"
  }
  [ "$rc_makeinstall" -ne 0 ] && return "$rc_makeinstall"
+ time_end
 
  return 0
 }
