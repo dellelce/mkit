@@ -78,11 +78,23 @@ profile_postgres()
  return $?
 }
 
+profile_postgres10()
+{
+ add_run_dep libressl
+ add_run_dep libxml2
+ add_run_dep zlib
+ add_run_dep ncurses
+ add_run_dep readline
+ add_run_dep postgresql10
+ return $?
+}
+
 profile_timescaledb()
 {
  add_build_dep cmake
+ add_build_dep bison # only when building from commit/tag/branch (not "packaged" source)
  profile_postgres
- add_run_dep timescaledb
+ add_run_dep timescaledb10
  return $?
 }
 
