@@ -108,7 +108,7 @@ download()
   have_hook $pkg is_installed
   typeset is_installed_state=$?
 
-  [ $is_installed_hook -eq 0 ] && hook $pkg is_installed &&
+  [ $is_installed_state -eq 0 ] && hook $pkg is_installed &&
   {
    INSTALLED_LIST="$INSTALLED_LIST $pkg";
    eval "fn_${pkg}=installed"
