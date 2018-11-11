@@ -94,6 +94,14 @@ profile_postgres()
  return $?
 }
 
+profile_timescaledb()
+{
+ add_build_dep cmake
+ profile_postgres
+ add_run_dep timescaledb
+ return $?
+}
+
 profile_openvpn()
 {
  add_run_dep openssl
