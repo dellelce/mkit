@@ -103,7 +103,12 @@ download()
  # build-time packages need only be downloaded if not already installed
  for pkg in $BUILDTIME_LIST
  do
-  hook $pkg is_installed &&
+  # if hook does not exist the package has to be downloaded as there is nothing to check
+  # (hook function returns always zero if hook does no exist!)
+  have_hook $pkg is_installed
+  typeset is_installed_state=$?
+
+  [ $is_installed_hook -eq 0 ] && hook $pkg is_installed &&
   {
    INSTALLED_LIST="$INSTALLED_LIST $pkg";
    eval "fn_${pkg}=installed"
@@ -280,12 +285,22 @@ EOF
  }
 }
 
-#
-# hooks!
+# have_hook: check if give hook exists
+have_hook()
+{
+ # package name, hook name
+ typeset pname="$1"; shift
+ typeset hname="$1"; shift
+
+ typeset hookfile="$MKIT/hooks/$pname/${hname}.sh"
+
+ [ -f "$hookfile" ] && { return 0; } || { return 1; }
+}
+
+# hook: run a "piece of code" associated with a certain step & package
 hook()
 {
  # package name, hook name, arguments
-
  typeset pname="$1"; shift
  typeset hname="$1"; shift
  typeset args="$*"; shift
