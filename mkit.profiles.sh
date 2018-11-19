@@ -197,4 +197,11 @@ profile_git()
  return $?
 }
 
+profile_shared()
+{
+ profile_gnudev
+ profile_python
+ add_run_dep bison
+}
+
 ### EOF ###
