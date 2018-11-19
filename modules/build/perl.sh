@@ -22,9 +22,8 @@ build_perl_core()
   return 1;
  }
 
- # redis & many others does not have a GNU configure but just a raw makefile
- # or some other sometimes fancy buil systems.
- # we create a build directory different than source directory for them.
+ # we create a build directory different than source directory for packages that usually
+ # do not support building from a directory different from the source directory
  prepare_build $dir
 
  echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
