@@ -2,9 +2,14 @@ build_gcc7()
 {
  typeset languages="c"
  typeset args="$*"
+ typeset arg
  typeset rc=0
 
- [ ! -z "$args" ] && languages="${languages},${args}"
+ for arg in $args
+ do
+  # all options that don't have an "=" are treated as a language
+  [ "${arg/=/}" != "${arg}" ] && { languages="${languages},${arg}"; continue; }
+ done
 
  [ -z "$LD_LIBRARY_PATH" ] &&
  {
