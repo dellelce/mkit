@@ -31,9 +31,10 @@ getdirfullpath()
 mkit_setup_prefix()
 {
  typeset _prefix
+ typeset default_prefix="$HOME/.install"
 
  ## "prefix" is the usual "GNU prefix" option i.e. the root of our install
- export prefix="${1:-$PWD}"
+ export prefix="${1:-$default_prefix}"
 
  # prefix: if a relative path make it absolute
  [ ${prefix} != ${prefix#./} ] &&
