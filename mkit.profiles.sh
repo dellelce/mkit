@@ -211,4 +211,9 @@ profile_slcp()
  add_run_dep slcp
 }
 
+profile_readline()
+{
+ add_run_dep readline
+}
+
 ### EOF ###

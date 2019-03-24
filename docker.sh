@@ -84,11 +84,8 @@ main_tests_default()
 
  # readline
  test_any "$prefix/lib/libhistory.a" || let fails="(( $fails + 1))"
- test_any "$prefix/lib/libhistory.so.7.0" || let fails="(( $fails + 1))"
- test_any "$prefix/lib/libhistory.so.7" || let fails="(( $fails + 1))"
  test_any "$prefix/lib/libhistory.so" || let fails="(( $fails + 1))"
  test_any "$prefix/lib/libreadline.a" || let fails="(( $fails + 1))"
- test_any "$prefix/lib/libreadline.so.7.0" || let fails="(( $fails + 1))"
 
  echo
  ls -lt "${prefix}/bin" || let fails="(( $fails + 1))"
