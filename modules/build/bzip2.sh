@@ -22,7 +22,7 @@ build_bzip2_core()
  #bzip2 does not have a configure but just a raw makefile
  prepare_build
 
- time_stat
+ time_start
 
  echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
