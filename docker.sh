@@ -114,7 +114,8 @@ main_tests_uwsgi()
 
  # libs test for: openssl & readline
  typeset any_ssl="libcrypto.so.1.0.0 libssl.so.1.0.0"
- typeset any_readline="libhistory.a libhistory.so.7.0 libhistory.so.7"
+ typeset any_readline="libhistory.a libhistory.so"
+
  for any in $any_ssl $any_readline
  do
   test_any "$prefix/lib/$any" || let fails="(( $fails + 1))"
