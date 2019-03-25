@@ -16,6 +16,17 @@
 
 ### FUNCTIONS ###
 
+usage()
+{
+ cat << EOF
+ mkit [profile=name of profile] install_directory
+
+ Variables:
+  - NO_TIMESTAMP: do not add timestamp in logfiles
+
+EOF
+}
+
 getdirfullpath()
 {
  export dp="$1";
@@ -95,6 +106,8 @@ mkit_setup()
 }
 
 ### MAIN ###
+
+ [ -z "$*" ] && { usage; exit; } # do not accept zero arguments
 
  export MKIT=$(getdirfullpath $(dirname $0))
 
