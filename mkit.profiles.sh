@@ -216,4 +216,11 @@ profile_readline()
  add_run_dep readline
 }
 
+profile_bind()
+{
+ # libxml2 & openssl are included in python profile
+ profile_python
+ add_run_dep bind
+}
+
 ### EOF ###
