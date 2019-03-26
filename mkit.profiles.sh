@@ -100,6 +100,7 @@ profile_timescaledb()
 
 profile_openvpn()
 {
+ profile_gnudev
  add_run_dep openssl
  add_run_dep lzo
  #we don't want you "linuxpam"
