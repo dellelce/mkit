@@ -10,11 +10,8 @@ Download and Build (from source) complete stacks. The latest version available f
   * KEEP_DOCS (Docker only): do not delete documentation directories.
 
 ## TODO:
-  * Initial support for "hooks" added: they can be used for sanity checks and other tests. 
-  * SANITY CHECKS: Test if basic pre-requisites: gcc/g++ are there (we are not going to installed them!)
-  * NO: Test if a component is needed (missing on the system)
-  * YES: Add ability to re-use installed system component (use installed pcre instead of downloading it)
-  * Give more options (i.e. force download)
+
+Review possible new features:
   * add a default "local install" directory ($HOME/.srcget maybe?)
   * Better & more options (there is only one now.... and it is not really optional!)
   * arguments: strip: do we need fat binaries in docker images (sometimes?)
@@ -25,3 +22,37 @@ Download and Build (from source) complete stacks. The latest version available f
   * g++ (several packages)
   * perl (> 5.10), Data/Dumper.pm (autotools, mostly for buil steps only)
 
+## PROFILES:
+
+"mkit" build software defined by a "profile", each profile is defined by a series of "modules" defined in
+
+```
+mkit.profiles.sh
+```
+
+the modules themselves are defined in the ``modules`` directory.
+
+Here follow a list of the supported profiles:
+
+| Name        | Description           |
+|-------------|-----------------------|
+| gnudev      |                       |
+| default     |                       |
+| redis       |                       |
+| python      |                       |
+| uwsgi       |                       |
+| postgres    |                       |
+| postgres10  |                       |
+| timescaledb |                       |
+| openvpn     |                       |
+| gcc         |                       |
+| gcc7        |                       |
+| gccgo7      |                       |
+| varnish     |                       |
+| curl        |                       |
+| haproxy     |                       |
+| git         |                       |
+| shared      |                       |
+| slcp        |                       |
+| readline    |                       |
+| bind        |                       |
