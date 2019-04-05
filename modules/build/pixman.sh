@@ -1,9 +1,9 @@
 #
-# cairo
+# pixman
 #
-build_cairo()
+build_pixman()
 {
  [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
- build_gnuconf cairo $srcdir_cairo
+ build_gnuconf pixman $srcdir_pixman
  return $?
 }
