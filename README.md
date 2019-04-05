@@ -55,4 +55,5 @@ Here follow a list of the supported profiles:
 | shared      |                       |
 | slcp        |                       |
 | readline    |                       |
-| bind        |                       |
+| bind        | Standard DNA Library / Toolkit        |
+| cairo       | Standard 2d Graphics Library          |
