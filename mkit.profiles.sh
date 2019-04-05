@@ -224,4 +224,13 @@ profile_bind()
  add_run_dep bind
 }
 
+profile_cairo()
+{
+ add_run_dep zlib
+ add_run_dep libpng
+ add_run_dep freetype
+ add_run_dep fontconfig
+ add_run_dep cairo
+}
+
 ### EOF ###
