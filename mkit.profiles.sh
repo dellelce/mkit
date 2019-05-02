@@ -243,4 +243,11 @@ profile_cairo()
  add_run_dep cairo
 }
 
+profile_iftop()
+{
+ add_run_dep libpcap
+ add_run_dep ncurses
+ add_run_dep iftop
+}
+
 ### EOF ###
