@@ -60,6 +60,13 @@ profile_python()
  add_run_dep python3
 }
 
+profile_pythonbuild()
+{
+ add_build_dep libffi ncurses zlib bzip2 readline
+ add_build_dep openssl sqlite3 expat libxml2
+ add_build_dep python3
+}
+
 profile_uwsgi()
 {
  profile_python
@@ -220,7 +227,7 @@ profile_readline()
 profile_bind()
 {
  # libxml2 & openssl are included in python profile
- profile_python
+ profile_pythonbuild
  add_run_dep bind
 }
 
@@ -229,7 +236,9 @@ profile_cairo()
  add_run_dep zlib
  add_run_dep libpng
  add_run_dep freetype
- #add_run_dep fontconfig
+ add_run_dep gperf
+ add_run_dep expat
+ add_run_dep fontconfig
  add_run_dep pixman
  add_run_dep cairo
 }
