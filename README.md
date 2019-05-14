@@ -34,26 +34,26 @@ the modules themselves are defined in the ``modules`` directory.
 
 Here follow a list of the supported profiles:
 
-| Name        | Description           |
-|-------------|-----------------------|
-| gnudev      |                       |
-| default     |                       |
-| redis       |                       |
-| python      |                       |
-| uwsgi       |                       |
-| postgres    |                       |
-| postgres10  |                       |
-| timescaledb |                       |
-| openvpn     |                       |
-| gcc         |                       |
-| gcc7        |                       |
-| gccgo7      |                       |
-| varnish     |                       |
-| curl        |                       |
-| haproxy     |                       |
-| git         |                       |
-| shared      |                       |
-| slcp        |                       |
-| readline    |                       |
-| bind        | Standard DNA Library / Toolkit        |
-| cairo       | Standard 2d Graphics Library          |
+| Name        | Description                                  |
+|-------------|----------------------------------------------|
+| gnudev      | Common tools for GNU development             |
+| default     | Original profile: Apache, Python, PHP        |
+| redis       | Redis                                        |
+| python      | Python 3                                     |
+| uwsgi       |                                              |
+| postgres    | Postgres (Latest)                            |
+| postgres10  | Postgres (10 only)                           |
+| timescaledb |                                              |
+| openvpn     |                                              |
+| gcc         |                                              |
+| gcc7        |                                              |
+| gccgo7      |                                              |
+| varnish     |                                              |
+| curl        |                                              |
+| haproxy     |                                              |
+| git         |                                              |
+| shared      |  shared toolery                              |
+| slcp        |                                              |
+| readline    |                                              |
+| bind        | Standard DNS Library / Toolkit               |
+| cairo       | Standard 2d Graphics Library                 |
