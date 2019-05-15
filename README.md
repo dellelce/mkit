@@ -55,5 +55,6 @@ Here follow a list of the supported profiles:
 | shared      |  shared toolery                              |
 | slcp        |                                              |
 | readline    |                                              |
+| imagemagick | ImageMagick graphics toolkit                 |
 | bind        | Standard DNS Library / Toolkit               |
 | cairo       | Standard 2d Graphics Library                 |

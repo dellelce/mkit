@@ -259,4 +259,11 @@ profile_blender()
  add_run_dep python # it needs python, but it could be a run-time dep only
  add_run_dep blender
 }
+
+profile_imagemagick()
+{
+ add_run_dep zlib
+ add_run_dep libpng
+ add_run_dep imagemagick
+}
 ### EOF ###
