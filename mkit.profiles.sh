@@ -266,4 +266,10 @@ profile_imagemagick()
  add_run_dep libpng
  add_run_dep imagemagick
 }
+
+# standalone cmake
+profile_cmake()
+{
+ add_run_dep cmake
+}
 ### EOF ###
