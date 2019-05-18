@@ -373,6 +373,75 @@ build_raw_core()
  return 0
 }
 
+build_raw_lite()
+{
+ typeset rc=0 cwd=""
+ export rc_conf=0 rc_make=0 rc_makeinstall=0
+ typeset id="$1"; shift   # build id
+ typeset pkgbuilddir="$BUILDDIR/$id"
+ typeset makedir=""
+
+ [ ! -d "$pkgbuilddir" ] &&
+ { mkdir -p "$pkgbuilddir"; } ||
+ { pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir"; }
+
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
+ echo
+ time_start
+
+ have_hook $id configure &&
+ {
+  logFile=$(logger_file ${id}_configure)
+  cwd="$PWD"
+  echo "Configuring..."
+
+  hook $id configure > ${logFile} 2>&1; rc_conf="$?"
+
+  cd "$cwd"
+ }
+ [ "$rc_conf" -ne 0 ] && { cat ${logFile}; return "$rc_conf"; }
+
+ # where is the Makefile?
+ # if the previous step run successfully we could find it in the build directory
+ # otherwise it is in the source directory.... if both fail we give up
+ for makedir in $pkgbuilddir $dir
+ do
+  [ -f "$makedir/Makefile" ] && break
+ done
+
+ [ -z "$makedir" ] && { echo "Failed to find a Makefile."; return 1; }
+
+ # make
+ {
+  logFile=$(logger_file ${id}_make)
+  echo "Running make"
+
+  cwd="$PWD"; cd "$makedir"
+
+  make > ${logFile} 2>&1; rc_make="$?"
+
+  cd "$cwd"
+ }
+ [ "$rc_make" -ne 0 ] && { cat ${logFile}; return "$rc_make"; }
+
+ # make install
+ {
+  logFile=$(logger_file ${id}_makeinstall)
+  echo "Running make install"
+
+  cwd="$PWD"; cd "$makedir"
+
+  make install PREFIX="${prefix}" > ${logFile} 2>&1
+  rc_makeinstall="$?"
+
+  cd "$cwd"
+ }
+ [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; return "$rc_makeinstall"; }
+
+ time_end
+ return 0
+}
+
 #
 #
 build_perlmodule()
