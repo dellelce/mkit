@@ -10,19 +10,11 @@ ENV INSTALLDIR  ${PREFIX}
 
 ARG PROFILE=default
 
-# gcc, g++        C/C++ compilers
-# bash            needed by mkit.sh & srcget-sh
-# wget            builtin wget does not work for us
-# perl            I'll pass...
-# file            no magic inside
-# xz              xz is the "best"
-# libc-dev        headers
-# linux-headers   more headers
-# sed             needed by mkit.sh modules
-ENV PACKAGES gcc bash wget perl perl-dev file xz make libc-dev linux-headers g++ sed
-
 WORKDIR $BUILDDIR
 COPY . $BUILDDIR
+
+# Package requirements
+ENV PACKAGES gcc bash wget perl perl-dev file xz make libc-dev linux-headers g++ sed bison cmake
 
 # Build and do not keep "static libraries"
 RUN  apk add --no-cache  $PACKAGES &&  \
