@@ -231,7 +231,9 @@ profile_readline()
 profile_bind()
 {
  # libxml2 & openssl are included in python profile
- profile_pythonbuild
+ # mixing run-time and build-time dependencies is not supported at this time
+ # *IF* this means need to link from multiple prefixes)
+ profile_python
  add_run_dep bind
 }
 
@@ -242,7 +244,8 @@ profile_cairo()
  add_run_dep freetype
  add_run_dep gperf
  add_run_dep expat
- add_run_dep fontconfig
+ #I thought uuid was not mandatory, temporarily re-disabling
+ #add_run_dep fontconfig
  add_run_dep pixman
  add_run_dep cairo
 }
