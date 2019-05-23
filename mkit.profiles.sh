@@ -242,7 +242,8 @@ profile_cairo()
  add_run_dep freetype
  add_run_dep gperf
  add_run_dep expat
- add_run_dep fontconfig
+ #I thought uuid was not mandatory, temporarily re-disabling
+ #add_run_dep fontconfig
  add_run_dep pixman
  add_run_dep cairo
 }

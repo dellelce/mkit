@@ -1,1 +1,1 @@
-flex --version
+flex --version >/dev/null 2>&1
