@@ -48,17 +48,20 @@ build_sanity_gnuconf()
  [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; }
  [ ! -d "$1" ] && { echo "build_sanity_gnuconf: invalid srcdirectory: $1"; return 1; }
 
- acpath=$(aclocal --print-ac-dir)
- export ACLOCAL_PATH="${acpath}"
-
- [ -d "${prefix}/share/aclocal" -a "${acpath}" != "${prefix}/share/aclocal" ] &&
+ type aclocal >/dev/null 2>&1  &&
  {
-  export ACLOCAL_PATH="${prefix}/share/aclocal:$ACLOCAL_PATH"
- }
+  acpath=$(aclocal --print-ac-dir)
+  export ACLOCAL_PATH="${acpath}"
 
- [ -d "/usr/share/aclocal" -a "${acpath}" != "/usr/share/aclocal" ] &&
- {
-  export ACLOCAL_PATH="$ACLOCAL_PATH:/usr/share/aclocal"
+  [ -d "${prefix}/share/aclocal" -a "${acpath}" != "${prefix}/share/aclocal" ] &&
+  {
+   export ACLOCAL_PATH="${prefix}/share/aclocal:$ACLOCAL_PATH"
+  }
+
+  [ -d "/usr/share/aclocal" -a "${acpath}" != "/usr/share/aclocal" ] &&
+  {
+   export ACLOCAL_PATH="$ACLOCAL_PATH:/usr/share/aclocal"
+  }
  }
 
  # try autogen.sh
