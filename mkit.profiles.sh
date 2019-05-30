@@ -283,7 +283,7 @@ profile_cmake()
 
 profile_opengl()
 {
- profile gnu_build
+ profile gnubuild
  add_run_dep dri2proto
  add_run_dep glproto
  add_run_dep pciaccess
