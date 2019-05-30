@@ -44,19 +44,42 @@ logger_file()
 #
 build_sanity_gnuconf()
 {
+ typeset acpath=""
  [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; }
  [ ! -d "$1" ] && { echo "build_sanity_gnuconf: invalid srcdirectory: $1"; return 1; }
 
- [ ! -f "$1/configure" -a -f "$1/configure.ac" ] &&
+ acpath=$(aclocal --print-ac-dir)
+ export ACLOCAL_PATH="${acpath}"
+
+ [ -d "${prefix}/share/aclocal" -a "${acpath}" != "${prefix}/share/aclocal" ] &&
+ {
+  export ACLOCAL_PATH="${prefix}/share/aclocal:$ACLOCAL_PATH"
+ }
+
+ [ -d "/usr/share/aclocal" -a "${acpath}" != "/usr/share/aclocal" ] &&
+ {
+  export ACLOCAL_PATH="$ACLOCAL_PATH:/usr/share/aclocal"
+ }
+
+ # try autogen.sh
+ [ ! -e "$1/configure" -a -e "$1/configure.ac" -a -e "$1/autogen.sh" ] &&
  {
   typeset cwd="$PWD"
   cd "$1"
 
-  # Allow mixing aclocals......
-  [ -d "/usr/share/aclocal" ] &&
-  {
-    export ACLOCAL_PATH="/usr/share/aclocal:${prefix}/share/aclocal"
-  }
+  NOCONFIGURE=1 \
+  ./autogen.sh >/dev/null 2>&1; ar_rc=$?
+  cd "$cwd"
+  [ $ar_rc -ne 0 ] && { echo "autogen.sh failed with rc = $ar_rc"; return $ar_rc; }
+  build_sanity_gnuconf $1
+  return $?
+ }
+
+ # try autoreconf
+ [ ! -e "$1/configure" -a -e "$1/configure.ac" ] &&
+ {
+  typeset cwd="$PWD"
+  cd "$1"
 
   autoreconf -vif >/dev/null 2>&1; ar_rc=$?
   cd "$cwd"
@@ -65,6 +88,7 @@ build_sanity_gnuconf()
   return $?
  }
 
+ # check again and use buildconf.sh this time
  [ ! -f "$1/configure" -a -f "$1/buildconf.sh" ] &&
  {
   echo "build_sanity_gnuconf: no configure file in: $1 but buildconf.sh is present"
@@ -74,6 +98,7 @@ build_sanity_gnuconf()
   return $?
  }
 
+ # give up if stil missing.
  [ ! -f "$1/configure" ] && { echo "build_sanity_gnuconf: no configure file in: $1"; return 1; }
 
  return 0
