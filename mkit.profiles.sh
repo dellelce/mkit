@@ -285,7 +285,11 @@ profile_cmake()
 
 profile_opengl()
 {
- profile gnubuild
+ #gnubuild to be used with alpine 3.9 or should we just check for pkgconf(ig)
+ #profile_gnubuild
+
+ #xcbproto has some python code...
+ profile_pythonbuild
  add_run_dep dri2proto
  add_run_dep glproto
  add_run_dep pciaccess
