@@ -7,7 +7,6 @@ build_readline()
  {
    rlmk="$srcdir_readline/shlib/Makefile.in"
 
-   ls -lt $rlmk
    typeset ncurses="-L${prefix}\/lib -lncurses"
    sed -i -e "s:SHLIB_LIBS = @SHLIB_LIBS@:SHLIB_LIBS = @SHLIB_LIBS@ ${ncurses}:" $rlmk
    #ls -lt $rlmk

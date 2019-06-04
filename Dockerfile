@@ -1,4 +1,4 @@
-ARG BASE=alpine:3.9
+ARG BASE=alpine:3.8
 FROM $BASE as build
 
 MAINTAINER Antonio Dell'Elce

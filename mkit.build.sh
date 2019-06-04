@@ -48,17 +48,20 @@ build_sanity_gnuconf()
  [ -z "$1" ] && { echo "build_sanity_gnuconf srcdirectory"; return 1; }
  [ ! -d "$1" ] && { echo "build_sanity_gnuconf: invalid srcdirectory: $1"; return 1; }
 
- acpath=$(aclocal --print-ac-dir)
- export ACLOCAL_PATH="${acpath}"
-
- [ -d "${prefix}/share/aclocal" -a "${acpath}" != "${prefix}/share/aclocal" ] &&
+ type aclocal >/dev/null 2>&1  &&
  {
-  export ACLOCAL_PATH="${prefix}/share/aclocal:$ACLOCAL_PATH"
- }
+  acpath=$(aclocal --print-ac-dir)
+  export ACLOCAL_PATH="${acpath}"
 
- [ -d "/usr/share/aclocal" -a "${acpath}" != "/usr/share/aclocal" ] &&
- {
-  export ACLOCAL_PATH="$ACLOCAL_PATH:/usr/share/aclocal"
+  [ -d "${prefix}/share/aclocal" -a "${acpath}" != "${prefix}/share/aclocal" ] &&
+  {
+   export ACLOCAL_PATH="${prefix}/share/aclocal:$ACLOCAL_PATH"
+  }
+
+  [ -d "/usr/share/aclocal" -a "${acpath}" != "/usr/share/aclocal" ] &&
+  {
+   export ACLOCAL_PATH="$ACLOCAL_PATH:/usr/share/aclocal"
+  }
  }
 
  # try autogen.sh
@@ -68,7 +71,7 @@ build_sanity_gnuconf()
   cd "$1"
 
   NOCONFIGURE=1 \
-  ./autogen.sh >/dev/null 2>&1; ar_rc=$?
+  ./autogen.sh >/dev/null 2>&1; typeset ar_rc=$?
   cd "$cwd"
   [ $ar_rc -ne 0 ] && { echo "autogen.sh failed with rc = $ar_rc"; return $ar_rc; }
   build_sanity_gnuconf $1
@@ -92,7 +95,7 @@ build_sanity_gnuconf()
  [ ! -f "$1/configure" -a -f "$1/buildconf.sh" ] &&
  {
   echo "build_sanity_gnuconf: no configure file in: $1 but buildconf.sh is present"
-  $dir/buildconf.sh; bc_rc=$?
+  $dir/buildconf.sh; typeset bc_rc=$?
   [ $bc_rc -ne 0 ] && return $bc_rc
   build_sanity_gnuconf $dir
   return $?
@@ -192,7 +195,7 @@ add_run_dep()
    do
      echo $item
    done | awk '!x[$0]++'
-)
+ )
 }
 
 # add_build_dep: buildtime dependencies
@@ -210,7 +213,7 @@ add_build_dep()
    do
      echo $item
    done | awk '!x[$0]++'
-)
+ )
 }
 
 #
@@ -488,7 +491,7 @@ build_perlmodule()
  }
 
  # redis & many others does not have a GNU configure but just a raw makefile
- # or some other sometimes fancy buil systems.
+ # or some other build systems.
  # we create a build directory different than source directory for them.
  prepare_build "$dir"
 

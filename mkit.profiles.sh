@@ -204,6 +204,7 @@ profile_git()
 {
  profile_gnubuild
  add_run_dep zlib
+ add_run_dep curl
  add_run_dep git
 
  return $?
@@ -239,6 +240,8 @@ profile_bind()
 
 profile_cairo()
 {
+ #this will be needed when moving from alpine 3.8 to 3.9
+ #add_build_dep pkgconfig
  add_run_dep zlib
  add_run_dep libpng
  add_run_dep freetype
@@ -291,6 +294,11 @@ profile_openscad()
 
 profile_opengl()
 {
+ #gnubuild to be used with alpine 3.9 or should we just check for pkgconf(ig)
+ #profile_gnubuild
+
+ #xcbproto has some python code...
+ profile_pythonbuild
  add_run_dep dri2proto
  add_run_dep glproto
  add_run_dep pciaccess
