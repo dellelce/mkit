@@ -110,16 +110,17 @@ mkit_setup()
  [ -z "$*" ] && { usage; exit; } # do not accept zero arguments
 
  export MKIT=$(getdirfullpath $(dirname $0))
+ echo $MKIT
 
- . mkit.config.sh
- . mkit.profiles.sh
+ . $MKIT/mkit.config.sh || exit $?
+ . $MKIT/mkit.profiles.sh || exit $?
 
  export srcgetUrl="https://github.com/dellelce/srcget/archive"
 
  mkit_setup $*
- .  mkit.lib.sh
- .  mkit.build.sh
- .  mkit.components.sh
+ . $MKIT/mkit.lib.sh || exit $?
+ . $MKIT/mkit.build.sh || exit $?
+ . $MKIT/mkit.components.sh || exit $?
 
  echo "Install directory is ${prefix}"
 
