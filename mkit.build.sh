@@ -378,31 +378,30 @@ build_raw_core()
  echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
  echo
  time_start
+
+ export CFLAGS="${BASE_CFLAGS} -I${prefix}/include"
+ export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
+
  # make
- {
-  logFile=$(logger_file ${id}_make)
-  echo "Running make: logging at ${logFile}"
+ logFile=$(logger_file ${id}_make)
+ echo "Running make"
+ cwd="$PWD"; cd "$dir"
 
-  cwd="$PWD"; cd "$dir"
+ make > ${logFile} 2>&1; rc_make="$?"
 
-  make > ${logFile} 2>&1; rc_make="$?"
-
-  cd "$cwd"
- }
+ cd "$cwd"
  [ "$rc_make" -ne 0 ] && { cat ${logFile}; return "$rc_make"; }
 
  # make install
- {
-  logFile=$(logger_file ${id}_makeinstall)
-  echo "Running make install: logging at ${logFile}"
+ logFile=$(logger_file ${id}_makeinstall)
+ echo "Running make install"
 
-  cwd="$PWD"; cd "$dir"
+ cwd="$PWD"; cd "$dir"
 
-  make install PREFIX="${prefix}" > ${logFile} 2>&1
-  rc_makeinstall="$?"
+ make install PREFIX="${prefix}" > ${logFile} 2>&1
+ rc_makeinstall="$?"
 
-  cd "$cwd"
- }
+ cd "$cwd"
  [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; return "$rc_makeinstall"; }
 
  time_end
