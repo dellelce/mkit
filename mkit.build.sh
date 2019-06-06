@@ -92,7 +92,7 @@ build_sanity_gnuconf()
  }
 
  # check again and use buildconf.sh this time
- [ ! -f "$1/configure" -a -f "$1/buildconf.sh" ] &&
+ [ ! -e "$1/configure" -a -e "$1/buildconf.sh" ] &&
  {
   echo "build_sanity_gnuconf: no configure file in: $1 but buildconf.sh is present"
   $dir/buildconf.sh; typeset bc_rc=$?
@@ -273,6 +273,7 @@ run_build()
    )
  }
 
+ # Main Build Loop!
  for pkg in $BUILDTIME_LIST $RUNTIME_LIST
  do
   build=0
@@ -281,10 +282,11 @@ run_build()
   fname=$(getbasename $pkg)
   [ "$fname" == "installed" ] && continue
 
-  eval options="\$options_${pkg}"
+  eval options="\$options_${pkg}" # load options for specified package
 
   echo
 
+  # TODO: add discovery/fall-back function
   func="build_${pkg}"
   type $func >/dev/null 2>&1
   func_rc=$?
@@ -306,6 +308,10 @@ run_build()
     }
   }
 
+  # check build state: do we really need to build?
+  # This is to be used when re-running a failed build and want to skip some components
+  have_hook global need_to_build && hook global need_to_build ${pkg} || continue
+
   # uncompress
   do_uncompress ${pkg} || return $?
 
@@ -314,6 +320,7 @@ run_build()
     prefix="$buildprefix" $func $options; rc=$?
   } ||
   {
+    # Launch Build
     $func $options; rc=$?
   }
 
@@ -322,6 +329,7 @@ run_build()
     echo "Failed build of $pkg with return code: $rc"
     return $rc
   }
+  have_hook global successful_built && hook global successful_built ${pkg} || break
  done
 
  [ -d "$buildprefix" ] && rm -rf "$buildprefix"
