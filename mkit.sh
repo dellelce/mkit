@@ -68,6 +68,8 @@ mkit_setup()
  export RUNTIME_LIST=""
  export DOWNLOADS="${WORKDIR}/downloads"
 
+ mkdir -p "$WORKDIR/state" # keep states of builds here
+
  [ -z "$TMP" ] && export TMP="/tmp"
 
  [ -z "$NO_TIMESTAMP" ] &&
