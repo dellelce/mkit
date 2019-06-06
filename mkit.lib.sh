@@ -285,7 +285,7 @@ EOF
  }
 }
 
-# have_hook: check if give hook exists
+# have_hook: check if given hook exists
 have_hook()
 {
  # package name, hook name
