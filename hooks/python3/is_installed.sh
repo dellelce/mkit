@@ -1,1 +1,1 @@
-python3 -V 2>&1 > /dev/null && python3 -m venv -h  2>&1 >/dev/null
+python3 -V > /dev/null 2>&1 && python3 -m venv -h  >/dev/null 2>&1
