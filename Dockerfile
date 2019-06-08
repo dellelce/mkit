@@ -14,7 +14,7 @@ WORKDIR $BUILDDIR
 COPY . $BUILDDIR
 
 # Package requirements
-ENV PACKAGES gcc bash wget perl perl-dev file xz make libc-dev linux-headers g++ sed bison cmake
+ENV PACKAGES gcc bash wget perl perl-dev automake autoconf libtool file xz make libc-dev linux-headers g++ sed bison cmake
 
 # Build and do not keep "static libraries"
 RUN  apk add --no-cache  $PACKAGES &&  \

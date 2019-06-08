@@ -62,6 +62,9 @@ build_sanity_gnuconf()
   {
    export ACLOCAL_PATH="$ACLOCAL_PATH:/usr/share/aclocal"
   }
+ } ||
+ {
+  echo "INFO: aclocal not found: can be an issue for some GNU configure builds"
  }
 
  # try autogen.sh
@@ -71,7 +74,7 @@ build_sanity_gnuconf()
   cd "$1"
 
   NOCONFIGURE=1 \
-  ./autogen.sh >/dev/null 2>&1; typeset ar_rc=$?
+  ./autogen.sh 2>&1; typeset ar_rc=$?
   cd "$cwd"
   [ $ar_rc -ne 0 ] && { echo "autogen.sh failed with rc = $ar_rc"; return $ar_rc; }
   build_sanity_gnuconf $1
@@ -126,10 +129,6 @@ build_gnuconf()
  typeset pkgbuilddir="$BUILDDIR/$id"
 
  [ -z "$dir" ] && { echo "usage: build_gnuconf id source_dir_path"; return 1; }
- build_sanity_gnuconf $dir
- rc=$?
-
- [ $rc -ne 0 ] && { echo "build_gnuconf: build sanity tests failed for $dir"; return $rc; }
 
  [ ! -d "$pkgbuilddir" ] &&
    { mkdir -p "$pkgbuilddir"; } ||
@@ -141,17 +140,22 @@ build_gnuconf()
   return 1;
  }
 
+ echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
+ echo
+
+ time_start # setup timer
+
+ logFile=$(logger_file ${id}_sanity)
+ build_sanity_gnuconf $dir > ${logFile} 2>&1; rc=$?
+
+ [ $rc -ne 0 ] && { cat "${logFile}"; echo "build_gnuconf: build sanity tests failed for $dir"; return $rc; }
+
  # some "configure"s do not support building in a directory different than the source directory
  # TODO: cwd to "$dir"
  [ "$opt" == "BADCONFIGURE" ] &&
  {
   prepare_build "$dir"
  }
-
- echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
- echo
-
- time_start # setup timer
 
  export CFLAGS="${BASE_CFLAGS} -I${prefix}/include"
  export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
