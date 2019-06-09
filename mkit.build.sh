@@ -168,7 +168,9 @@ build_gnuconf()
 
  echo "Running make..."
  logFile=$(logger_file ${id}_make)
- make > ${logFile} 2>&1; rc_make=$?
+ eval make_options="\$make_options_${pkg}"
+ make $make_options > ${logFile} 2>&1; rc_make="$?"
+ unset make_options
 
  [ "$rc_make" -ne 0 ] && { cat "${logFile}"; return $rc_make; }
 
@@ -316,7 +318,6 @@ run_build()
   # This is to be used when re-running a failed build and want to skip some components
   have_hook global need_to_build && hook global need_to_build ${pkg} || continue
 
-  # uncompress
   do_uncompress ${pkg} || return $?
 
   [ "$build" -eq 1 ] &&
@@ -391,7 +392,9 @@ build_raw_core()
  echo "Running make"
  cwd="$PWD"; cd "$dir"
 
- make > ${logFile} 2>&1; rc_make="$?"
+ eval make_options="\$make_options_${pkg}"
+ make $make_options > ${logFile} 2>&1; rc_make="$?"
+ unset make_options
 
  cd "$cwd"
  [ "$rc_make" -ne 0 ] && { cat ${logFile}; return "$rc_make"; }
@@ -501,8 +504,7 @@ build_perlmodule()
   return 1;
  }
 
- # redis & many others does not have a GNU configure but just a raw makefile
- # or some other build systems.
+ # many do not have GNU configure just a raw makefile
  # we create a build directory different than source directory for them.
  prepare_build "$dir"
 
@@ -540,7 +542,7 @@ build_perlmodule()
 
  cwd="$PWD"; cd "$dir"
 
- PERL5LIB=$prefix/share/perl5 \
+ PERL5LIB="$prefix/share/perl5" \
  make install > ${logFile} 2>&1
  rc_makeinstall="$?"
 
@@ -558,6 +560,15 @@ add_options()
  typeset options="$*"
 
  eval "export options_${pkg}=\"${options}\""
+}
+
+# add_make_options: allow to pass custom options from profiles to build functions
+add_make_options()
+{
+ typeset pkg="$1"; shift
+ typeset options="$*"
+
+ eval "export make_options_${pkg}=\"${options}\""
 }
 
 ### EOF ###
