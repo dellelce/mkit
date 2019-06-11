@@ -330,7 +330,7 @@ profile_opengl()
  add_run_dep expat2_1
  add_run_dep zlib
 
- #travis: currently building mesa3d exceeds 10 minutes and travils kills the process because nothing is sent to stdout
+ #travis: currently building mesa3d exceeds 10 minutes and travil kills the process because nothing is sent to stdout
  #        this is a bit "excessive" but we want to hog almost all processors available
  typeset cpucnt=$(egrep -c '^processor' /proc/cpuinfo)
  [ $cpucnt -eq 2 ] && add_make_options mesa3d -j${cpucnt}
