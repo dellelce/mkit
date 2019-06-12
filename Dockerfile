@@ -1,14 +1,13 @@
 ARG BASE=alpine:3.8
 FROM $BASE as build
 
-MAINTAINER Antonio Dell'Elce
+LABEL maintainer="Antonio Dell'Elce"
 
 ENV BUILDDIR  /app-build
 
+ARG PROFILE=default
 ARG PREFIX=/app/httpd
 ENV INSTALLDIR  ${PREFIX}
-
-ARG PROFILE=default
 
 WORKDIR $BUILDDIR
 COPY . $BUILDDIR
@@ -27,6 +26,7 @@ FROM $BASE AS final
 
 ARG PREFIX=/app/httpd
 ENV INSTALLDIR  ${PREFIX}
+ENV PATH        ${PREFIX}/bin:${PATH}
 
 RUN mkdir -p ${INSTALLDIR} && \
     apk add --no-cache libgcc
