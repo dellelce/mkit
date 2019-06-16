@@ -3,8 +3,7 @@
 # glew
 build_glew()
 {
- # the Makefile is......
- # ...respond not react
+ # push in our otions for greater flexibility
  sed -i -e 's/\.EXTRA/_EXTRA/g' $srcdir_glew/Makefile $srcdir_glew/config/Makefile.linux
  sed -i -E -e 's/^CFLAGS(.*)/CFLAGS\1 $(CFLAGS_ENV)/' $srcdir_glew/Makefile
  sed -i -E -e 's/^LIB\.LDFLAGS(.*)/LIB.LDFLAGS\1 $(LDFLAGS_ENV)/' $srcdir_glew/Makefile
