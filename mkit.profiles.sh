@@ -288,6 +288,8 @@ profile_openscad()
  profile_opengl
  add_run_dep glew
  add_run_dep opencsg
+ add_run_dep gmp # requried by cgal
+ add_run_dep mpfr # required by cgal
  add_run_dep cgal
  add_run_dep openscad
 }
@@ -332,6 +334,7 @@ profile_opengl()
 
  #travis: currently building mesa3d exceeds 10 minutes and travil kills the process because nothing is sent to stdout
  #        this is a bit "excessive" but we want to hog almost all processors available
+ #        Note: my development environment the build takes about 330 seconds without any parallelism...
  typeset cpucnt=$(egrep -c '^processor' /proc/cpuinfo)
  [ $cpucnt -eq 2 ] && add_make_options mesa3d -j${cpucnt}
  [ $cpucnt -gt 2 ] && { let cpucnt="(( $cpucnt - 1 ))";  add_make_options mesa3d -j${cpucnt}; }
