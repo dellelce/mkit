@@ -1,12 +1,9 @@
-# syntax=docker/dockerfile:experimental
 ARG BASE=alpine:3.8
 FROM $BASE as build
 
 LABEL maintainer="Antonio Dell'Elce"
 
 ENV BUILDDIR  /app-build
-
-RUN --mount=type=tmpfs,target=${BUILDDIR}
 
 ARG PROFILE=default
 ARG PREFIX=/app/httpd

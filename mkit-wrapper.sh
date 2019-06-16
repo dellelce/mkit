@@ -31,7 +31,6 @@
 
  [ "$isdocker" == "yes" ] &&
  {
-  export DOCKER_BUILDKIT=1
   docker build -t "$image" --build-arg PROFILE=$PROFILE --build-arg PREFIX=$prefix .
   build_rc="$?"
   [ $build_rc -eq 0 -a ! -z "$image" ] && docker_hub "$image"
