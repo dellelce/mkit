@@ -33,7 +33,7 @@ build_haproxy_core()
  echo "Running make..."
  {
   #TODO: add SLZ
-  conf="TARGET=linux2628"
+  conf="TARGET=linux-glibc"
   conf="${conf} LDFLAGS=-Wl,-rpath=${prefix}/lib" \
   conf="${conf} PREFIX=${prefix}"
   conf="${conf} LUA_LIB=${prefix}/lib"
