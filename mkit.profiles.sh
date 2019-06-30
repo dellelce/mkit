@@ -301,6 +301,8 @@ profile_opengl()
 
  #xcbproto has some python code...
  profile_pythonbuild
+ add_build_dep cmake
+ add_run_dep openssl
  add_run_dep dri2proto
  add_run_dep glproto
  add_run_dep pciaccess
