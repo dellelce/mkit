@@ -338,4 +338,18 @@ profile_opengl()
  add_run_dep mesa3d
 }
 
+profile_x11()
+{
+ add_run_dep xextproto # required by x11
+ add_run_dep xtrans # required by x11
+ add_run_dep pthreadstubs # required by xcb
+ add_run_dep xau # required by xcb
+ add_run_dep xcbproto # required by xcb
+ add_run_dep xcb # required by x11
+ add_run_dep kbproto # required by x11
+ add_run_dep inputproto # required by x11
+ add_run_dep xproto # required by x11
+ add_run_dep x11
+}
+
 ### EOF ###
