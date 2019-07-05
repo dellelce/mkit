@@ -345,4 +345,12 @@ profile_libgit2()
  add_run_dep libgit2
 }
 
+profile_mosquitto()
+{
+ add_build_dep cmake
+ add_run_dep openssl
+ add_make_options  WITH_DOCS=no
+ add_run_dep mosquitto
+}
+
 ### EOF ###
