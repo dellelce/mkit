@@ -58,3 +58,4 @@ Here follow a list of the supported profiles:
 | imagemagick | ImageMagick graphics toolkit                 |
 | bind        | Standard DNS Library / Toolkit               |
 | cairo       | Standard 2d Graphics Library                 |
+| libgit2     | pure C implementation of the core git methods|

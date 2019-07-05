@@ -338,4 +338,11 @@ profile_opengl()
  add_run_dep mesa3d
 }
 
+profile_libgit2()
+{
+ add_build_dep cmake
+ add_run_dep libssh2
+ add_run_dep libgit2
+}
+
 ### EOF ###
