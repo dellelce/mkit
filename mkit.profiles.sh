@@ -354,4 +354,10 @@ profile_mosquitto()
  add_run_dep mosquitto
 }
 
+profile_wget()
+{
+ add_run_dep gnutls
+ add_run_dep wget
+}
+
 ### EOF ###
