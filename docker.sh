@@ -160,7 +160,8 @@ export fails=0
 
 ### MAIN ###
 
-mkdir -p $prefix && ./mkit.sh $prefix profile="${profile}"
+# NO_TIMESTAMP: using this option avoids recording build timestamp in executables making two builds with same input have the same output
+mkdir -p $prefix &&  NO_TIMESTAMP=1 ./mkit.sh $prefix profile="${profile}"
 rc=$?
 
 echo "mkit rc: $rc"

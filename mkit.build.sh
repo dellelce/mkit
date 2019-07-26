@@ -87,7 +87,7 @@ build_sanity_gnuconf()
   typeset cwd="$PWD"
   cd "$1"
 
-  autoreconf -vif >/dev/null 2>&1; ar_rc=$?
+  autoreconf -vif 2>&1; ar_rc=$?
   cd "$cwd"
   [ $ar_rc -ne 0 ] && { echo "autoreconf failed with rc = $ar_rc"; return $ar_rc; }
   build_sanity_gnuconf $1
@@ -405,8 +405,9 @@ build_raw_core()
 
  cwd="$PWD"; cd "$dir"
 
- make install PREFIX="${prefix}" > ${logFile} 2>&1
- rc_makeinstall="$?"
+ eval install_options="\$install_options_${pkg}"
+ make install PREFIX="${prefix}" > ${logFile} 2>&1; rc_makeinstall="$?"
+ unset install_options
 
  cd "$cwd"
  [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; return "$rc_makeinstall"; }
@@ -562,13 +563,22 @@ add_options()
  eval "export options_${pkg}=\"${options}\""
 }
 
-# add_make_options: allow to pass custom options from profiles to build functions
+# add_make_options: allow to pass custom options from profiles to "make" step
 add_make_options()
 {
  typeset pkg="$1"; shift
  typeset options="$*"
 
  eval "export make_options_${pkg}=\"${options}\""
+}
+
+# add_install_options: allow to pass custom options from profiles to "make install" step
+add_install_options()
+{
+ typeset pkg="$1"; shift
+ typeset options="$*"
+
+ eval "export install_options_${pkg}=\"${options}\""
 }
 
 ### EOF ###

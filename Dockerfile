@@ -21,7 +21,7 @@ RUN  apk add --no-cache  $PACKAGES &&  \
      rm -f ${INSTALLDIR}/lib/*.a
 
 # Second Stage
-ARG BASE=alpine:latest
+ARG BASE=alpine:3.8
 FROM $BASE AS final
 
 ARG PREFIX=/app/httpd
