@@ -354,4 +354,15 @@ profile_mosquitto()
  add_run_dep mosquitto
 }
 
+profile_postgis()
+{
+ profile_postgres
+ add_run_dep sqlite3
+ add_run_dep libxml2
+ add_run_dep proj
+ add_run_dep gdal
+ add_run_dep geos
+ add_run_dep postgis
+}
+
 ### EOF ###
