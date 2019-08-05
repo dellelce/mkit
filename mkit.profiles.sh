@@ -354,4 +354,12 @@ profile_mosquitto()
  add_run_dep mosquitto
 }
 
+profile_strongswan()
+{
+ add_run_dep curl
+ add_run_dep openssl
+ add_run_dep gmp
+ add_run_dep strongswan
+}
+
 ### EOF ###
