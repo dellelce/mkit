@@ -354,4 +354,10 @@ profile_mosquitto()
  add_run_dep mosquitto
 }
 
+profile_nettle()
+{
+ add_run_dep gmp
+ add_run_dep nettle
+}
+
 ### EOF ###
