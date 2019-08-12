@@ -112,12 +112,11 @@ mkit_setup()
  [ -z "$*" ] && { usage; exit; } # do not accept zero arguments
 
  export MKIT=$(getdirfullpath $(dirname $0))
- echo $MKIT
+ export srcgetUrl="https://github.com/dellelce/srcget/archive"
 
  . $MKIT/mkit.config.sh || exit $?
  . $MKIT/mkit.profiles.sh || exit $?
 
- export srcgetUrl="https://github.com/dellelce/srcget/archive"
 
  mkit_setup $*
  . $MKIT/mkit.lib.sh || exit $?
