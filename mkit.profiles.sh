@@ -286,6 +286,7 @@ profile_cmake()
 profile_openscad()
 {
  profile_opengl
+ add_run_dep glu # required by glew
  add_run_dep glew
  add_run_dep opencsg
  add_run_dep gmp # requried by cgal
@@ -299,8 +300,6 @@ profile_opengl()
  #gnubuild to be used with alpine 3.9 or should we just check for pkgconf(ig)
  #profile_gnubuild
 
- #xcbproto has some python code...
- profile_pythonbuild
  add_build_dep cmake
  add_run_dep openssl
  add_run_dep dri2proto
@@ -333,6 +332,16 @@ profile_opengl()
  add_run_dep xrandr
  add_run_dep expat2_1
  add_run_dep zlib
+
+ # introduced recently or required by the "meson" build system?
+ add_run_dep libunwind
+ add_run_dep libffi
+ add_run_dep libxml2
+ #TODO: if platforms left to auto wayland is required and it fails because unclear handling of PKG_CONFIG_PATH
+ #NOTE: issue related to version 0.51.1 of meson which has already been resolved in master
+ #add_run_dep wayland
+
+ profile_pythonbuild
 
  #travis: currently building mesa3d exceeds 10 minutes and travil kills the process because nothing is sent to stdout
  #        this is a bit "excessive" but we want to hog almost all processors available
