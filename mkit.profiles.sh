@@ -102,7 +102,7 @@ profile_postgres()
 
 profile_postgres10()
 {
- add_run_dep libressl
+ add_run_dep openssl
  add_run_dep libxml2
  add_run_dep zlib
  add_run_dep ncurses
@@ -113,7 +113,7 @@ profile_postgres10()
 
 profile_postgres11()
 {
- add_run_dep libressl
+ add_run_dep openssl
  add_run_dep libxml2
  add_run_dep zlib
  add_run_dep ncurses
