@@ -28,7 +28,7 @@ test_file()
 ### ENV ###
 
 prefix="$1"; shift
-python="$prefix/bin/python3.7"
+python="$prefix/bin/python3.8"
 
 ### MAIN ###
 
