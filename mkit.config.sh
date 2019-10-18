@@ -7,7 +7,7 @@
 
 ### ENV ###
 
- export srcget="0.0.10.3" #  srcget version
+ export srcget="0.0.10.5" #  srcget version
 
  # vt100 family sequences
  export ESC=""
