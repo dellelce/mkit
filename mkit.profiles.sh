@@ -382,4 +382,11 @@ profile_nettle()
  add_run_dep nettle
 }
 
+profile_geant4()
+{
+ add_build_dep cmake
+ add_run_dep expat
+ add_run_dep geant4
+}
+
 ### EOF ###
