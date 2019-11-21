@@ -179,6 +179,18 @@ profile_gccgo7()
  return $?
 }
 
+profile_gcc6()
+{
+ add_build_dep m4
+ add_run_dep zlib
+ add_run_dep binutils
+ add_run_dep gmp
+ add_run_dep mpfr
+ add_run_dep mpc
+ add_run_dep gcc6
+ return $?
+}
+
 profile_varnish()
 {
  # varnish needs python (">= 2.7") for generating some files
