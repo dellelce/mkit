@@ -32,7 +32,7 @@ python="$prefix/bin/python3.8"
 
 ### MAIN ###
 
-mkdir $prefix && ./mkit.sh $prefix
+mkdir -p $prefix && ./mkit.sh $prefix
 rc=$?
 
 echo "mkit rc: $rc"
