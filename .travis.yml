@@ -22,5 +22,5 @@ env:
 before_script:
  - mkdir /tmp/build && sudo mount -t tmpfs tmpfs /tmp/build
  - sudo ./travis-tmpfs.sh
- - ( ( while true; do echo "travis ping $(date +%H%M%S)"; sleep 15; [ -f end ] && break; done; ) & )
+ - ( ( while true; do echo "[31mtravis ping $(date +%H%M%S)[0m"; sleep 30; [ -f end ] && break; done; ) & )
 script: ./mkit-wrapper.sh "$USEDOCKER"
