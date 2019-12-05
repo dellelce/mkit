@@ -21,4 +21,5 @@ env:
  - USEDOCKER="no" PREFIX="/tmp/build"
 before_script:
  - mkdir /tmp/build && sudo mount -t tmpfs tmpfs /tmp/build
+ - sudo ./travis-tmpfs.sh
 script: ./mkit-wrapper.sh "$USEDOCKER"
