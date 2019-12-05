@@ -20,5 +20,5 @@ env:
 # - USEDOCKER="yes" PROFILE="mosquitto" DOCKER_IMAGE="dellelce/mosquitto-base" PREFIX="/app/mosquitto"
  - USEDOCKER="no" PREFIX="/tmp/build"
 before_script:
- - mkdir /mkit_workdir && mount -t tmpfs tmpfs /mkit_workdir
+ - mkdir /tmp/build && mount -t tmpfs tmpfs /tmp/build
 script: ./mkit-wrapper.sh "$USEDOCKER"
