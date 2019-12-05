@@ -19,4 +19,6 @@ env:
  - USEDOCKER="yes" PROFILE="libgit2" DOCKER_IMAGE="dellelce/libgit2-base" PREFIX="/app/libgit2"
 # - USEDOCKER="yes" PROFILE="mosquitto" DOCKER_IMAGE="dellelce/mosquitto-base" PREFIX="/app/mosquitto"
  - USEDOCKER="no" PREFIX="/tmp/build"
+before_script:
+ - mkdir /mkit_workdir && mount -t tmpfs tmpfs /mkit_workdir
 script: ./mkit-wrapper.sh "$USEDOCKER"
