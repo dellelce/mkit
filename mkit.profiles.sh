@@ -426,4 +426,9 @@ profile_x11()
  add_run_dep xrandr
 }
 
+profile_libxc()
+{
+ add_run_dep libxc
+}
+
 ### EOF ###
