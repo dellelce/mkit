@@ -426,4 +426,12 @@ profile_x11()
  add_run_dep xrandr
 }
 
+profile_fontconfig()
+{
+ add_run_dep gperf
+ add_run_dep expat
+ add_run_dep freetype
+ add_run_dep fontconfig
+}
+
 ### EOF ###
