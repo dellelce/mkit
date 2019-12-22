@@ -436,4 +436,10 @@ profile_leptonica()
  add_run_dep leptonica
 }
 
+profile_tesseract()
+{
+ profile_leptonica
+ add_run_dep tesseract
+}
+
 ### EOF ###
