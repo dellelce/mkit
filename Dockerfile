@@ -16,7 +16,8 @@ COPY . $BUILDDIR
 ENV PACKAGES gcc bash wget perl perl-dev automake autoconf libtool file xz make libc-dev linux-headers g++ sed bison cmake
 
 # Build and do not keep "static libraries"
-RUN  apk add --no-cache  $PACKAGES &&  \
+RUN  mkdir ${INSTALLDIR}/lib && ln -s ${INSTALLDIR}/lib64 ${INSTALLDIR}/lib && 
+     apk add --no-cache  $PACKAGES &&  \
      bash ${BUILDDIR}/docker.sh $INSTALLDIR && \
      rm -f ${INSTALLDIR}/lib/*.a
 
