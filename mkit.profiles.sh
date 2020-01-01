@@ -364,7 +364,7 @@ profile_opengl()
  add_run_dep libxrender
  add_run_dep libxrandr
  add_run_dep xrandr
- add_run_dep expat2_1
+ add_run_dep expat
  add_run_dep zlib
 
  # introduced recently or required by the "meson" build system?

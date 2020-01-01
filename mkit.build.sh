@@ -40,8 +40,7 @@ logger_file()
  echo $LAST_LOG
 }
 
-#
-#
+# Perform sanity checks and try to generate GNU configure if possible
 build_sanity_gnuconf()
 {
  typeset acpath=""
@@ -158,6 +157,7 @@ build_gnuconf()
  }
 
  export CFLAGS="${BASE_CFLAGS} -I${prefix}/include"
+ export CPPFLAGS="${BASE_CFLAGS} -I${prefix}/include"
  export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
 
  echo "Configuring..."
@@ -229,6 +229,7 @@ add_build_dep()
 #    BUILDTIME_LIST
 #    DOWNLOAD_MAP
 #    BASE_CFLAGS
+#    BASE_CPPFLAGS
 #    BASE_LDFLAGS
 #    all variables set by add_options if any
 run_build()
@@ -236,8 +237,10 @@ run_build()
  typeset pkg=""
  typeset rc=0
  typeset buildprefix=""
+ typeset mainprefix="$prefix"
 
  [ ! -z "$CFLAGS" ] && { export BASE_CFLAGS="$CFLAGS"; unset CFLAGS; }
+ [ ! -z "$CPPFLAGS" ] && { export BASE_CPPFLAGS="$CPPFLAGS"; unset CPPFLAGS; }
  [ ! -z "$LDFLAGS" ] && { export BASE_LDFLAGS="$CFLAGS"; unset LDFLAGS; }
 
  # download latest archives / builds name mapping
@@ -267,6 +270,8 @@ run_build()
 
    # no checks?
    mkdir -p "$buildprefix/bin"
+   mkdir -p "$buildprefix/lib"
+   ln -s "$buildprefix/lib" "$buildprefix/lib64"
    # build prefix files to be found before everything else
    export PATH="$buildprefix/bin:$PATH"
 
@@ -284,6 +289,10 @@ run_build()
  do
   build=0
   [ ${pkg} != "${pkg#_}" ] && { build=1; pkg="${pkg#_}"; }
+
+  [ "$build" -eq 0 ] && { prefix="$mainprefix"; } || { prefix="$buildprefix"; }
+
+  echo "Build type is $build: Prefix for $pkg is: $prefix"
 
   fname=$(getbasename $pkg)
   [ "$fname" == "installed" ] && continue
@@ -322,7 +331,9 @@ run_build()
 
   [ "$build" -eq 1 ] &&
   {
+    #typeset mainprefix="$prefix"
     prefix="$buildprefix" $func $options; rc=$?
+    #prefix="$mainprefix"  #BUG: TODO: this shouldn't be needed
   } ||
   {
     # Launch Build
@@ -334,6 +345,9 @@ run_build()
     echo "Failed build of $pkg with return code: $rc"
     return $rc
   }
+
+  # run "successful_built" hook for run-time dependencies
+  [ "$build" -eq 1 ] && continue
   have_hook global successful_built && hook global successful_built ${pkg} || break
  done
 
@@ -384,8 +398,9 @@ build_raw_core()
  echo
  time_start
 
- export CFLAGS="${BASE_CFLAGS} -I${prefix}/include"
- export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
+ #export CFLAGS="${BASE_CFLAGS} -I${prefix}/include"
+ #export CPPFLAGS="${BASE_CPPLAGS} -I${prefix}/include"
+ #export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
 
  # make
  logFile=$(logger_file ${id}_make)
