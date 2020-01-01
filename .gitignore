@@ -6,3 +6,4 @@ srcget*
 mkit_workdir
 tmp
 *.log
+*.swp
