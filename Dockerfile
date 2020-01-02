@@ -13,7 +13,8 @@ WORKDIR $BUILDDIR
 COPY . $BUILDDIR
 
 # Package requirements
-ENV PACKAGES gcc bash wget perl perl-dev automake autoconf libtool file xz make libc-dev linux-headers g++ sed bison cmake
+ENV PACKAGES gcc bash wget perl perl-dev automake autoconf libtool file xz \
+             make libc-dev linux-headers g++ sed bison cmake gfortran
 
 # Build and do not keep "static libraries"
 RUN  mkdir -p ${INSTALLDIR}/lib && ln -s ${INSTALLDIR}/lib64 ${INSTALLDIR}/lib && \
