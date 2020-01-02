@@ -375,7 +375,7 @@ profile_opengl()
 profile_libgit2()
 {
  add_build_dep cmake
- profile_python
+ #profile_python
  add_run_dep openssl
  add_run_dep libssh2
  add_run_dep libgit2
@@ -429,6 +429,16 @@ profile_x11()
 profile_libxc()
 {
  add_run_dep libxc
+}
+
+profile_leptonica()
+{
+ add_run_dep libpng
+ add_run_dep expat # required by freetype
+ add_run_dep gperf # required by fontconfig
+ add_run_dep freetype # required by fontconfig
+ add_run_dep fontconfig
+ add_run_dep leptonica
 }
 
 ### EOF ###
