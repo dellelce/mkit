@@ -38,22 +38,22 @@ Here follow a list of the supported profiles:
 |-------------|----------------------------------------------|
 | gnudev      | Common tools for GNU development             |
 | default     | Original profile: Apache, Python, PHP        |
-| redis       | Redis                                        |
+| redis       | Redis (Key-value data store)                 |
 | python      | Python 3                                     |
-| uwsgi       |                                              |
+| uwsgi       | Python WSGI & HTTP Server                    |
 | postgres    | Postgres (Latest)                            |
 | postgres10  | Postgres (10 only)                           |
-| timescaledb |                                              |
-| openvpn     |                                              |
+| timescaledb | Postgres time-series extension               |
+| openvpn     | Classic SSL VPN                              |
 | gcc         |                                              |
 | gcc7        |                                              |
 | gccgo7      |                                              |
-| varnish     |                                              |
 | curl        |                                              |
-| haproxy     |                                              |
+| varnish     | Http Cache Server                            |
+| haproxy     | Http Load Balancer                           |
+| shared      | Shared toolery                               |
+| slcp        | Shell prompt with git support                |
 | git         |                                              |
-| shared      |  shared toolery                              |
-| slcp        |                                              |
 | readline    |                                              |
 | imagemagick | ImageMagick graphics toolkit                 |
 | bind        | Standard DNS Library / Toolkit               |

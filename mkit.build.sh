@@ -87,7 +87,7 @@ build_sanity_gnuconf()
   typeset cwd="$PWD"
   cd "$1"
 
-  autoreconf -vif >/dev/null 2>&1; ar_rc=$?
+  autoreconf -vif 2>&1; ar_rc=$?
   cd "$cwd"
   [ $ar_rc -ne 0 ] && { echo "autoreconf failed with rc = $ar_rc"; return $ar_rc; }
   build_sanity_gnuconf $1

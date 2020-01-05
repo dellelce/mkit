@@ -28,11 +28,11 @@ test_file()
 ### ENV ###
 
 prefix="$1"; shift
-python="$prefix/bin/python3.7"
+python="$prefix/bin/python3.8"
 
 ### MAIN ###
 
-mkdir $prefix && ./mkit.sh $prefix
+mkdir -p $prefix && ./mkit.sh $prefix
 rc=$?
 
 echo "mkit rc: $rc"
