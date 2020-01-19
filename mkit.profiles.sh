@@ -439,6 +439,7 @@ profile_libxc()
 
 profile_leptonica()
 {
+ add_run_dep zlib
  add_run_dep libpng
  add_run_dep expat # required by freetype
  add_run_dep gperf # required by fontconfig
