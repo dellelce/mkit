@@ -442,4 +442,9 @@ profile_leptonica()
  add_run_dep leptonica
 }
 
+profile_bzip2()
+{
+ add_run_dep bzip2
+}
+
 ### EOF ###
