@@ -179,6 +179,18 @@ profile_gccgo7()
  return $?
 }
 
+profile_gcc6()
+{
+ add_build_dep m4
+ add_run_dep zlib
+ add_run_dep binutils
+ add_run_dep gmp
+ add_run_dep mpfr
+ add_run_dep mpc
+ add_run_dep gcc6
+ return $?
+}
+
 profile_varnish()
 {
  # varnish needs python (">= 2.7") for generating some files
@@ -363,7 +375,7 @@ profile_opengl()
 profile_libgit2()
 {
  add_build_dep cmake
- profile_python
+ #profile_python
  add_run_dep openssl
  add_run_dep libssh2
  add_run_dep libgit2
@@ -387,6 +399,59 @@ profile_geant4()
  add_build_dep cmake
  add_run_dep expat
  add_run_dep geant4
+}
+
+profile_x11()
+{
+ add_run_dep dri2proto
+ add_run_dep glproto
+ add_run_dep pciaccess
+ add_run_dep libdrm
+ add_run_dep xproto
+ add_run_dep xextproto
+ add_run_dep xtrans
+ add_run_dep kbproto
+ add_run_dep inputproto
+ add_run_dep xcbproto
+ add_run_dep pthreadstubs
+ add_run_dep xau
+ add_run_dep xcb
+ add_run_dep x11
+ add_run_dep damageproto
+ add_run_dep fixesproto
+ add_run_dep xfixes
+ add_run_dep xdamage
+ add_run_dep xext
+ add_run_dep xf86vidmodeproto
+ add_run_dep xxf86vm
+ add_run_dep xorgmacros
+ add_run_dep xshmfence
+ add_run_dep randrproto
+ add_run_dep renderproto
+ add_run_dep libxrender
+ add_run_dep libxrandr
+ add_run_dep xrandr
+}
+
+profile_libxc()
+{
+ add_run_dep libxc
+}
+
+profile_leptonica()
+{
+ add_run_dep zlib
+ add_run_dep libpng
+ add_run_dep expat # required by freetype
+ add_run_dep gperf # required by fontconfig
+ add_run_dep freetype # required by fontconfig
+ add_run_dep fontconfig
+ add_run_dep leptonica
+}
+
+profile_bzip2()
+{
+ add_run_dep bzip2
 }
 
 ### EOF ###
