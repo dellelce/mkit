@@ -424,6 +424,11 @@ profile_x11()
  add_run_dep libxrender
  add_run_dep libxrandr
  add_run_dep xrandr
+} 
+
+profile_neuron()
+{
+ add_run_dep neuron
 }
 
 ### EOF ###
