@@ -452,4 +452,9 @@ profile_gpaw()
  add_run_dep  gpaw
 }
 
+profile_bzip2()
+{
+ add_run_dep bzip2
+}
+
 ### EOF ###
