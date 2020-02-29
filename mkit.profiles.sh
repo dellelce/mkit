@@ -442,4 +442,14 @@ profile_leptonica()
  add_run_dep leptonica
 }
 
+profile_gpaw()
+{
+ profile_pythonbuild
+
+ add_run_dep  libxc
+ add_run_dep  scalapack
+ add_run_dep  openblas
+ add_run_dep  gpaw
+}
+
 ### EOF ###
