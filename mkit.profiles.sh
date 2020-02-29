@@ -55,6 +55,7 @@ profile_redis()
 
 profile_python()
 {
+ add_run_dep xz
  add_run_dep libffi ncurses zlib bzip2 readline
  add_run_dep openssl sqlite3 expat libxml2
  add_run_dep python3
@@ -62,9 +63,19 @@ profile_python()
 
 profile_pythonbuild()
 {
+ add_build_dep xz
  add_build_dep libffi ncurses zlib bzip2 readline
  add_build_dep openssl sqlite3 expat libxml2
  add_build_dep python3
+}
+
+#python2
+profile_python2()
+{
+ add_run_dep xz
+ add_run_dep libffi ncurses zlib bzip2 readline
+ add_run_dep openssl sqlite3 expat libxml2
+ add_run_dep python2
 }
 
 profile_uwsgi()
@@ -91,7 +102,7 @@ profile_postgres()
 
 profile_postgres10()
 {
- add_run_dep libressl
+ add_run_dep openssl
  add_run_dep libxml2
  add_run_dep zlib
  add_run_dep ncurses
@@ -100,11 +111,22 @@ profile_postgres10()
  return $?
 }
 
+profile_postgres11()
+{
+ add_run_dep openssl
+ add_run_dep libxml2
+ add_run_dep zlib
+ add_run_dep ncurses
+ add_run_dep readline
+ add_run_dep postgresql11
+ return $?
+}
+
 profile_timescaledb()
 {
  add_build_dep cmake
  add_build_dep bison # only when building from commit/tag/branch (not "packaged" source)
- profile_postgres
+ profile_postgres11
  add_run_dep timescaledb
  return $?
 }
@@ -154,6 +176,18 @@ profile_gccgo7()
  add_run_dep mpc
  add_options gcc7 go
  add_run_dep gcc7
+ return $?
+}
+
+profile_gcc6()
+{
+ add_build_dep m4
+ add_run_dep zlib
+ add_run_dep binutils
+ add_run_dep gmp
+ add_run_dep mpfr
+ add_run_dep mpc
+ add_run_dep gcc6
  return $?
 }
 
@@ -350,6 +384,49 @@ profile_x11()
  add_run_dep inputproto # required by x11
  add_run_dep xproto # required by x11
  add_run_dep x11
+}
+
+profile_libgit2()
+{
+ add_build_dep cmake
+ #profile_python
+ add_run_dep openssl
+ add_run_dep libssh2
+ add_run_dep libgit2
+}
+
+profile_mosquitto()
+{
+ add_build_dep cmake
+ add_run_dep openssl
+ add_run_dep mosquitto
+}
+
+profile_nettle()
+{
+ add_run_dep gmp
+ add_run_dep nettle
+}
+
+profile_libxc()
+{
+ add_run_dep libxc
+}
+
+profile_leptonica()
+{
+ add_run_dep zlib
+ add_run_dep libpng
+ add_run_dep expat # required by freetype
+ add_run_dep gperf # required by fontconfig
+ add_run_dep freetype # required by fontconfig
+ add_run_dep fontconfig
+ add_run_dep leptonica
+}
+
+profile_bzip2()
+{
+ add_run_dep bzip2
 }
 
 ### EOF ###

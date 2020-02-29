@@ -155,7 +155,7 @@ main_tests_uwsgi()
 prefix="$1"; shift
 profile="${1:-${PROFILE}}"; shift; unset PROFILE
 profile="${profile:-default}" # sanity check
-python="$prefix/bin/python3.7"
+python="$prefix/bin/python3.8"
 export fails=0
 
 ### MAIN ###
