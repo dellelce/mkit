@@ -62,8 +62,7 @@ build_bzip2_core()
   cwd="$PWD"; cd "$dir"
 
   make install PREFIX="${prefix}" > ${logFile} 2>&1
-  cp "libbz2.so.1.0.6" "${prefix}/lib"
-  ln -sf "${prefix}/lib/libbz2.so.1.0.6" "${prefix}/lib/libbz2.so.1.0"
+  cp -Pp libbz2.so.* "${prefix}/lib"  # we also want shared libraries
   rc_makeinstall="$?"
 
   cd "$cwd"

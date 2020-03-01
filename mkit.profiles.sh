@@ -426,8 +426,14 @@ profile_x11()
  add_run_dep xrandr
 }
 
+profile_libxc()
+{
+ add_run_dep libxc
+}
+
 profile_leptonica()
 {
+ add_run_dep zlib
  add_run_dep libpng
  add_run_dep expat # required by freetype
  add_run_dep gperf # required by fontconfig
@@ -439,6 +445,11 @@ profile_leptonica()
 profile_opencv()
 {
   add_run_dep opencv
+}
+
+profile_bzip2()
+{
+ add_run_dep bzip2
 }
 
 ### EOF ###
