@@ -447,4 +447,9 @@ profile_bzip2()
  add_run_dep bzip2
 }
 
+profile_octave()
+{
+ add_run_dep octave
+}
+
 ### EOF ###
