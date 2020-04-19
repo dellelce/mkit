@@ -457,6 +457,7 @@ profile_proj()
 
 profile_libevent()
 {
+  add_run_dep openssl
   add_run_dep libevent
 }
 
