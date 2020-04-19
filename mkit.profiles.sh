@@ -455,4 +455,9 @@ profile_proj()
  add_run_dep proj
 }
 
+profile_libevent()
+{
+  add_run_dep libevent
+}
+
 ### EOF ###
