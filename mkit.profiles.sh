@@ -441,4 +441,11 @@ profile_leptonica()
  add_run_dep leptonica
 }
 
+profile_inkscape()
+{
+ add_run_dep pango
+ add_run_dep glib
+ add_run_dep inkscape
+}
+
 ### EOF ###
