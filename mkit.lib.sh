@@ -292,7 +292,7 @@ have_hook()
  typeset pname="$1"; shift
  typeset hname="$1"; shift
 
- typeset hookfile="$MKIT/hooks/$pname/${hname}.sh"
+ typeset hookfile="$MKIT/modules/$pname/hooks/${hname}.sh"
 
  [ -f "$hookfile" ] && { return 0; } || { return 1; }
 }
@@ -305,7 +305,7 @@ hook()
  typeset hname="$1"; shift
  typeset args="$*"; shift
 
- typeset hookfile="$MKIT/hooks/$pname/${hname}.sh"
+ typeset hookfile="$MKIT/modules/$pname/hooks/${hname}.sh"
 
  [ -f "$hookfile" ] &&
  {

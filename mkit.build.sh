@@ -300,7 +300,7 @@ run_build()
   [ $func_rc -ne 0 ] &&
   {
     # module was not found built-in: try as module
-    module_func="$MKIT/modules/build/${pkg}.sh"
+    module_func="$MKIT/modules/${pkg}/build.sh"
 
     [ -f "$module_func" ] &&
     {

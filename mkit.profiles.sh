@@ -433,6 +433,7 @@ profile_libxc()
 
 profile_leptonica()
 {
+ add_run_dep zlib
  add_run_dep libpng
  add_run_dep expat # required by freetype
  add_run_dep gperf # required by fontconfig
@@ -446,6 +447,19 @@ profile_inkscape()
  add_run_dep pango
  add_run_dep glib
  add_run_dep inkscape
+}
+
+profile_bzip2()
+{
+ add_run_dep bzip2
+}
+
+profile_proj()
+{
+ profile_curl
+ add_run_dep sqlite3
+ add_run_dep libtiff
+ add_run_dep proj
 }
 
 ### EOF ###
