@@ -11,7 +11,7 @@ build_varnish()
   echo > "$srcdir_varnish/man/Makefile.am"
  }
 
- RST2MAN=:i RST2HTML=: SPHINX=: \
+ RST2MAN=: RST2HTML=: SPHINX=: \
  build_gnuconf varnish $srcdir_varnish
  return $?
 }
