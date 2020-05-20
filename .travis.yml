@@ -21,7 +21,7 @@ env:
 # - USEDOCKER="yes" PROFILE="opengl" DOCKER_IMAGE="dellelce/opengl-base" PREFIX="/app/opengl"
  - USEDOCKER="yes" PROFILE="libgit2" DOCKER_IMAGE="dellelce/libgit2-base" PREFIX="/app/libgit2"
  - USEDOCKER="yes" PROFILE="varnish" DOCKER_IMAGE="dellelce/varnish-base" PREFIX="/app/varnish"
- - USEDOCKER="yes" PROFILE="mosquitto" DOCKER_IMAGE="dellelce/mosquitto-base" PREFIX="/app/mosquitto"
+# - USEDOCKER="yes" PROFILE="mosquitto" DOCKER_IMAGE="dellelce/mosquitto-base" PREFIX="/app/mosquitto"
  - USEDOCKER="no" PREFIX="/tmp/build"
 before_script:
  - mkdir /tmp/build && sudo mount -t tmpfs tmpfs /tmp/build
