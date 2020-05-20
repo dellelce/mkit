@@ -79,6 +79,10 @@ download()
 
  for pkg in $RUNTIME_LIST
  do
+  typeset dont_download=$(hook $pkg dont_download)
+
+  [ ! -z "$dont_download" ] && continue
+
   typeset custom_download=$(hook $pkg custom_download)
 
   [ -f "$custom_download" ] &&
@@ -132,7 +136,6 @@ download()
   }
 
   DOWNLOAD_MAP="${DOWNLOAD_MAP} ${pkg}:${fn}"  # this will fail if ${fn} has spaces!
-  set +x
 
   # save directory to a variable named after the package
   eval "fn_${pkg}=$fn"
