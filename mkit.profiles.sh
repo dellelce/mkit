@@ -447,4 +447,10 @@ profile_bzip2()
  add_run_dep bzip2
 }
 
+profile_cantera()
+{
+ add_run_dep fmt
+ add_run_dep cantera
+}
+
 ### EOF ###
