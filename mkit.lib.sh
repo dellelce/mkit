@@ -89,6 +89,15 @@ download()
   {
    fn=$(get_source $pkg)
    srcget_rc=$?
+   [ -z "$fn" ] && { echo "Invalid filename"; return $srcget_rc; }
+
+   [ $srcget_rc -eq 8 ] &&
+   {
+     # Debug error code 8: "Not Found"
+
+     get_source -x $pkg
+   }
+
    fn="$PWD/$fn"
    [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
   }
@@ -127,7 +136,16 @@ download()
    fn=$(get_source $pkg)
    srcget_rc=$?
    fn="$PWD/$fn"
+
+   [ $srcget_rc -eq 8 ] &&
+   {
+     # Debug error code 8: "Not Found"
+
+     get_source -x $pkg
+   }
+
    [ ! -f "$fn" ] && { echo "Failed downloading $pkg: rc = $srcget_rc"; return $srcget_rc; }
+
    echo "${BOLD}$pkg${RESET} has been downloaded as: " $fn
   }
 
@@ -292,7 +310,7 @@ have_hook()
  typeset pname="$1"; shift
  typeset hname="$1"; shift
 
- typeset hookfile="$MKIT/hooks/$pname/${hname}.sh"
+ typeset hookfile="$MKIT/modules/$pname/hooks/${hname}.sh"
 
  [ -f "$hookfile" ] && { return 0; } || { return 1; }
 }
@@ -305,7 +323,7 @@ hook()
  typeset hname="$1"; shift
  typeset args="$*"; shift
 
- typeset hookfile="$MKIT/hooks/$pname/${hname}.sh"
+ typeset hookfile="$MKIT/modules/$pname/hooks/${hname}.sh"
 
  [ -f "$hookfile" ] &&
  {
