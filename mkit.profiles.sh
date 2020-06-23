@@ -80,6 +80,7 @@ profile_python2()
 
 profile_uwsgi()
 {
+ add_run_dep pcre
  profile_python
  add_run_dep uwsgi
  return $?

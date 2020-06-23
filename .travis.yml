@@ -8,12 +8,12 @@ services:
  - docker
 env:
 # - USEDOCKER="yes" PROFILE="leptonica" DOCKER_IMAGE="dellelce/leptonica-base" PREFIX="/app/leptonica"
- - USEDOCKER="yes" PROFILE="haproxy" DOCKER_IMAGE="dellelce/haproxy-base" PREFIX="/app/haproxy"
+# - USEDOCKER="yes" PROFILE="haproxy" DOCKER_IMAGE="dellelce/haproxy-base" PREFIX="/app/haproxy"
  - USEDOCKER="yes" PROFILE="proj" DOCKER_IMAGE="dellelce/proj-base" PREFIX="/app/proj"
  - USEDOCKER="yes" PROFILE="default" DOCKER_IMAGE="dellelce/mkit" PREFIX="/app/httpd"
  - USEDOCKER="yes" PROFILE="python" DOCKER_IMAGE="dellelce/py-base" PREFIX="/app/python"
  - USEDOCKER="yes" PROFILE="timescaledb" DOCKER_IMAGE="dellelce/timescaledb-base" PREFIX="/app/pg"
- - USEDOCKER="yes" PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi".
+ - USEDOCKER="yes" PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi"
  - USEDOCKER="yes" PROFILE="libxc" DOCKER_IMAGE="dellelce/libxc-base" PREFIX="/app/libxc"
  - USEDOCKER="yes" PROFILE="openvpn" DOCKER_IMAGE="dellelce/openvpnbase" PREFIX="/app/openvpn"
 # - USEDOCKER="yes" PROFILE="bind" DOCKER_IMAGE="dellelce/bindbase" PREFIX="/app/bind"
