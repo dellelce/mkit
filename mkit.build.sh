@@ -304,7 +304,7 @@ run_build()
 
     [ -f "$module_func" ] &&
     {
-      . "$module_func"
+      . "$module_func" $options
       type $func >/dev/null 2>&1
       func_rc=$?
     } ||

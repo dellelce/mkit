@@ -80,6 +80,8 @@ profile_python2()
 
 profile_uwsgi()
 {
+ add_options pcre "--enable-jit"
+
  add_run_dep pcre
  profile_python
  add_run_dep uwsgi
@@ -456,6 +458,12 @@ profile_proj()
  add_run_dep sqlite3
  add_run_dep libtiff
  add_run_dep proj
+}
+
+profile_pcre()
+{
+ add_options pcre "--enable-jit"
+ add_run_dep pcre
 }
 
 ### EOF ###
