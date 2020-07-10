@@ -7,7 +7,7 @@ branches:
 services:
  - docker
 env:
- - USEDOCKER="yes" PROFILE="leptonica" DOCKER_IMAGE="dellelce/leptonica-base" PREFIX="/app/leptonica"
+# - USEDOCKER="yes" PROFILE="leptonica" DOCKER_IMAGE="dellelce/leptonica-base" PREFIX="/app/leptonica"
 # - USEDOCKER="yes" PROFILE="haproxy" DOCKER_IMAGE="dellelce/haproxy-base" PREFIX="/app/haproxy"
  - USEDOCKER="yes" PROFILE="proj" DOCKER_IMAGE="dellelce/proj-base" PREFIX="/app/proj"
  - USEDOCKER="yes" PROFILE="default" DOCKER_IMAGE="dellelce/mkit" PREFIX="/app/httpd"
@@ -22,6 +22,7 @@ env:
  - USEDOCKER="yes" PROFILE="libgit2" DOCKER_IMAGE="dellelce/libgit2-base" PREFIX="/app/libgit2"
  - USEDOCKER="yes" PROFILE="varnish" DOCKER_IMAGE="dellelce/varnish-base" PREFIX="/app/varnish"
  - USEDOCKER="yes" PROFILE="mosquitto" DOCKER_IMAGE="dellelce/mosquitto-base" PREFIX="/app/mosquitto"
+ - USEDOCKER="yes" PROFILE="fluentbit" DOCKER_IMAGE="dellelce/fluentbit-base" PREFIX="/app/fluentbit"
  - USEDOCKER="no" PREFIX="/tmp/build"
 before_script:
  - mkdir /tmp/build && sudo mount -t tmpfs tmpfs /tmp/build
