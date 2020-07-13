@@ -466,4 +466,10 @@ profile_pcre()
  add_run_dep pcre
 }
 
+profile_fluentbit()
+{
+ add_build_dep cmake
+ add_run_dep fluentbit
+}
+
 ### EOF ###
