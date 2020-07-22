@@ -319,7 +319,7 @@ run_build()
   have_hook global need_to_build && hook global need_to_build ${pkg} || continue
 
   # this must be skipped if no downloaded
-  [ -z "$(hook ${pkg} need_to_download) ] && do_uncompress ${pkg} || return $?
+  [ -z "$(hook ${pkg} need_to_download)" ] && do_uncompress ${pkg} || return $?
 
   [ "$build" -eq 1 ] &&
   {
