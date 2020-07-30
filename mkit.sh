@@ -112,7 +112,6 @@ mkit_setup()
  [ -z "$*" ] && { usage; exit; } # do not accept zero arguments
 
  export MKIT=$(getdirfullpath $(dirname $0))
- echo $MKIT
 
  . $MKIT/mkit.config.sh || exit $?
  . $MKIT/mkit.profiles.sh || exit $?
