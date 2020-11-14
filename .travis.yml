@@ -8,7 +8,7 @@ services:
  - docker
 env:
 # - USEDOCKER="yes" PROFILE="leptonica" DOCKER_IMAGE="dellelce/leptonica-base" PREFIX="/app/leptonica"
- - USEDOCKER="yes" PROFILE="haproxy" DOCKER_IMAGE="dellelce/haproxy-base" PREFIX="/app/haproxy"
+# - USEDOCKER="yes" PROFILE="haproxy" DOCKER_IMAGE="dellelce/haproxy-base" PREFIX="/app/haproxy"
  - USEDOCKER="yes" PROFILE="proj" DOCKER_IMAGE="dellelce/proj-base" PREFIX="/app/proj"
  - USEDOCKER="yes" PROFILE="default" DOCKER_IMAGE="dellelce/mkit" PREFIX="/app/httpd"
  - USEDOCKER="yes" PROFILE="python" DOCKER_IMAGE="dellelce/py-base" PREFIX="/app/python"
