@@ -449,6 +449,11 @@ profile_leptonica()
  add_run_dep leptonica
 }
 
+profile_opencv()
+{
+  add_run_dep opencv
+}
+
 profile_bzip2()
 {
  add_run_dep bzip2
