@@ -388,6 +388,12 @@ profile_libgit2()
  add_run_dep libgit2
 }
 
+profile_vim()
+{
+  add_run_dep ncurses
+  add_run_dep vim
+}
+
 profile_mosquitto()
 {
  add_build_dep cmake
