@@ -2,21 +2,22 @@
 #
 # File:         travis-tmpfs.sh
 # Created:      051219
-# Description:  docker on tmpfs
+# Description:  move docker main directory to tmpfs
 #
 
 ## MAIN ##
 
  standby="/var/lib/docker-standby"
- mv /var/lib/docker "$standby"
- mkdir -p /var/lib/docker && mount -t tmpfs tmpfs /var/lib/docker; rc=$?
+ libdocker="$(docker info -f '{{.DockerRootDir}}' )" # this is the default directory
+ mv "$libdocker" "$standby"
+ mkdir -p "$libdocker" && mount -t tmpfs tmpfs "$libdocker"; rc=$?
  [ $rc -ne 0 ] && exit $rc
 
  (
-  cd $standby; tar cf - .
+  cd "$standby"; tar cf - .
  ) |
  (
-  cd /var/lib/docker; tar xf -
+  cd "$libdocker"; tar xf -
  )
 
  rm -rf "$standby"
