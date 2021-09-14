@@ -41,7 +41,7 @@ logger_file()
 }
 
 #
-#
+# Perform commont sanity steps for GNU Configure if "configure" is absent
 build_sanity_gnuconf()
 {
  typeset acpath=""
