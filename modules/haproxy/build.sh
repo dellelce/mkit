@@ -32,8 +32,13 @@ build_haproxy_core()
  logFile=$(logger_file ${id}_make)
  echo "Running make..."
  {
-  #TODO: add SLZ
-  conf="TARGET=linux-glibc"
+  [ -f "/etc/alpine-release" ] &&
+  {
+    conf="TARGET=linux-musl"
+  } ||
+  {
+    conf="TARGET=linux-glibc"
+  }
   conf="${conf} LDFLAGS=-Wl,-rpath=${prefix}/lib" \
   conf="${conf} PREFIX=${prefix}"
   conf="${conf} LUA_LIB=${prefix}/lib"
@@ -43,6 +48,7 @@ build_haproxy_core()
   conf="${conf} SSL_LIB=${prefix}/lib"
   conf="${conf} SSL_INC=${prefix}/include"
   conf="${conf} PCRE2DIR=${prefix}"
+  conf="${conf} USE_PCRE2_JIT=1"
   conf="${conf} USE_PCRE2=1"
   conf="${conf} USE_OPENSSL=1"
   conf="${conf} USE_ZLIB=1"
