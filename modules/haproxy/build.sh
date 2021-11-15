@@ -44,7 +44,6 @@ build_haproxy_core()
   conf="${conf} SSL_INC=${prefix}/include"
   conf="${conf} PCRE2DIR=${prefix}"
   conf="${conf} USE_PCRE2=1"
-  conf="${conf} USE_PCRE=0"
   conf="${conf} USE_OPENSSL=1"
   conf="${conf} USE_ZLIB=1"
   conf="${conf} USE_LUA=1"
