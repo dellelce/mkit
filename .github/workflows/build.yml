@@ -4,4 +4,5 @@ jobs:
   Build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - run: ls -lt && PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi" run-workflow.sh yes
