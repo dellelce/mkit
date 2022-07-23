@@ -4,4 +4,4 @@ jobs:
   Build:
     runs-on: ubuntu-latest
     steps:
-      - run: cd ../../ && PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi" run-workflow.sh yes
+      - run: cd ../../ && ls -lt && PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi" run-workflow.sh yes
