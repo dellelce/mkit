@@ -10,6 +10,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run mkit wrapper
+      - name: Checkout
         uses: actions/checkout@v3
+      - name: Run mkit wrapper
         run: ls -lt && PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi" ./mkit-wrapper.sh yes
