@@ -1,12 +1,16 @@
 ARG BASE=alpine:3.8
+ARG PREFIX=/app/httpd
+ARG PROFILE
+
+# Build
 FROM $BASE as build
 
 LABEL maintainer="Antonio Dell'Elce"
 
 ENV BUILDDIR  /app-build
 
-ARG PROFILE=default
-ARG PREFIX=/app/httpd
+ARG PROFILE
+ARG PREFIX
 ENV INSTALLDIR  ${PREFIX}
 
 WORKDIR $BUILDDIR
@@ -26,7 +30,7 @@ RUN  mkdir -p ${INSTALLDIR}/lib && ln -s ${INSTALLDIR}/lib64 ${INSTALLDIR}/lib &
 ARG BASE=alpine:3.8
 FROM $BASE AS final
 
-ARG PREFIX=/app/httpd
+ARG PREFIX
 ENV INSTALLDIR  ${PREFIX}
 ENV PATH        ${PREFIX}/bin:${PATH}
 
