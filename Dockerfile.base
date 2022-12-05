@@ -1,0 +1,15 @@
+FROM alpine:3.8
+
+WORKDIR /mkit
+
+ENV PACKAGES gcc bash wget perl perl-dev automake autoconf libtool file xz \
+             make libc-dev linux-headers g++ sed bison cmake gfortran
+
+RUN  mkdir /app  && \ 
+     apk add --no-cache  $PACKAGES
+
+COPY modules modules/
+COPY mkit*.sh ./
+
+RUN ls -lt
+
