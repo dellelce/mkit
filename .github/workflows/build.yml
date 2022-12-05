@@ -1,5 +1,9 @@
 name: Build
 on: [push]
+
+env:
+  BASE_IMAGE: ghcr.io/dellelce/mkit-base
+
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -15,4 +19,4 @@ jobs:
 #      - name: Run mkit wrapper
 #        run: ls -lt && PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi" ./mkit-wrapper.sh yes
       - name: Mkit base image
-        run: make build-base BASE=ghcr.io/dellelce/mkit-base && docker push
+        run: make build-base BASE=$BASE_IMAGE && docker push $BASE_IMAGE
