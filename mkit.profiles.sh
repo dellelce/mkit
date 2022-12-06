@@ -22,6 +22,13 @@ profile_gnudev()
  add_run_dep libtool
 }
 
+profile_perl()
+{
+ add_run_dep perl
+ add_run_dep makemaker
+ add_run_dep datadumper
+}
+
 # TODO: automate build orders & list
 profile_default()
 {
