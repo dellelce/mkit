@@ -64,7 +64,7 @@ profile_python()
 {
  add_run_dep xz
  add_run_dep libffi ncurses zlib bzip2 readline
- add_run_dep openssl sqlite3 expat libxml2
+ add_run_dep openssl sqlite3
  add_run_dep python3
 }
 
@@ -72,7 +72,7 @@ profile_pythonbuild()
 {
  add_build_dep xz
  add_build_dep libffi ncurses zlib bzip2 readline
- add_build_dep openssl sqlite3 expat libxml2
+ add_build_dep openssl sqlite3
  add_build_dep python3
 }
 
