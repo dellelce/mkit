@@ -1,7 +1,5 @@
 # mkit
 
-[![Build Status](https://travis-ci.org/dellelce/mkit.svg?branch=master)](https://travis-ci.org/dellelce/mkit)
-
 Download and Build (from source) complete stacks. The latest version available for each package is downloaded.
 
 ## Configuration variables

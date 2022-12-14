@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# File:         travis-tmpfs.sh
+# File:         use-tmpfs.sh
 # Created:      051219
 # Description:  move docker main directory to tmpfs
 #

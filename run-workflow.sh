@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Building for travis
+# Building for run-workflow
 # This is only used by non-Docker build as a wrapper to mkit.sh to add testing
 #
-# File:         travis.sh
+# File:         run-workflow.sh
 # Created:      250718
 #
 

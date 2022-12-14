@@ -22,6 +22,13 @@ profile_gnudev()
  add_run_dep libtool
 }
 
+profile_perl()
+{
+ add_run_dep perl
+ add_run_dep makemaker
+ add_run_dep datadumper
+}
+
 # TODO: automate build orders & list
 profile_default()
 {
@@ -57,7 +64,7 @@ profile_python()
 {
  add_run_dep xz
  add_run_dep libffi ncurses zlib bzip2 readline
- add_run_dep openssl sqlite3 expat libxml2
+ add_run_dep openssl1_1 sqlite3 expat libxml2
  add_run_dep python3
 }
 
@@ -65,7 +72,7 @@ profile_pythonbuild()
 {
  add_build_dep xz
  add_build_dep libffi ncurses zlib bzip2 readline
- add_build_dep openssl sqlite3 expat libxml2
+ add_build_dep openssl sqlite3
  add_build_dep python3
 }
 
@@ -80,6 +87,9 @@ profile_python2()
 
 profile_uwsgi()
 {
+ add_options pcre "--enable-jit"
+
+ add_run_dep pcre
  profile_python
  add_run_dep uwsgi
  return $?
@@ -126,7 +136,7 @@ profile_timescaledb()
 {
  add_build_dep cmake
  add_build_dep bison # only when building from commit/tag/branch (not "packaged" source)
- profile_postgres11
+ profile_postgres
  add_run_dep timescaledb
  return $?
 }
@@ -223,6 +233,8 @@ profile_curl()
 
 profile_haproxy()
 {
+ add_options pcre "--enable-jit"
+
  add_run_dep pcre
  add_run_dep zlib
  add_run_dep ncurses # needed by readline
@@ -238,7 +250,6 @@ profile_git()
 {
  profile_gnubuild
  add_run_dep zlib
- add_run_dep curl
  add_run_dep git
 
  return $?
@@ -248,6 +259,7 @@ profile_shared()
 {
  profile_gnudev
  profile_python
+ profile_git
  add_run_dep bison
 }
 
@@ -269,6 +281,7 @@ profile_bind()
  # mixing run-time and build-time dependencies is not supported at this time
  # *IF* this means need to link from multiple prefixes)
  profile_python
+ add_run_dep libuv
  add_run_dep bind
 }
 
@@ -314,6 +327,7 @@ profile_imagemagick()
 # standalone cmake
 profile_cmake()
 {
+ add_build_dep openssl
  add_run_dep cmake
 }
 
@@ -459,6 +473,18 @@ profile_proj()
  add_run_dep sqlite3
  add_run_dep libtiff
  add_run_dep proj
+}
+
+profile_pcre()
+{
+ add_options pcre "--enable-jit"
+ add_run_dep pcre
+}
+
+profile_fluentbit()
+{
+ add_build_dep cmake
+ add_run_dep fluentbit
 }
 
 ### EOF ###

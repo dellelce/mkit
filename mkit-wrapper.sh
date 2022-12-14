@@ -14,7 +14,10 @@
   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   rc=$?
   [ $rc -ne 0 ] && { echo "docker_hub: Docker hub login failed with rc = $rc"; return $rc; }
+ }
 
+ docker_push()
+ {
   [ ! -z "$target" ] && { docker push "$target"; return $?; }
   return 0
  }
@@ -31,11 +34,12 @@
 
  [ "$isdocker" == "yes" ] &&
  {
+  docker_hub || return $?
   docker build -t "$image" --build-arg PROFILE=$PROFILE --build-arg PREFIX=$prefix .
   build_rc="$?"
-  [ $build_rc -eq 0 -a ! -z "$image" ] && docker_hub "$image"
+  [ $build_rc -eq 0 -a ! -z "$image" ] && docker_push "$image"
   exit $build_rc
  } ||
- { ./travis.sh "$prefix"; exit $?; }
+ { ./run-workflow.sh "$prefix"; exit $?; }
 
 ### EOF ###
