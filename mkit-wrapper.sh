@@ -40,6 +40,6 @@
   [ $build_rc -eq 0 -a ! -z "$image" ] && docker_push "$image"
   exit $build_rc
  } ||
- { ./travis.sh "$prefix"; exit $?; }
+ { ./run-workflow.sh "$prefix"; exit $?; }
 
 ### EOF ###

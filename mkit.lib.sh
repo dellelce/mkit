@@ -150,7 +150,6 @@ download()
   }
 
   DOWNLOAD_MAP="${DOWNLOAD_MAP} ${pkg}:${fn}"  # this will fail if ${fn} has spaces!
-  set +x
 
   # save directory to a variable named after the package
   eval "fn_${pkg}=$fn"
