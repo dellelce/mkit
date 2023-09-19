@@ -468,6 +468,12 @@ profile_leptonica()
  add_run_dep leptonica
 }
 
+profile_tesseract()
+{
+ profile_leptonica
+ add_run_dep tesseract
+}
+
 profile_bzip2()
 {
  add_run_dep bzip2
