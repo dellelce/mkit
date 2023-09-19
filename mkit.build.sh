@@ -41,7 +41,7 @@ logger_file()
 }
 
 #
-#
+# Perform commont sanity steps for GNU Configure if "configure" is absent
 build_sanity_gnuconf()
 {
  typeset acpath=""
@@ -304,7 +304,7 @@ run_build()
 
     [ -f "$module_func" ] &&
     {
-      . "$module_func"
+      . "$module_func" $options
       type $func >/dev/null 2>&1
       func_rc=$?
     } ||
