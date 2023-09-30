@@ -35,8 +35,8 @@ build_gcc()
                    --with-system-zlib \
                    --disable-nls \
                    ${extra_args}
- rc=$?
 
+ rc=$?
  [ ! -z "$OLD_LP" ] && { LD_LIBRARY_PATH="$OLD_LP"; unset OLD_LP; }
 
  return $rc
