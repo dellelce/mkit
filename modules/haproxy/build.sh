@@ -2,7 +2,6 @@
 # Build haproxy
 build_haproxy_core()
 {
- typeset rc=0
  export rc_conf=0 rc_make=0 rc_makeinstall=0
  typeset id="$1";  shift  # build id
  typeset dir="$1"; shift  # src directory

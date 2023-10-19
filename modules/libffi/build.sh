@@ -1,11 +1,7 @@
 #
 build_libffi()
 {
- typeset rc=0 dir=""
-
- build_gnuconf libffi $srcdir_libffi
- rc=$?
- [ $rc -ne 0 ] && return $rc
+ build_gnuconf libffi $srcdir_libffi || return $?
 
  # libffi ignores --libdir and --includedir options of configure
  # installs includes in $prefix/lib/libffi-version/include/ etc

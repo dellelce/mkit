@@ -3,7 +3,7 @@
 #
 build_bzip2_core()
 {
- typeset rc=0 cwd=""
+ typeset cwd=""
  export rc_conf=0 rc_make=0 rc_makeso=0 rc_makeinstall=0
  typeset id="$1"; shift   # build id
  typeset dir="$1"; shift  # src directory
