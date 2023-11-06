@@ -1,0 +1,22 @@
+name: Build
+on: [push]
+
+env:
+  BASE_IMAGE: ghcr.io/dellelce/mkit-base
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v3
+#      - name: Run mkit wrapper
+#        run: ls -lt && PROFILE="uwsgi" DOCKER_IMAGE="dellelce/uwsgi" PREFIX="/app/uwsgi" ./mkit-wrapper.sh yes
+      - name: Mkit base image
+        run: make build-base BASE=$BASE_IMAGE && docker push $BASE_IMAGE

@@ -22,6 +22,13 @@ profile_gnudev()
  add_run_dep libtool
 }
 
+profile_perl()
+{
+ add_run_dep perl
+ add_run_dep makemaker
+ add_run_dep datadumper
+}
+
 # TODO: automate build orders & list
 profile_default()
 {
@@ -55,20 +62,34 @@ profile_redis()
 
 profile_python()
 {
+ add_run_dep xz
  add_run_dep libffi ncurses zlib bzip2 readline
- add_run_dep openssl sqlite3 expat libxml2
+ add_run_dep openssl1_1 sqlite3 expat libxml2
  add_run_dep python3
 }
 
 profile_pythonbuild()
 {
+ add_build_dep xz
  add_build_dep libffi ncurses zlib bzip2 readline
- add_build_dep openssl sqlite3 expat libxml2
+ add_build_dep openssl sqlite3
  add_build_dep python3
+}
+
+#python2
+profile_python2()
+{
+ add_run_dep xz
+ add_run_dep libffi ncurses zlib bzip2 readline
+ add_run_dep openssl sqlite3 expat libxml2
+ add_run_dep python2
 }
 
 profile_uwsgi()
 {
+ add_options pcre "--enable-jit"
+
+ add_run_dep pcre
  profile_python
  add_run_dep uwsgi
  return $?
@@ -91,12 +112,23 @@ profile_postgres()
 
 profile_postgres10()
 {
- add_run_dep libressl
+ add_run_dep openssl
  add_run_dep libxml2
  add_run_dep zlib
  add_run_dep ncurses
  add_run_dep readline
  add_run_dep postgresql10
+ return $?
+}
+
+profile_postgres11()
+{
+ add_run_dep openssl
+ add_run_dep libxml2
+ add_run_dep zlib
+ add_run_dep ncurses
+ add_run_dep readline
+ add_run_dep postgresql11
  return $?
 }
 
@@ -144,6 +176,18 @@ profile_gcc7()
  return $?
 }
 
+profile_gcc11()
+{
+ add_build_dep m4
+ add_run_dep zlib
+ add_run_dep binutils
+ add_run_dep gmp
+ add_run_dep mpfr
+ add_run_dep mpc
+ add_run_dep gcc11
+ return $?
+}
+
 profile_gccgo7()
 {
  add_build_dep m4
@@ -154,6 +198,18 @@ profile_gccgo7()
  add_run_dep mpc
  add_options gcc7 go
  add_run_dep gcc7
+ return $?
+}
+
+profile_gcc6()
+{
+ add_build_dep m4
+ add_run_dep zlib
+ add_run_dep binutils
+ add_run_dep gmp
+ add_run_dep mpfr
+ add_run_dep mpc
+ add_run_dep gcc6
  return $?
 }
 
@@ -189,6 +245,8 @@ profile_curl()
 
 profile_haproxy()
 {
+ add_options pcre "--enable-jit"
+
  add_run_dep pcre
  add_run_dep zlib
  add_run_dep ncurses # needed by readline
@@ -204,7 +262,6 @@ profile_git()
 {
  profile_gnubuild
  add_run_dep zlib
- add_run_dep curl
  add_run_dep git
 
  return $?
@@ -214,6 +271,7 @@ profile_shared()
 {
  profile_gnudev
  profile_python
+ profile_git
  add_run_dep bison
 }
 
@@ -235,6 +293,7 @@ profile_bind()
  # mixing run-time and build-time dependencies is not supported at this time
  # *IF* this means need to link from multiple prefixes)
  profile_python
+ add_run_dep libuv
  add_run_dep bind
 }
 
@@ -280,6 +339,7 @@ profile_imagemagick()
 # standalone cmake
 profile_cmake()
 {
+ add_build_dep openssl
  add_run_dep cmake
 }
 
@@ -341,7 +401,7 @@ profile_opengl()
 profile_libgit2()
 {
  add_build_dep cmake
- profile_python
+ #profile_python
  add_run_dep openssl
  add_run_dep libssh2
  add_run_dep libgit2
@@ -360,6 +420,86 @@ profile_strongswan()
  add_run_dep openssl
  add_run_dep gmp
  add_run_dep strongswan
+}
+
+profile_nettle()
+{
+ add_run_dep gmp
+ add_run_dep nettle
+}
+
+profile_x11()
+{
+ add_run_dep dri2proto
+ add_run_dep glproto
+ add_run_dep pciaccess
+ add_run_dep libdrm
+ add_run_dep xproto
+ add_run_dep xextproto
+ add_run_dep xtrans
+ add_run_dep kbproto
+ add_run_dep inputproto
+ add_run_dep xcbproto
+ add_run_dep pthreadstubs
+ add_run_dep xau
+ add_run_dep xcb
+ add_run_dep x11
+ add_run_dep damageproto
+ add_run_dep fixesproto
+ add_run_dep xfixes
+ add_run_dep xdamage
+ add_run_dep xext
+ add_run_dep xf86vidmodeproto
+ add_run_dep xxf86vm
+ add_run_dep xorgmacros
+ add_run_dep xshmfence
+ add_run_dep randrproto
+ add_run_dep renderproto
+ add_run_dep libxrender
+ add_run_dep libxrandr
+ add_run_dep xrandr
+}
+
+profile_libxc()
+{
+ add_run_dep libxc
+}
+
+profile_leptonica()
+{
+ add_run_dep zlib
+ add_run_dep libpng
+ add_run_dep expat # required by freetype
+ add_run_dep gperf # required by fontconfig
+ add_run_dep freetype # required by fontconfig
+ add_run_dep fontconfig
+ add_run_dep leptonica
+}
+
+profile_bzip2()
+{
+ add_run_dep bzip2
+}
+
+profile_proj()
+{
+ profile_curl
+ add_run_dep sqlite3
+ add_run_dep libtiff
+ add_run_dep proj
+}
+
+profile_pcre()
+{
+ add_options pcre "--enable-jit"
+ add_run_dep pcre
+}
+
+profile_fluentbit()
+{
+ add_build_dep cmake
+ add_run_dep fluentbit
+>>>>>>> master
 }
 
 ### EOF ###
