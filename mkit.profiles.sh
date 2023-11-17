@@ -416,8 +416,8 @@ profile_mosquitto()
 
 profile_strongswan()
 {
- add_run_dep curl
  add_run_dep openssl1_1
+ add_run_dep curl
  add_run_dep gmp
  add_run_dep strongswan
 }
