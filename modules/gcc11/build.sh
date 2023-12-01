@@ -1,13 +1,15 @@
-# TODO: support cross-compiling
-# TODO: c++ is pushed in into languages, why?
-build_gcc()
+build_gcc11()
 {
  typeset languages="c"
  typeset args="$*"
+ typeset arg
  typeset rc=0
- typeset extra_args=""
 
- [ ! -z "$args" ] && languages="${languages},${args}"
+ for arg in $args
+ do
+  # all options that don't have an "=" are treated as a language
+  [ "${arg/=/}" != "${arg}" ] && { languages="${languages},${arg}"; continue; }
+ done
 
  [ -z "$LD_LIBRARY_PATH" ] &&
  {
@@ -18,14 +20,8 @@ build_gcc()
    export LD_LIBRARY_PATH="$prefix/lib:$LD_LIBRARY_PATH"
  }
 
- [ -f "/etc/alpine-release" ] &&
- {
-   extra_args="--disable-libssp --disable-libmpx --disable-libmudflap --disable-libsanitizer"
-   extra_args="${extra_args} --disable-gomp --disable-libatomic"
- }
-
  MAKEINFO=: \
- build_gnuconf gcc $srcdir_gcc \
+ build_gnuconf gcc11 $srcdir_gcc11 \
                    --enable-languages=${languages} \
                    --with-gmp=${prefix} \
                    --with-mpfr=${prefix} \
@@ -33,10 +29,9 @@ build_gcc()
                    --disable-multilib \
                    --disable-lto \
                    --with-system-zlib \
-                   --disable-nls \
-                   ${extra_args}
-
+                   --disable-nls
  rc=$?
+
  [ ! -z "$OLD_LP" ] && { LD_LIBRARY_PATH="$OLD_LP"; unset OLD_LP; }
 
  return $rc

@@ -1,7 +1,7 @@
 #
 build_uwsgi()
 {
- typeset rc=0 dir=""
+ typeset dir=""
 
  [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
 
