@@ -15,12 +15,9 @@ build_python3()
             --with-ensurepip=yes
  rc=$?
 
- # remove this file until I have proof I need it ;)
- # is it for building modules? Not clear in Makefile's "libainstall" target
- for fn in $prefix/lib/python*/config-*/lib*.a
- do
-   [ -f "$fn" ] && rm -f "$fn"
- done
+ # remove all .a files
+ # note: the following line could fail if any filename as a "space", can this happen?
+ find $prefix -type f -name '*\.a' | xargs rm
 
  return $rc
 }
