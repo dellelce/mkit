@@ -27,6 +27,7 @@ build_gcc11()
                    --with-mpfr=${prefix} \
                    --with-mpc=${prefix} \
                    --disable-multilib \
+                   --disable-libiberty \
                    --disable-lto \
                    --with-system-zlib \
                    --disable-nls
