@@ -22,6 +22,13 @@ profile_gnudev()
  add_run_dep libtool
 }
 
+profile_perl()
+{
+ add_run_dep perl
+ add_run_dep makemaker
+ add_run_dep datadumper
+}
+
 # TODO: automate build orders & list
 profile_default()
 {
@@ -57,7 +64,7 @@ profile_python()
 {
  add_run_dep xz
  add_run_dep libffi ncurses zlib bzip2 readline
- add_run_dep openssl sqlite3 expat libxml2
+ add_run_dep openssl1_1 sqlite3 expat libxml2
  add_run_dep python3
 }
 
@@ -65,7 +72,7 @@ profile_pythonbuild()
 {
  add_build_dep xz
  add_build_dep libffi ncurses zlib bzip2 readline
- add_build_dep openssl sqlite3 expat libxml2
+ add_build_dep openssl sqlite3
  add_build_dep python3
 }
 
@@ -169,6 +176,18 @@ profile_gcc7()
  return $?
 }
 
+profile_gcc11()
+{
+ add_build_dep m4
+ add_run_dep zlib
+ add_run_dep binutils
+ add_run_dep gmp
+ add_run_dep mpfr
+ add_run_dep mpc
+ add_run_dep gcc11
+ return $?
+}
+
 profile_gccgo7()
 {
  add_build_dep m4
@@ -243,7 +262,6 @@ profile_git()
 {
  profile_gnubuild
  add_run_dep zlib
- add_run_dep curl
  add_run_dep git
 
  return $?
