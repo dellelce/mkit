@@ -235,6 +235,7 @@ run_build()
 {
  typeset pkg=""
  typeset rc=0
+ typeset uncompress_rc=0
  typeset buildprefix=""
 
  [ ! -z "$CFLAGS" ] && { export BASE_CFLAGS="$CFLAGS"; unset CFLAGS; }
@@ -299,7 +300,6 @@ run_build()
 
   [ $func_rc -ne 0 ] &&
   {
-    # module was not found built-in: try as module
     module_func="$MKIT/modules/${pkg}/build.sh"
 
     [ -f "$module_func" ] &&
@@ -318,7 +318,8 @@ run_build()
   # This is to be used when re-running a failed build and want to skip some components
   have_hook global need_to_build && hook global need_to_build ${pkg} || continue
 
-  do_uncompress ${pkg} || return $?
+  # this must be skipped if no downloaded
+  [ -z "$(hook ${pkg} need_to_download)" ] && do_uncompress ${pkg} || return $?
 
   [ "$build" -eq 1 ] &&
   {
