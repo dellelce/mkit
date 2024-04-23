@@ -470,7 +470,7 @@ profile_leptonica()
 
 profile_gpaw()
 {
- profile_pythonbuild
+ profile_python
 
  add_run_dep  libxc
  add_run_dep  lapack
