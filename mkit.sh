@@ -1,8 +1,6 @@
 #!/bin/bash
 #
-# This file has the "main" code of mkit.
 # mkit builds software from source (dowloaded by srcget).
-# Each "software"/package is defined by a function in mkit.profiles.sh in format:
 #
 # profile_NAME
 #
@@ -57,7 +55,7 @@ mkit_setup_prefix()
  export PATH="$prefix/bin:$PATH"
 }
 
-mkit_setup()
+mkit_setup_paths()
 {
  export TIMESTAMP="$(date +%H%M_%d%m%y)"
  export WORKDIR="$PWD/mkit_workdir"
@@ -84,6 +82,14 @@ mkit_setup()
 
  export LOGSDIR="${WORKDIR}/logs"
 
+ mkdir -p "$BUILDDIR"
+ mkdir -p "$LOGSDIR"
+ mkdir -p "$SRCDIR"
+ mkdir -p "$DOWNLOADS"
+}
+
+mkit_args()
+{
  while [ "$1" != "" ]
  do
   arg="$1"
@@ -101,10 +107,6 @@ mkit_setup()
  done
 
  [ -z "$prefix" ] && mkit_setup_prefix # make sure prefix is set with defaults if the previous block failed
- mkdir -p "$BUILDDIR"
- mkdir -p "$LOGSDIR"
- mkdir -p "$SRCDIR"
- mkdir -p "$DOWNLOADS"
 }
 
 ### MAIN ###
@@ -112,13 +114,14 @@ mkit_setup()
  [ -z "$*" ] && { usage; exit; } # do not accept zero arguments
 
  export MKIT=$(getdirfullpath $(dirname $0))
+ export srcgetUrl="https://github.com/dellelce/srcget/archive"
 
  . $MKIT/mkit.config.sh || exit $?
  . $MKIT/mkit.profiles.sh || exit $?
 
- export srcgetUrl="https://github.com/dellelce/srcget/archive"
+ mkit_setup_paths
+ mkit_args $*
 
- mkit_setup $*
  . $MKIT/mkit.lib.sh || exit $?
  . $MKIT/mkit.build.sh || exit $?
  . $MKIT/mkit.components.sh || exit $?
