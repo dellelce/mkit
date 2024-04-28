@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.8
 
 WORKDIR /mkit
 
@@ -12,4 +12,3 @@ COPY modules modules/
 COPY mkit*.sh ./
 
 RUN ls -lt
-
