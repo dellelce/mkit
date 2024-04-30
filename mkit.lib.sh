@@ -79,6 +79,10 @@ download()
 
  for pkg in $RUNTIME_LIST
  do
+  typeset dont_download=$(hook $pkg dont_download)
+
+  [ ! -z "$dont_download" ] && continue
+
   typeset custom_download=$(hook $pkg custom_download)
 
   [ -f "$custom_download" ] &&

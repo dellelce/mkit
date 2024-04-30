@@ -72,7 +72,7 @@ profile_pythonbuild()
 {
  add_build_dep xz
  add_build_dep libffi ncurses zlib bzip2 readline
- add_build_dep openssl sqlite3
+ add_build_dep openssl1_1 sqlite3 expat
  add_build_dep python3
 }
 
@@ -466,6 +466,16 @@ profile_leptonica()
  add_run_dep freetype # required by fontconfig
  add_run_dep fontconfig
  add_run_dep leptonica
+}
+
+profile_gpaw()
+{
+ profile_python
+
+ add_run_dep  libxc
+ add_run_dep  lapack
+ add_run_dep  openblas
+ add_run_dep  gpaw
 }
 
 profile_bzip2()

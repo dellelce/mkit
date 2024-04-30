@@ -1,4 +1,4 @@
-ARG BASE=alpine:3.8
+ARG BASE=alpine:3.19
 FROM $BASE as build
 
 LABEL maintainer="Antonio Dell'Elce"
@@ -24,7 +24,7 @@ RUN  mkdir -p ${INSTALLDIR}/lib && ln -s ${INSTALLDIR}/lib64 ${INSTALLDIR}/lib &
      rm -f ${INSTALLDIR}/lib/*.a
 
 # Second Stage
-ARG BASE=alpine:3.8
+ARG BASE=alpine:3.19
 FROM $BASE AS final
 
 ARG PREFIX=/app/httpd
