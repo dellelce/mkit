@@ -38,11 +38,12 @@ build_gpaw_core()
  logFile=$(logger_file ${id}_make)
  echo "Running pip install..."
  {
-  pip3 install .
-
-  rc_pipinstall=$?
+   LDFLAGS="-L${prefix}/lib -L/usr/lib -Wl,-rpath=${prefix}/lib -Wl,-rpath=/usr/lib"  \
+   CFLAGS="-I${prefix}/include"       \
+   pip3 install .
+   rc_pipinstall=$?
  } > ${logFile} 2>&1
- [ $rc_make -ne 0 ] && { cd "$cwd"; time_end; cat "${logFile}"; echo ; echo "Failed make for ${id}";  return $rc_make; }
+ [ $rc_pipinstall -ne 0 ] && { cd "$cwd"; time_end; cat "${logFile}"; echo ; echo "Failed pip install for ${id}";  return $rc_make; }
 
  cd "$WORKDIR"
 
