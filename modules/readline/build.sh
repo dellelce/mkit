@@ -3,6 +3,9 @@
 #
 build_readline()
 {
+ export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
+ mkdir -p "$PKG_CONFIG_PATH"
+
  [ -f "/etc/alpine-release" -a -f "$srcdir_readline/shlib/Makefile.in" ] &&
  {
    rlmk="$srcdir_readline/shlib/Makefile.in"
