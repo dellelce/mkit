@@ -5,7 +5,7 @@ build_python3()
  typeset rc=0
  typeset fn
 
- [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pk config"
+ export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
 
  LDFLAGS="-L${prefix}/lib -Wl,-rpath=${prefix}/lib"  \
  CFLAGS="-I${prefix}/include"                        \
