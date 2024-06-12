@@ -7,6 +7,7 @@ build_ncurses()
  mkdir -p "$PKG_CONFIG_PATH"
 
  build_gnuconf ncurses $srcdir_ncurses --with-shared --with-cxx-shared  \
-                                       --without-ada --disable-lib-suffixes
+                                       --without-ada --disable-lib-suffixes \
+                                       --enable-pc-files
  return $?
 }
