@@ -39,7 +39,7 @@ build_gpaw_core()
  echo "Running pip install..."
  {
    LIBS="-lgfortran -lpython3 -lssl -lcrypto"
-   LDFLAGS="${LIBS} -L${prefix}/lib -L/usr/lib -Wl,-rpath=${prefix}/lib -Wl,-rpath=/usr/lib"  \
+   LDFLAGS="${LIBS} -L${prefix}/lib -L/usr/lib -Wl,-rpath=${prefix}/lib:/usr/lib"  \
    CFLAGS="-I${prefix}/include"       \
    pip3 install .
    rc_pipinstall=$?
