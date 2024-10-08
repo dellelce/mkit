@@ -3,7 +3,7 @@ FROM alpine:3.19
 WORKDIR /mkit
 
 ENV PACKAGES gcc bash wget perl perl-dev automake autoconf libtool file xz \
-             make libc-dev linux-headers g++ sed bison cmake gfortran
+             make libc-dev linux-headers g++ sed bison flex cmake gfortran
 
 RUN  mkdir /app  && \ 
      apk add --no-cache  $PACKAGES

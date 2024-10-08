@@ -14,7 +14,7 @@ COPY . $BUILDDIR
 
 # Package requirements
 ENV PACKAGES gcc bash wget perl perl-dev automake autoconf libtool file xz \
-             make libc-dev linux-headers g++ sed bison cmake gfortran \
+             make libc-dev linux-headers g++ sed bison flex cmake gfortran \
              awk grep
 
 # Build and do not keep "static libraries"
