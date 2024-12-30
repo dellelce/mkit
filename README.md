@@ -15,11 +15,6 @@ Review possible new features:
   * arguments: strip: do we need fat binaries in docker images (sometimes?)
   * arguments: debug builds: sometimes we need more symbols (-g2 etc)
 
-## REQUIREMENTS:
-  * gcc
-  * g++ (several packages)
-  * perl (> 5.10), Data/Dumper.pm (autotools, mostly for buil steps only)
-
 ## PROFILES:
 
 "mkit" build software defined by a "profile", each profile is defined by a series of "modules" defined in
