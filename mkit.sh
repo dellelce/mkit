@@ -124,7 +124,6 @@ mkit_args()
 
  . $MKIT/mkit.lib.sh || exit $?
  . $MKIT/mkit.build.sh || exit $?
- . $MKIT/mkit.components.sh || exit $?
 
  echo "Install directory is ${prefix}"
 
