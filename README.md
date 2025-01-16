@@ -7,14 +7,6 @@ Download and Build (from source) complete stacks. The latest version available f
   * NO_TIMESTAMP: do not use a time stamp for "build" and "src" directories
   * KEEP_DOCS (Docker only): do not delete documentation directories.
 
-## TODO:
-
-Review possible new features:
-  * add a default "local install" directory ($HOME/.srcget maybe?)
-  * Better & more options (there is only one now.... and it is not really optional!)
-  * arguments: strip: do we need fat binaries in docker images (sometimes?)
-  * arguments: debug builds: sometimes we need more symbols (-g2 etc)
-
 ## PROFILES:
 
 "mkit" build software defined by a "profile", each profile is defined by a series of "modules" defined in
