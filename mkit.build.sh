@@ -264,7 +264,7 @@ run_build()
  # if there is any build-time dep prepare a custom prefix for them.
  [ ! -z "$BUILDTIME_LIST" ] &&
  {
-   export buildprefix="$TMP/build_prefix_${RANDOM}${RANDOM}"
+   export buildprefix="$TMP/builddeps_prefix"
 
    # no checks?
    mkdir -p "$buildprefix/bin"
