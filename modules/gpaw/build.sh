@@ -38,7 +38,7 @@ build_gpaw_core()
  logFile=$(logger_file ${id}_make)
  echo "Running pip install..."
  {
-   LIBS="-lgfortran -lpython3 -lssl -lcrypto"
+   LIBS="-lpython3 -lssl -lcrypto"
    LDFLAGS="${LIBS} -L${prefix}/lib -L/usr/lib -Wl,-rpath=${prefix}/lib:/usr/lib"  \
    CFLAGS="-I${prefix}/include"       \
    pip3 install .
