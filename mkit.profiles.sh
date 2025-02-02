@@ -336,12 +336,18 @@ profile_imagemagick()
  add_run_dep imagemagick
 }
 
-# standalone cmake
 profile_cmake()
 {
  add_build_dep openssl
  add_run_dep cmake
 }
+
+profile_cmakebuild()
+{
+ add_build_dep openssl
+ add_build_dep cmake
+}
+
 
 profile_openscad()
 {
@@ -471,6 +477,8 @@ profile_leptonica()
 profile_gpaw()
 {
  profile_python
+ profile_gnubuild    # gpaw needs autoreconf
+ profile_cmakebuild  # lapack build requires cmake
 
  add_run_dep  libxc
  add_run_dep  lapack
