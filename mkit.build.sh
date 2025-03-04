@@ -152,10 +152,7 @@ build_gnuconf()
 
  # some "configure"s do not support building in a directory different than the source directory
  # TODO: cwd to "$dir"
- [ "$opt" == "BADCONFIGURE" ] &&
- {
-  prepare_build "$dir"
- }
+ [ "$opt" == "BADCONFIGURE" ] && prepare_build "$dir"
 
  export CFLAGS="${BASE_CFLAGS} -I${prefix}/include"
  export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
@@ -180,7 +177,7 @@ build_gnuconf()
 
  cd "$WORKDIR"
 
- [ "$rc_makeinstall" -ne 0 ] && { cat "${logFile}"; }
+ [ "$rc_makeinstall" -ne 0 ] && cat "${logFile}"
  time_end
 
  return $rc_makeinstall
@@ -582,4 +579,4 @@ add_install_options()
  eval "export install_options_${pkg}=\"${options}\""
 }
 
-### EOF ###
+## EOF ##
