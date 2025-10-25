@@ -1,5 +1,6 @@
 build_libuv()
 {
- [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"; build_gnuconf libuv $srcdir_libuv
- return $?
+  [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
+  build_gnuconf libuv $srcdir_libuv
+  return $?
 }

@@ -3,6 +3,6 @@
 #
 build_gperf()
 {
- build_gnuconf gperf $srcdir_gperf
- return $?
+  build_gnuconf gperf $srcdir_gperf
+  return $?
 }

@@ -7,11 +7,11 @@
 
 ### ENV ###
 
- export srcget="0.0.14.8" #  srcget version
+export srcget="0.0.14.8" #  srcget version
 
- # vt100 family sequences
- export ESC=""
- export BOLD="${ESC}[1m"
- export RESET="${ESC}[0m"
+# vt100 family sequences
+export ESC=""
+export BOLD="${ESC}[1m"
+export RESET="${ESC}[0m"
 
 ### EOF ###

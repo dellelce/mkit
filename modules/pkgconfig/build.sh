@@ -1,5 +1,5 @@
 build_pkgconfig()
 {
- build_gnuconf pkgconfig $srcdir_pkgconfig 
- return $?
+  build_gnuconf pkgconfig $srcdir_pkgconfig
+  return $?
 }

@@ -7,19 +7,22 @@
 
 ## MAIN ##
 
- standby="/var/lib/docker-standby"
- libdocker="$(docker info -f '{{.DockerRootDir}}' )" # this is the default directory
- mv "$libdocker" "$standby"
- mkdir -p "$libdocker" && mount -t tmpfs tmpfs "$libdocker"; rc=$?
- [ $rc -ne 0 ] && exit $rc
+standby="/var/lib/docker-standby"
+libdocker="$(docker info -f '{{.DockerRootDir}}')" # this is the default directory
+mv "$libdocker" "$standby"
+mkdir -p "$libdocker" && mount -t tmpfs tmpfs "$libdocker"
+rc=$?
+[ $rc -ne 0 ] && exit $rc
 
- (
-  cd "$standby"; tar cf - .
- ) |
- (
-  cd "$libdocker"; tar xf -
- )
+(
+  cd "$standby"
+  tar cf - .
+) |
+  (
+    cd "$libdocker"
+    tar xf -
+  )
 
- rm -rf "$standby"
+rm -rf "$standby"
 
 ## EOF ##

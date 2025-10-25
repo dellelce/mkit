@@ -2,6 +2,6 @@
 #
 build_libbsd()
 {
- build_gnuconf libbsd $srcdir_libbsd
- return $?
+  build_gnuconf libbsd $srcdir_libbsd
+  return $?
 }

@@ -1,6 +1,6 @@
 build_mosquitto()
 {
- build_raw_lite mosquitto
+  build_raw_lite mosquitto
 
- return $?
+  return $?
 }

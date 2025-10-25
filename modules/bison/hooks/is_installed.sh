@@ -1,1 +1,1 @@
-bison --version > /dev/null 2>&1
+bison --version >/dev/null 2>&1

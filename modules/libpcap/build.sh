@@ -3,6 +3,6 @@
 #
 build_libpcap()
 {
- build_gnuconf libpcap $srcdir_libpcap
- return $?
+  build_gnuconf libpcap $srcdir_libpcap
+  return $?
 }

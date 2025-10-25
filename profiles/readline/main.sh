@@ -1,4 +1,4 @@
 profile_readline()
 {
- add_run_dep readline
+  add_run_dep readline
 }

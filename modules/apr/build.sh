@@ -3,6 +3,6 @@
 #
 build_apr()
 {
- build_gnuconf apr $srcdir_apr
- return $?
+  build_gnuconf apr $srcdir_apr
+  return $?
 }

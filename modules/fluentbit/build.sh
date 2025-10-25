@@ -1,8 +1,8 @@
 build_fluentbit()
 {
- [ -f "/etc/alpine-release" ] && apk add --no-cache fts-dev
+  [ -f "/etc/alpine-release" ] && apk add --no-cache fts-dev
 
- build_raw_lite fluentbit
+  build_raw_lite fluentbit
 
- return $?
+  return $?
 }

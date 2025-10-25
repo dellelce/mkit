@@ -13,147 +13,158 @@
 
 test_file()
 {
- typeset f="$1"
- typeset basef="$(basename $f)"
+  typeset f="$1"
+  typeset basef="$(basename $f)"
 
- [ ! -f "$f" ] && { echo "File $f does not exist."; return 1; }
+  [ ! -f "$f" ] && {
+    echo "File $f does not exist."
+    return 1
+  }
 
- echo "File ${basef} exists."
- ls -lt "$f"
+  echo "File ${basef} exists."
+  ls -lt "$f"
 
- return 0
+  return 0
 }
 
 test_any()
 {
- typeset f="$1"
- typeset basef="$(basename $f)"
+  typeset f="$1"
+  typeset basef="$(basename $f)"
 
- [ ! -e "$f" ] && { echo "$f does not exist."; return 1; }
+  [ ! -e "$f" ] && {
+    echo "$f does not exist."
+    return 1
+  }
 
- echo "File ${basef} exists."
- ls -lt "$f"
+  echo "File ${basef} exists."
+  ls -lt "$f"
 
- return 0
+  return 0
 }
 
 test_dir()
 {
- typeset d="$1"
+  typeset d="$1"
 
- [ ! -d "$d" ] && { echo "Directory $d does not exist."; return 1; }
- return 0
+  [ ! -d "$d" ] && {
+    echo "Directory $d does not exist."
+    return 1
+  }
+  return 0
 }
 
 # tests for "default" profile
 main_tests_default()
 {
- fails=0
+  fails=0
 
- echo "Starting tests..."
- test_dir  "$prefix/bin"
- rc_bin=$?
- [ "$rc_bin" -ne 0 ] && let fails="(( $fails + 1))"
+  echo "Starting tests..."
+  test_dir "$prefix/bin"
+  rc_bin=$?
+  [ "$rc_bin" -ne 0 ] && let fails="(( $fails + 1))"
 
- test_file $python
- rc_python=$?
+  test_file $python
+  rc_python=$?
 
- rc_sslversion=0
- rc_readline=0
+  rc_sslversion=0
+  rc_readline=0
 
- [ "$rc_python" -eq 0 ] &&
- {
-  echo "Testing correct OpenSSL module is built:"
-  echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | ${python}
-  rc_sslversion=$?
+  [ "$rc_python" -eq 0 ] &&
+    {
+      echo "Testing correct OpenSSL module is built:"
+      echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | ${python}
+      rc_sslversion=$?
 
-  echo "Testing readline"
-  echo "import readline;" | ${python}
-  rc_readline="$?"
- } ||
- {
-  let fails="(( $fails + 1))"
- }
+      echo "Testing readline"
+      echo "import readline;" | ${python}
+      rc_readline="$?"
+    } ||
+    {
+      let fails="(( $fails + 1))"
+    }
 
- [ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
- [ "$rc_readline" -ne 0 ] && let fails="(( $fails + 1))"
+  [ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
+  [ "$rc_readline" -ne 0 ] && let fails="(( $fails + 1))"
 
- # mod_wsgi checks
- test_file "$prefix/modules/mod_wsgi.so" || let fails="(( $fails + 1))"
- test_file "$prefix/modules/mod_proxy_uwsgi.so" || let fails="(( $fails + 1))"
+  # mod_wsgi checks
+  test_file "$prefix/modules/mod_wsgi.so" || let fails="(( $fails + 1))"
+  test_file "$prefix/modules/mod_proxy_uwsgi.so" || let fails="(( $fails + 1))"
 
- # readline
- test_any "$prefix/lib/libhistory.a" || let fails="(( $fails + 1))"
- test_any "$prefix/lib/libhistory.so" || let fails="(( $fails + 1))"
- test_any "$prefix/lib/libreadline.a" || let fails="(( $fails + 1))"
+  # readline
+  test_any "$prefix/lib/libhistory.a" || let fails="(( $fails + 1))"
+  test_any "$prefix/lib/libhistory.so" || let fails="(( $fails + 1))"
+  test_any "$prefix/lib/libreadline.a" || let fails="(( $fails + 1))"
 
- echo
- ls -lt "${prefix}/bin" || let fails="(( $fails + 1))"
+  echo
+  ls -lt "${prefix}/bin" || let fails="(( $fails + 1))"
 
- [ "$rc" -eq 0 -a "$fails" -ne 0 ] &&
- {
-  echo "Build succeeded but there were $fails test failures!"
-  return 1
- }
+  [ "$rc" -eq 0 -a "$fails" -ne 0 ] &&
+    {
+      echo "Build succeeded but there were $fails test failures!"
+      return 1
+    }
 
- return $rc
+  return $rc
 }
 
 main_tests_uwsgi()
 {
- typeset any
- fails=0
+  typeset any
+  fails=0
 
- echo "Starting tests..."
- test_dir  "$prefix/bin"
- rc_bin=$?
- [ "$rc_bin" -ne 0 ] && let fails="(( $fails + 1))"
+  echo "Starting tests..."
+  test_dir "$prefix/bin"
+  rc_bin=$?
+  [ "$rc_bin" -ne 0 ] && let fails="(( $fails + 1))"
 
- test_file $python
- rc_python=$?
+  test_file $python
+  rc_python=$?
 
- # libs test for: openssl & readline
- typeset any_ssl="libcrypto.so.1.0.0 libssl.so.1.0.0"
- typeset any_readline="libhistory.a libhistory.so"
+  # libs test for: openssl & readline
+  typeset any_ssl="libcrypto.so.1.0.0 libssl.so.1.0.0"
+  typeset any_readline="libhistory.a libhistory.so"
 
- for any in $any_ssl $any_readline
- do
-  test_any "$prefix/lib/$any" || let fails="(( $fails + 1))"
- done
+  for any in $any_ssl $any_readline; do
+    test_any "$prefix/lib/$any" || let fails="(( $fails + 1))"
+  done
 
- rc_sslversion=0
- rc_readline=0
+  rc_sslversion=0
+  rc_readline=0
 
- [ "$rc_python" -eq 0 ] &&
- {
-  echo "Testing correct OpenSSL module is built:"
-  echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | ${python}
-  rc_sslversion=$?
+  [ "$rc_python" -eq 0 ] &&
+    {
+      echo "Testing correct OpenSSL module is built:"
+      echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | ${python}
+      rc_sslversion=$?
 
-  echo "Testing readline"
-  echo "import readline;" | ${python}
-  rc_readline="$?"
- } ||
- {
-  let fails="(( $fails + 1))"
- }
+      echo "Testing readline"
+      echo "import readline;" | ${python}
+      rc_readline="$?"
+    } ||
+    {
+      let fails="(( $fails + 1))"
+    }
 
- [ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
- [ "$rc_readline" -ne 0 ] && let fails="(( $fails + 1))"
+  [ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
+  [ "$rc_readline" -ne 0 ] && let fails="(( $fails + 1))"
 
- [ "$rc" -eq 0 -a "$fails" -ne 0 ] &&
- {
-  echo "Build succeeded but there were $fails test failures!"
-  return 1
- }
+  [ "$rc" -eq 0 -a "$fails" -ne 0 ] &&
+    {
+      echo "Build succeeded but there were $fails test failures!"
+      return 1
+    }
 
- return $rc
+  return $rc
 }
 
 ### ENV ###
 
-prefix="$1"; shift
-profile="${1:-${PROFILE}}"; shift; unset PROFILE
+prefix="$1"
+shift
+profile="${1:-${PROFILE}}"
+shift
+unset PROFILE
 profile="${profile:-default}" # sanity check
 python="$prefix/bin/python3.10"
 export fails=0
@@ -161,41 +172,45 @@ export fails=0
 ### MAIN ###
 
 # NO_TIMESTAMP: using this option avoids recording build timestamp in executables making two builds with same input have the same output
-mkdir -p $prefix &&  NO_TIMESTAMP=1 ./mkit.sh $prefix profile="${profile}"
+mkdir -p $prefix && NO_TIMESTAMP=1 ./mkit.sh $prefix profile="${profile}"
 rc=$?
 
 echo "mkit rc: $rc"
 [ "$rc" -ne 0 ] && exit $rc
 
-for dir in $prefix/lib/python*/test
-do
+for dir in $prefix/lib/python*/test; do
   [ -d "$dir" ] && pytestlib="$dir"
 done
 
-[ -d "$pytestlib" ] && { echo "Deleting unneeded test lib"; rm -rf "$pytestlib"; }
+[ -d "$pytestlib" ] && {
+  echo "Deleting unneeded test lib"
+  rm -rf "$pytestlib"
+}
 
 # if KEEP_DOCS is not set delete documentation directories
 [ -z "$KEEP_DOCS" ] &&
-{
- for dir in $prefix/man \
-            $prefix/manual \
-            $prefix/doc \
-            $prefix/share/doc \
-            $prefix/share/*-doc \
-            $prefix/share/man \
-            $prefix/share/info
- do
-  [ -d "$dir" ] && { echo "Removing doc dir: " $dir; rm -rf "$dir"; }
- done
-}
+  {
+    for dir in $prefix/man \
+      $prefix/manual \
+      $prefix/doc \
+      $prefix/share/doc \
+      $prefix/share/*-doc \
+      $prefix/share/man \
+      $prefix/share/info; do
+      [ -d "$dir" ] && {
+        echo "Removing doc dir: " $dir
+        rm -rf "$dir"
+      }
+    done
+  }
 
 # even if rc != 0: we do some tests anyway
 tests="main_tests_${profile}"
-type $tests > /dev/null 2>&1 # only execute the test function if it exists...
+type $tests >/dev/null 2>&1 # only execute the test function if it exists...
 [ $? -eq 0 ] &&
-{
- $tests || exit $?
-}
+  {
+    $tests || exit $?
+  }
 
 exit 0
 

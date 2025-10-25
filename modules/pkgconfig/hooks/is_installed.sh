@@ -1,1 +1,1 @@
- pkg-config --version > /dev/null 2>&1
+pkg-config --version >/dev/null 2>&1

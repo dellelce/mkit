@@ -11,23 +11,29 @@
 
 test_file()
 {
- typeset f="$1"
- typeset basef="$(basename $f)"
+  typeset f="$1"
+  typeset basef="$(basename $f)"
 
- [ ! -f "$f" ] && { echo "File $f does not exist."; return 1; }
+  [ ! -f "$f" ] && {
+    echo "File $f does not exist."
+    return 1
+  }
 
- echo "${basef} exists."
- ls -lt "$f"
+  echo "${basef} exists."
+  ls -lt "$f"
 
- # shared library test
- [ "${basef%.so}" != "${basef}" ] && { ldd "$f" ||  return $?; }
+  # shared library test
+  [ "${basef%.so}" != "${basef}" ] && {
+    ldd "$f" || return $?
+  }
 
- return 0
+  return 0
 }
 
 ### ENV ###
 
-prefix="$1"; shift
+prefix="$1"
+shift
 python="$prefix/bin/python3.8"
 
 ### MAIN ###
@@ -45,29 +51,32 @@ rc_python=$?
 
 rc_sslversion=0
 [ "$rc_python" -eq 0 ] &&
-{
- echo "Testing correct OpenSSL module is built:"
- echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | ${python}
- rc_sslversion=$?
-} ||
-{
- let fails="(( $fails + 1))"
-}
+  {
+    echo "Testing correct OpenSSL module is built:"
+    echo "import _ssl; print(_ssl.OPENSSL_VERSION);" | ${python}
+    rc_sslversion=$?
+  } ||
+  {
+    let fails="(( $fails + 1))"
+  }
 
 [ "$rc_sslversion" -ne 0 ] && let fails="(( $fails + 1))"
 
 # mod_wsgi checks
 f="$prefix/modules/mod_wsgi.so"
-test_file  $f || let fails="(( $fails + 1 ))"
+test_file $f || let fails="(( $fails + 1 ))"
 
 f="$prefix/modules/mod_proxy_uwsgi.so"
-test_file  $f || let fails="(( $fails + 1 ))"
+test_file $f || let fails="(( $fails + 1 ))"
 
 #
 echo
 ls -lt "${prefix}/bin"
 
-[ "$rc" -eq 0 -a "$fails" -ne 0 ] && { echo "Build succeeded but there were $fails test failures!"; exit 1; }
+[ "$rc" -eq 0 -a "$fails" -ne 0 ] && {
+  echo "Build succeeded but there were $fails test failures!"
+  exit 1
+}
 
 exit $rc
 

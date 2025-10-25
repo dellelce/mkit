@@ -2,6 +2,6 @@
 #
 build_automake()
 {
- build_gnuconf automake $srcdir_automake
- return $?
+  build_gnuconf automake $srcdir_automake
+  return $?
 }

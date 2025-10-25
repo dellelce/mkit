@@ -1,53 +1,65 @@
 build_gpaw()
 {
- [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig";
+  [ -d "${prefix}/lib/pkgconfig" ] && export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
 
- build_gpaw_core gpaw $srcdir_gpaw
+  build_gpaw_core gpaw $srcdir_gpaw
 
- return $?
+  return $?
 }
 
 #
 # Build gpaw
 build_gpaw_core()
 {
- export rc_pipinstall=0
- typeset id="$1";  shift  # build id
- typeset dir="$1"; shift  # src directory
- typeset pkgbuilddir="$BUILDDIR/$id"
+  export rc_pipinstall=0
+  typeset id="$1"
+  shift # build id
+  typeset dir="$1"
+  shift # src directory
+  typeset pkgbuilddir="$BUILDDIR/$id"
 
- # Other steps
- [ ! -d "$pkgbuilddir" ] && { mkdir -p "$pkgbuilddir"; } ||
- {
-   pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"; mkdir -p "$pkgbuilddir";
- }
+  # Other steps
+  [ ! -d "$pkgbuilddir" ] && {
+    mkdir -p "$pkgbuilddir"
+  } ||
+    {
+      pkgbuilddir="$BUILDDIR/${id}.${RANDOM}"
+      mkdir -p "$pkgbuilddir"
+    }
 
- cd "$pkgbuilddir" ||
- {
-   echo "build_gpaw: Failed to change to build directory: " $pkgbuilddir;
-   return 1;
- }
+  cd "$pkgbuilddir" ||
+    {
+      echo "build_gpaw: Failed to change to build directory: " $pkgbuilddir
+      return 1
+    }
 
- prepare_build $dir
+  prepare_build $dir
 
- echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
- echo
+  echo "Building $id [${BOLD}$(getbasename $id)${RESET}] at $(date)"
+  echo
 
- time_start
+  time_start
 
- logFile=$(logger_file ${id}_make)
- echo "Running pip install..."
- {
-   LIBS="-lgfortran -lpython3 -lssl -lcrypto"
-   LDFLAGS="${LIBS} -L${prefix}/lib -L/usr/lib -Wl,-rpath=${prefix}/lib:/usr/lib"  \
-   CFLAGS="-I${prefix}/include"       \
-   pip3 install .
-   rc_pipinstall=$?
- } > ${logFile} 2>&1
- [ $rc_pipinstall -ne 0 ] && { cd "$cwd"; time_end; cat "${logFile}"; echo ; echo "Failed pip install for ${id}";  return $rc_make; }
+  logFile=$(logger_file ${id}_make)
+  echo "Running pip install..."
+  {
+    LIBS="-lgfortran -lpython3 -lssl -lcrypto"
+    LDFLAGS="${LIBS} -L${prefix}/lib -L/usr/lib -Wl,-rpath=${prefix}/lib:/usr/lib" \
+      CFLAGS="-I${prefix}/include" \
+      pip3 install .
+    rc_pipinstall=$?
+  } >${logFile} 2>&1
+  [ $rc_pipinstall -ne 0 ] && {
+    cd "$cwd"
+    time_end
+    cat "${logFile}"
+    echo
+    echo "Failed pip install for ${id}"
+    return $rc_make
+  }
 
- cd "$WORKDIR"
+  cd "$WORKDIR"
 
- time_end
- return $rc_pipinstall
+  time_end
+  return $rc_pipinstall
 }
