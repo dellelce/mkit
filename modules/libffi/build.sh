@@ -1,6 +1,7 @@
 #
 build_libffi()
 {
+  MAKEINFO=: \
   build_gnuconf libffi $srcdir_libffi || return $?
 
   # libffi ignores --libdir and --includedir options of configure
