@@ -187,7 +187,13 @@ build_gnuconf()
   [ "$opt" == "BADCONFIGURE" ] && prepare_build "$dir"
 
   export CFLAGS="${BASE_CFLAGS} -I${prefix}/include"
-  export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
+  [ "$(uname)" == "Darwin" ] &&
+  {
+     export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath -Wl,${prefix}/lib"
+  } ||
+  {
+     export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
+  }
 
   echo "Configuring..."
   logFile=$(logger_file ${id}_configure)
@@ -448,7 +454,14 @@ build_raw_core()
   time_start
 
   export CFLAGS="${BASE_CFLAGS} -I${prefix}/include"
-  export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
+
+  [ "$(uname)" == "Darwin" ] &&
+  {
+     export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath -Wl,${prefix}/lib"
+  } ||
+  {
+     export LDFLAGS="${BASE_LDFLAGS} -L${prefix}/lib -Wl,-rpath=${prefix}/lib"
+  }
 
   # make
   logFile=$(logger_file ${id}_make)
