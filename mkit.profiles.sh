@@ -508,4 +508,12 @@ profile_fluentbit()
   add_run_dep fluentbit
 }
 
+profile_fontconfig()
+{
+ add_run_dep gperf
+ add_run_dep expat
+ add_run_dep freetype
+ add_run_dep fontconfig
+}
+
 ### EOF ###
